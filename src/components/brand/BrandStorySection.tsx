@@ -22,25 +22,19 @@ const VALUES = [
 
 export default function BrandStorySection() {
   return (
-    <section id="brand" className="bg-white">
+    <section id="brand" className="scroll-mt-[96px] bg-white">
       <div className="mx-auto max-w-6xl px-4 py-28">
         <div className="grid grid-cols-12 gap-10">
-
           {/* LEFT */}
           <div className="col-span-12 md:col-span-5">
-            <div className="text-[12px] tracking-[0.22em] text-zinc-500">
-              BRAND STORY
-            </div>
+            <div className="text-[12px] tracking-[0.22em] text-zinc-500">BRAND STORY</div>
 
-            {/* TITLE */}
             <h2 className="mt-3 text-[40px] leading-[1.1]">
-              <span className="font-semibold text-[#B90E0A]">W</span>
-              <span className="text-zinc-400">e </span>
-
+              <span className="font-semibold text-[#B90E0A]">We</span>
+              <span className="text-zinc-400"> </span>
               <span className="font-semibold text-[#B90E0A]">M</span>
               <span className="text-zinc-400">ake</span>
               <br />
-
               <span className="text-zinc-400">a </span>
               <span className="font-semibold text-[#B90E0A]">D</span>
               <span className="text-zinc-400">ifference.</span>
@@ -54,29 +48,43 @@ export default function BrandStorySection() {
 
             {/* IMAGE SLOT */}
             <div className="mt-10">
-              <div className="group relative h-[260px] w-full max-w-[460px] overflow-hidden rounded-2xl border border-zinc-200 bg-white md:h-[320px]">
-
-                {/* GRID BACKGROUND */}
-                <div className="pointer-events-none absolute inset-0">
-                  <div className="absolute inset-0 bg-zinc-50" />
-                  <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.06)_1px,transparent_1px)] bg-[size:18px_18px]" />
-                  <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(185,14,10,0.12)_1px,transparent_1px),linear-gradient(to_bottom,rgba(185,14,10,0.12)_1px,transparent_1px)] bg-[size:96px_96px] opacity-60" />
-                </div>
+              <div className="group relative h-[260px] w-full max-w-[460px] overflow-hidden rounded-2xl border border-zinc-200 bg-white">
+                <div className="pointer-events-none absolute inset-0 bg-[#FAFAFA]" aria-hidden="true" />
 
                 {/* SVG 1 */}
                 <img
                   src="/brand/brand-hero-1.svg"
                   alt="WeMD Brand Visual"
-                  className="absolute inset-0 h-full w-full object-contain p-8 opacity-100 transition-opacity duration-300 ease-out group-hover:opacity-0"
+                  className="absolute inset-0 z-30 m-auto w-auto max-h-[220px] opacity-100 transition-opacity duration-300 ease-out group-hover:opacity-0"
                 />
 
                 {/* SVG 2 */}
                 <img
                   src="/brand/brand-hero-2.svg"
                   alt="WeMD Brand Visual Hover"
-                  className="absolute inset-0 h-full w-full object-contain p-8 opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100"
+                  className="absolute inset-0 z-30 m-auto w-auto max-h-[220px] opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100"
                 />
+
+                {/* grid overlay (보이게) */}
+                <div className="pointer-events-none absolute inset-0 z-20" aria-hidden="true">
+                  <div
+                    className="
+                      absolute inset-0
+                      bg-[linear-gradient(to_right,rgba(0,0,0,0.07)_1px,transparent_1px),
+                          linear-gradient(to_bottom,rgba(0,0,0,0.07)_1px,transparent_1px)]
+                      bg-[size:22px_22px]
+                      opacity-55
+                    "
+                  />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_55%,rgba(0,0,0,0.05)_100%)]" />
+                </div>
               </div>
+            </div>
+
+            <div className="mt-10 h-px w-full bg-gradient-to-r from-zinc-200 via-zinc-300 to-transparent" />
+
+            <div className="mt-8 text-[13px] leading-relaxed text-zinc-500">
+              Human · Technology · Culture · Harmony · Rest
             </div>
           </div>
 
@@ -85,66 +93,37 @@ export default function BrandStorySection() {
             <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
               <div className="flex items-center gap-3">
                 <span className="h-5 w-px bg-[#B90E0A]" />
-                <div className="text-[14px] font-semibold text-zinc-900">
-                  Core Values
-                </div>
+                <div className="text-[14px] font-semibold text-zinc-900">Core Values</div>
               </div>
 
               <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {VALUES.map((v, idx) => (
-                  <ValueCard
+                  <div
                     key={v.title}
-                    index={idx + 1}
-                    title={v.title}
-                    desc={v.desc}
-                    className={idx === 4 ? "sm:col-span-2" : ""}
-                  />
+                    className="group relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-5"
+                  >
+                    <div className="pointer-events-none absolute inset-0 opacity-[0.25]">
+                      <div className="h-full w-full bg-[linear-gradient(to_right,rgba(0,0,0,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.06)_1px,transparent_1px)] bg-[size:28px_28px]" />
+                    </div>
+
+                    <div className="relative flex items-start justify-between">
+                      <div>
+                        <div className="text-[11px] tracking-[0.18em] text-zinc-500">0{idx + 1}</div>
+                        <div className="mt-2 text-[16px] font-semibold text-zinc-900">{v.title}</div>
+                      </div>
+                      <div className="mt-1 h-6 w-px bg-zinc-200 transition group-hover:bg-[#B90E0A]" />
+                    </div>
+
+                    <p className="relative mt-4 text-[13px] leading-relaxed text-zinc-600">{v.desc}</p>
+
+                    <div className="pointer-events-none absolute -right-20 -top-20 h-40 w-40 rounded-full bg-[#B90E0A]/0 blur-2xl transition group-hover:bg-[#B90E0A]/10" />
+                  </div>
                 ))}
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </section>
-  );
-}
-
-function ValueCard({
-  index,
-  title,
-  desc,
-  className,
-}: {
-  index: number;
-  title: string;
-  desc: string;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "group relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-5",
-        "transition-all duration-300 hover:-translate-y-[2px] hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)]",
-        className
-      )}
-    >
-      {/* GRID HOVER */}
-      <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.05)_1px,transparent_1px)] bg-[size:20px_20px]" />
-      </div>
-
-      <div className="relative">
-        <div className="text-[11px] tracking-[0.18em] text-zinc-400">
-          0{index}
-        </div>
-        <div className="mt-2 text-[16px] font-semibold text-[#B90E0A]">
-          {title}
-        </div>
-        <p className="mt-4 text-[13px] leading-relaxed text-zinc-600">
-          {desc}
-        </p>
-      </div>
-    </div>
   );
 }

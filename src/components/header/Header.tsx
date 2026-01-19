@@ -3,9 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { BOOKING_URL, NAV_ITEMS, type NavItem, type NavMega } from "../../config/nav";
-import { cn } from "../../lib/cn";
+import { BOOKING_URL, NAV_ITEMS, type NavItem, type NavMega } from "@/config/nav";
+import { cn } from "@/lib/cn";
 
+/* ---------- utils ---------- */
 function isMega(item: NavItem): item is NavMega {
   return item.type === "mega";
 }
@@ -21,9 +22,12 @@ function displayLabel(label: string) {
   return label;
 }
 
+/* ---------- Header ---------- */
 export default function Header() {
   const [activeMega, setActiveMega] = useState<string | null>(null);
-  const [scrolled, setScrolled] = useState(false);
+
+  // ✅ hero 없는 페이지 대비: 기본 false
+  const [onHero, setOnHero] = useState(false);
 
   const headerRef = useRef<HTMLElement | null>(null);
 
@@ -40,26 +44,36 @@ export default function Header() {
     return found && isMega(found) ? found : null;
   }, [activeMega]);
 
+  /* ---------- HERO 감지 ---------- */
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const hero = document.getElementById("hero");
+
+    // ✅ hero 없으면: 무조건 흰 헤더 모드
+    if (!hero) {
+      setOnHero(false);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setOnHero(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+
+    observer.observe(hero);
+    return () => observer.disconnect();
   }, []);
 
-  // 바깥 클릭 닫기
+  /* ---------- 외부 클릭 닫기 ---------- */
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
       if (!activeMega) return;
-      const el = headerRef.current;
-      if (!el) return;
-      if (!el.contains(e.target as Node)) setActiveMega(null);
+      if (!headerRef.current?.contains(e.target as Node)) setActiveMega(null);
     }
     window.addEventListener("mousedown", onClickOutside);
     return () => window.removeEventListener("mousedown", onClickOutside);
   }, [activeMega]);
 
-  // ESC 닫기
+  /* ---------- ESC 닫기 ---------- */
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") setActiveMega(null);
@@ -68,46 +82,37 @@ export default function Header() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  // ✅ 흰색 되는 조건: 스크롤 OR 메가메뉴 오픈
-  const headerIsWhite = scrolled || Boolean(activeMega);
+  /* ---------- 헤더 색 판정 ---------- */
+  const headerIsWhite = !onHero || Boolean(activeMega);
 
-  // ✅ 최상단 투명일 때 메뉴는 흰색
   const topText = headerIsWhite ? "text-zinc-900" : "text-white";
   const topTextHover = headerIsWhite ? "hover:text-zinc-950" : "hover:text-white";
-  const dividerColor = headerIsWhite ? "bg-zinc-300" : "bg-white/35";
+  const dividerColor = headerIsWhite ? "bg-zinc-300" : "bg-white/40";
 
   return (
     <header
       ref={headerRef}
       className={cn(
-        // ✅ 핵심: sticky가 아니라 fixed로 “히어로 위에 겹치게”
-        "fixed top-0 left-0 z-[999] w-full transition-colors",
+        "fixed top-0 z-50 w-full transition-colors duration-300",
         headerIsWhite ? "bg-white" : "bg-transparent",
         headerIsWhite ? "border-b border-zinc-200" : "border-b border-transparent"
       )}
+      // ✅ 이거 없으면 “열렸는데 안 닫힘”/“이벤트 꼬임” 발생
       onMouseLeave={() => setActiveMega(null)}
     >
       <div className="mx-auto max-w-6xl px-4">
         <div className="flex h-[78px] items-center justify-between">
-          {/* LEFT GROUP */}
+          {/* LEFT */}
           <div className="flex items-center">
-            {/* 메인 로고 */}
             <Link href="/" className="flex items-center">
-              <Image
-                src="/logo-main.png"
-                alt="WeMD"
-                width={74}
-                height={74}
-                priority
-                className="object-contain"
-              />
+              <Image src="/logo-main.png" alt="WeMD" width={74} height={74} priority />
             </Link>
 
-            {/* WeMD 에스테틱 = 링크 */}
+            {/* 원페이지 브랜드 */}
             <a
               href="#brand"
               className={cn(
-                "ml-20 cursor-pointer text-[16px] font-semibold transition-colors",
+                "ml-20 text-[16px] font-semibold transition-colors",
                 topText,
                 topTextHover
               )}
@@ -117,31 +122,30 @@ export default function Header() {
 
             <Divider className="mx-7" colorClass={dividerColor} />
 
-            {/* 얼굴/바디/맞춤 (메가메뉴) */}
+            {/* MEGA */}
             <nav className="hidden items-center gap-8 md:flex">
               <MegaTopButton
                 item={face}
-                activeMega={activeMega}
-                setActiveMega={setActiveMega}
+                open={activeMega === face?.label}
                 headerIsWhite={headerIsWhite}
+                onOpen={setActiveMega}
               />
               <MegaTopButton
                 item={body}
-                activeMega={activeMega}
-                setActiveMega={setActiveMega}
+                open={activeMega === body?.label}
                 headerIsWhite={headerIsWhite}
+                onOpen={setActiveMega}
               />
               <MegaTopButton
                 item={custom}
-                activeMega={activeMega}
-                setActiveMega={setActiveMega}
+                open={activeMega === custom?.label}
                 headerIsWhite={headerIsWhite}
+                onOpen={setActiveMega}
               />
             </nav>
 
             <Divider className="ml-7 hidden md:inline-block" colorClass={dividerColor} />
 
-            {/* 예약하기 */}
             <a
               href={BOOKING_URL}
               target="_blank"
@@ -156,48 +160,41 @@ export default function Header() {
             </a>
           </div>
 
-          {/* RIGHT GROUP */}
+          {/* RIGHT */}
           <div className="flex items-center gap-7">
             <div className="hidden items-center gap-7 md:flex">
-              {branches && branches.type === "link" ? (
+              {branches?.type === "link" && (
                 <a
                   href={branches.href}
                   className={cn("text-[14px] font-medium transition-colors", topText, topTextHover)}
                 >
                   {branches.label}
                 </a>
-              ) : null}
-
-              {franchise && franchise.type === "link" ? (
+              )}
+              {franchise?.type === "link" && (
                 <a
                   href={franchise.href}
                   className={cn("text-[14px] font-medium transition-colors", topText, topTextHover)}
                 >
                   {franchise.label}
                 </a>
-              ) : null}
+              )}
             </div>
 
-            {/* 서브 로고 */}
-            <Link href="/" className="flex items-center">
-              <Image
-                src="/logo-sub.svg"
-                alt="WeMD Aesthetic"
-                width={92}
-                height={92}
-                priority
-                className="object-contain"
-              />
+            <Link href="/" className="hidden md:block">
+              <Image src="/logo-sub.svg" alt="WeMD Aesthetic" width={92} height={92} priority />
             </Link>
           </div>
         </div>
       </div>
 
-      {/* 메가메뉴 */}
-      <MegaMenuAligned item={activeItem} scrolled={scrolled} />
+      {/* ✅ Mega Menu (이게 빠지면 당연히 “안열림”) */}
+      <MegaMenuTossWhite item={activeItem} onClose={() => setActiveMega(null)} />
     </header>
   );
 }
+
+/* ---------- Pieces ---------- */
 
 function Divider({
   className,
@@ -206,104 +203,119 @@ function Divider({
   className?: string;
   colorClass?: string;
 }) {
-  return (
-    <span
-      className={cn("inline-block h-5 w-px align-middle", colorClass ?? "bg-zinc-300", className)}
-      aria-hidden="true"
-    />
-  );
+  return <span className={cn("inline-block h-5 w-px", colorClass, className)} aria-hidden />;
 }
 
 function MegaTopButton({
   item,
-  activeMega,
-  setActiveMega,
+  open,
   headerIsWhite,
+  onOpen,
 }: {
-  item: NavItem | undefined;
-  activeMega: string | null;
-  setActiveMega: (v: string | null) => void;
+  item?: NavItem;
+  open: boolean;
   headerIsWhite: boolean;
+  onOpen: (v: string | null) => void;
 }) {
   if (!item || !isMega(item)) return null;
-  const open = activeMega === item.label;
 
-  const base =
-    headerIsWhite
-      ? open
-        ? "text-red-700"
-        : "text-red-600 hover:text-red-700"
-      : open
-      ? "text-white"
-      : "text-white/90 hover:text-white";
+  const color = headerIsWhite
+    ? open
+      ? "text-[#B90E0A]"
+      : "text-zinc-900 hover:text-[#B90E0A]"
+    : open
+    ? "text-white"
+    : "text-white/90 hover:text-white";
 
   return (
     <button
       type="button"
-      className={cn("relative h-[68px] text-[18px] font-semibold transition-colors", base)}
-      onMouseEnter={() => setActiveMega(item.label)}
-      aria-haspopup="menu"
-      aria-expanded={open}
+      className={cn("h-[68px] text-[18px] font-semibold transition-colors", color)}
+      onMouseEnter={() => onOpen(item.label)}
+      onFocus={() => onOpen(item.label)}
     >
       {displayLabel(item.label)}
     </button>
   );
 }
 
-function MegaMenuAligned({ item, scrolled }: { item: NavMega | null; scrolled: boolean }) {
+/**
+ * ✅ 토스 스타일(화이트 버전) 메가메뉴:
+ * - 왼쪽에 섹션 타이틀/설명
+ * - 오른쪽에 섹션별 링크 컬럼
+ * - "의미없는 회색 박스" 제거
+ */
+function MegaMenuTossWhite({
+  item,
+  onClose,
+}: {
+  item: NavMega | null;
+  onClose: () => void;
+}) {
   if (!item) return null;
 
-  const groups =
-    item.sections?.length && item.sections.some((s) => s.links?.length)
-      ? item.sections
-      : [{ title: "", links: item.sections.flatMap((s) => s.links) }];
-
   return (
-    <div
-      className={cn(
-        "bg-white",
-        "border-t border-zinc-200",
-        scrolled ? "border-b border-zinc-200" : "border-b border-zinc-100"
-      )}
-      role="menu"
-    >
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="grid min-h-[260px] grid-cols-12 gap-10 py-10">
-          {/* LEFT */}
-          <div className="col-span-8">
-            <div className="flex items-center gap-4">
-              <div className="text-[18px] font-semibold text-zinc-900">{displayLabel(item.label)}</div>
-              <span className="h-5 w-px bg-red-600" aria-hidden="true" />
-              <div className="text-[12px] tracking-[0.18em] text-zinc-500">PROGRAM</div>
+    <div className="border-t border-zinc-200 bg-white">
+      <div className="mx-auto max-w-6xl px-4 py-10">
+        <div className="grid grid-cols-12 gap-10">
+          {/* LEFT: title */}
+          <div className="col-span-12 md:col-span-3">
+            <div className="text-[12px] tracking-[0.22em] text-zinc-500">
+              {item.label.toUpperCase()}
             </div>
+            <div className="mt-3 text-[28px] font-semibold text-zinc-900">
+              {displayLabel(item.label)}
+            </div>
+            <p className="mt-4 text-[14px] leading-relaxed text-zinc-600">
+              프로그램 상세는 다음 페이지에서 확인할 수 있어요.
+            </p>
 
-            <div className="mt-8 grid grid-cols-3 gap-x-12 gap-y-6">
-              {groups.flatMap((g) => g.links).map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="whitespace-nowrap text-[14px] text-zinc-900 hover:underline"
-                >
-                  {link.label}
-                </Link>
-              ))}
+            <div className="mt-7">
+              <Link
+                href={item.sections?.[0]?.links?.[0]?.href ?? "/"}
+                className="inline-flex h-[40px] items-center justify-center rounded-full border border-zinc-200 px-5 text-[13px] font-medium text-zinc-900 hover:bg-zinc-50"
+                onClick={onClose}
+              >
+                대표 프로그램 보기
+              </Link>
             </div>
           </div>
 
-          {/* RIGHT: EVENT */}
-          <div className="col-span-4">
-            <div className="flex items-center gap-4">
-              <div className="text-[18px] font-semibold text-zinc-900">이벤트</div>
-              <span className="h-5 w-px bg-red-600" aria-hidden="true" />
-              <div className="text-[12px] tracking-[0.18em] text-zinc-500">EVENT</div>
+          {/* RIGHT: sections */}
+          <div className="col-span-12 md:col-span-9">
+            <div className="grid grid-cols-2 gap-10 md:grid-cols-3">
+              {item.sections.map((sec) => (
+                <div key={sec.title}>
+                  <div className="text-[12px] tracking-[0.18em] text-zinc-500">
+                    {sec.title}
+                  </div>
+                  <div className="mt-4 flex flex-col gap-3">
+                    {sec.links.map((l) => (
+                      <Link
+                        key={l.href}
+                        href={l.href}
+                        className="text-[15px] font-medium text-zinc-900 hover:text-[#B90E0A]"
+                        onClick={onClose}
+                      >
+                        {l.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
 
-            <Link href={item.promo?.href ?? "/event"} className="mt-6 block">
-              <div className="h-40 w-full rounded-2xl bg-zinc-200" />
-            </Link>
-
-            <div className="mt-4 text-[13px] leading-relaxed text-zinc-600">
-              새로운 프로모션과 시즌 프로그램을 확인해보세요.
+            {/* bottom helper */}
+            <div className="mt-10 flex items-center justify-between border-t border-zinc-100 pt-6">
+              <span className="text-[12px] text-zinc-500">WeMD Program Navigation</span>
+              <a
+                href={BOOKING_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="text-[12px] font-medium text-zinc-900 hover:text-[#B90E0A]"
+              >
+                예약하기 →
+              </a>
             </div>
           </div>
         </div>
