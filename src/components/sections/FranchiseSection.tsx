@@ -1,31 +1,63 @@
-import { BOOKING_URL } from "@/config/nav";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
+function useReveal<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setShow(true);
+      },
+      { threshold: 0.25 }
+    );
+
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return { ref, show };
+}
+
+function SectionHeader({ title, desc }: { title: string; desc: string }) {
+  const { ref, show } = useReveal<HTMLDivElement>();
+  return (
+    <div
+      ref={ref}
+      className={[
+        "mx-auto mb-16 max-w-3xl text-center",
+        "transition-all duration-[900ms] ease-out",
+        show ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
+      ].join(" ")}
+    >
+      <h2 className="text-[40px] font-semibold tracking-tight text-zinc-900 md:text-[52px]">
+        {title}
+      </h2>
+      <p className="mt-4 text-[15px] leading-relaxed text-zinc-600 md:text-[16px]">
+        {desc}
+      </p>
+    </div>
+  );
+}
 
 export default function FranchiseSection() {
   return (
-    <section id="franchise" className="scroll-mt-[96px] bg-white">
+    <section id="franchise" className="bg-zinc-50 scroll-mt-[78px]">
       <div className="mx-auto max-w-6xl px-4 py-28">
-        <div className="text-[12px] tracking-[0.22em] text-zinc-500">FRANCHISE</div>
-        <h2 className="mt-3 text-[38px] font-semibold tracking-tight text-zinc-900">입점 문의</h2>
+        <SectionHeader
+          title="입점 문의"
+          desc="입점 및 제휴 관련 문의를 남겨주세요. (폼/연락처/카카오 채널 링크 등을 연결하면 됩니다.)"
+        />
 
-        <div className="mt-10 grid grid-cols-12 gap-10">
-          <div className="col-span-12 md:col-span-7 rounded-3xl border border-zinc-200 bg-zinc-50 p-10 text-zinc-700">
-            입점/제휴 문의 내용을 여기에 구성합니다.
-          </div>
-
-          <div className="col-span-12 md:col-span-5 rounded-3xl border border-zinc-200 bg-white p-10">
-            <div className="text-[14px] font-semibold text-zinc-900">빠른 문의</div>
-            <p className="mt-3 text-[14px] leading-relaxed text-zinc-600">
-              가장 빠른 연결은 예약 채널을 통해 진행합니다.
-            </p>
-
-            <a
-              href={BOOKING_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-6 inline-flex h-[44px] w-full items-center justify-center rounded-full bg-zinc-900 px-6 text-[14px] font-medium text-white hover:bg-zinc-800 transition"
-            >
-              예약/문의로 이동
-            </a>
+        <div className="mt-10 rounded-3xl bg-white p-8 shadow-sm">
+          <div className="text-[14px] font-semibold text-zinc-900">Contact</div>
+          <div className="mt-3 text-[13px] leading-relaxed text-zinc-600">
+            - 이메일 / 전화 / 폼 영역을 여기에 넣어주세요.
           </div>
         </div>
       </div>

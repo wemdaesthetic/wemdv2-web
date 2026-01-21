@@ -25,10 +25,7 @@ function displayLabel(label: string) {
 /* ---------- Header ---------- */
 export default function Header() {
   const [activeMega, setActiveMega] = useState<string | null>(null);
-
-  // ✅ hero 없는 페이지 대비: 기본 false
-  const [onHero, setOnHero] = useState(false);
-
+  const [onHero, setOnHero] = useState(true); // 히어로 위인지 감지
   const headerRef = useRef<HTMLElement | null>(null);
 
   // nav items
@@ -47,12 +44,7 @@ export default function Header() {
   /* ---------- HERO 감지 ---------- */
   useEffect(() => {
     const hero = document.getElementById("hero");
-
-    // ✅ hero 없으면: 무조건 흰 헤더 모드
-    if (!hero) {
-      setOnHero(false);
-      return;
-    }
+    if (!hero) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => setOnHero(entry.isIntersecting),
@@ -83,6 +75,8 @@ export default function Header() {
   }, []);
 
   /* ---------- 헤더 색 판정 ---------- */
+  // 히어로 위에서는 투명 + 흰글씨, 그 외는 흰배경 + 검정글씨
+  // 메가메뉴가 열리면 항상 흰배경 + 검정글씨
   const headerIsWhite = !onHero || Boolean(activeMega);
 
   const topText = headerIsWhite ? "text-zinc-900" : "text-white";
@@ -93,11 +87,10 @@ export default function Header() {
     <header
       ref={headerRef}
       className={cn(
-        "fixed top-0 z-50 w-full transition-colors duration-300",
+        "fixed top-0 left-0 z-50 w-full transition-colors duration-300",
         headerIsWhite ? "bg-white" : "bg-transparent",
         headerIsWhite ? "border-b border-zinc-200" : "border-b border-transparent"
       )}
-      // ✅ 이거 없으면 “열렸는데 안 닫힘”/“이벤트 꼬임” 발생
       onMouseLeave={() => setActiveMega(null)}
     >
       <div className="mx-auto max-w-6xl px-4">
@@ -108,7 +101,7 @@ export default function Header() {
               <Image src="/logo-main.png" alt="WeMD" width={74} height={74} priority />
             </Link>
 
-            {/* 원페이지 브랜드 */}
+            {/* WeMD 에스테틱 (원페이지: #brand) */}
             <a
               href="#brand"
               className={cn(
@@ -122,7 +115,6 @@ export default function Header() {
 
             <Divider className="mx-7" colorClass={dividerColor} />
 
-            {/* MEGA */}
             <nav className="hidden items-center gap-8 md:flex">
               <MegaTopButton
                 item={face}
@@ -181,20 +173,20 @@ export default function Header() {
               )}
             </div>
 
-            <Link href="/" className="hidden md:block">
+            <Link href="/" className="flex items-center">
               <Image src="/logo-sub.svg" alt="WeMD Aesthetic" width={92} height={92} priority />
             </Link>
           </div>
         </div>
       </div>
 
-      {/* ✅ Mega Menu (이게 빠지면 당연히 “안열림”) */}
-      <MegaMenuTossWhite item={activeItem} onClose={() => setActiveMega(null)} />
+      {/* ✅ Toss-like Mega Menu (WHITE) */}
+      <MegaMenuTossLike item={activeItem} />
     </header>
   );
 }
 
-/* ---------- Pieces ---------- */
+/* ---------- Components ---------- */
 
 function Divider({
   className,
@@ -219,6 +211,11 @@ function MegaTopButton({
 }) {
   if (!item || !isMega(item)) return null;
 
+  // 상단바 글씨 크기 절대 줄이지 않음
+  const base =
+    "h-[68px] text-[18px] font-semibold transition-colors";
+
+  // 히어로 위(투명)일 때는 흰색 계열, 흰배경일 때는 레드 포인트
   const color = headerIsWhite
     ? open
       ? "text-[#B90E0A]"
@@ -230,74 +227,89 @@ function MegaTopButton({
   return (
     <button
       type="button"
-      className={cn("h-[68px] text-[18px] font-semibold transition-colors", color)}
+      className={cn(base, color)}
       onMouseEnter={() => onOpen(item.label)}
-      onFocus={() => onOpen(item.label)}
     >
       {displayLabel(item.label)}
     </button>
   );
 }
 
-/**
- * ✅ 토스 스타일(화이트 버전) 메가메뉴:
- * - 왼쪽에 섹션 타이틀/설명
- * - 오른쪽에 섹션별 링크 컬럼
- * - "의미없는 회색 박스" 제거
- */
-function MegaMenuTossWhite({
-  item,
-  onClose,
-}: {
-  item: NavMega | null;
-  onClose: () => void;
-}) {
+/* ---------- Toss-like Mega Menu (WHITE) ---------- */
+function MegaMenuTossLike({ item }: { item: NavMega | null }) {
   if (!item) return null;
 
+  const meta = getMegaMeta(item.label);
+
   return (
-    <div className="border-t border-zinc-200 bg-white">
+    <div
+      className="
+        relative z-50
+        border-t border-zinc-200 bg-white
+        shadow-[0_18px_40px_-28px_rgba(0,0,0,0.35)]
+      "
+    >
       <div className="mx-auto max-w-6xl px-4 py-10">
         <div className="grid grid-cols-12 gap-10">
-          {/* LEFT: title */}
+          {/* LEFT */}
           <div className="col-span-12 md:col-span-3">
-            <div className="text-[12px] tracking-[0.22em] text-zinc-500">
-              {item.label.toUpperCase()}
+            <div className="text-[28px] font-semibold tracking-tight text-zinc-900">
+              {meta.title}
             </div>
-            <div className="mt-3 text-[28px] font-semibold text-zinc-900">
-              {displayLabel(item.label)}
-            </div>
-            <p className="mt-4 text-[14px] leading-relaxed text-zinc-600">
-              프로그램 상세는 다음 페이지에서 확인할 수 있어요.
+            <p className="mt-3 text-[14px] leading-relaxed text-zinc-600">
+              {meta.desc}
             </p>
 
-            <div className="mt-7">
+            <div className="mt-6">
               <Link
-                href={item.sections?.[0]?.links?.[0]?.href ?? "/"}
-                className="inline-flex h-[40px] items-center justify-center rounded-full border border-zinc-200 px-5 text-[13px] font-medium text-zinc-900 hover:bg-zinc-50"
-                onClick={onClose}
+                href={meta.allHref}
+                className="inline-flex items-center gap-2 text-[13px] font-semibold text-zinc-800 hover:text-[#B90E0A]"
               >
-                대표 프로그램 보기
+                전체 보기 <span aria-hidden>→</span>
               </Link>
             </div>
           </div>
 
-          {/* RIGHT: sections */}
+          {/* RIGHT: columns */}
           <div className="col-span-12 md:col-span-9">
-            <div className="grid grid-cols-2 gap-10 md:grid-cols-3">
-              {item.sections.map((sec) => (
-                <div key={sec.title}>
-                  <div className="text-[12px] tracking-[0.18em] text-zinc-500">
-                    {sec.title}
+            <div
+              className={cn(
+                "grid gap-x-10 gap-y-10",
+                item.sections.length <= 3
+                  ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
+                  : item.sections.length === 4
+                  ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-4"
+                  : "grid-cols-1 sm:grid-cols-2 md:grid-cols-5"
+              )}
+            >
+              {item.sections.map((section) => (
+                <div key={section.title} className="min-w-0">
+                  {/* section title */}
+                  <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">
+                    {section.title || "MENU"}
                   </div>
+
                   <div className="mt-4 flex flex-col gap-3">
-                    {sec.links.map((l) => (
+                    {section.links.map((l) => (
                       <Link
                         key={l.href}
                         href={l.href}
-                        className="text-[15px] font-medium text-zinc-900 hover:text-[#B90E0A]"
-                        onClick={onClose}
+                        className="
+                          group inline-flex min-w-0 items-center justify-between
+                          text-[15px] font-semibold text-zinc-900
+                          hover:text-[#B90E0A]
+                        "
                       >
-                        {l.label}
+                        <span className="truncate">{l.label}</span>
+                        <span
+                          className="
+                            ml-3 shrink-0 text-zinc-300
+                            transition group-hover:translate-x-[2px] group-hover:text-[#B90E0A]/50
+                          "
+                          aria-hidden
+                        >
+                          →
+                        </span>
                       </Link>
                     ))}
                   </div>
@@ -305,16 +317,24 @@ function MegaMenuTossWhite({
               ))}
             </div>
 
-            {/* bottom helper */}
-            <div className="mt-10 flex items-center justify-between border-t border-zinc-100 pt-6">
-              <span className="text-[12px] text-zinc-500">WeMD Program Navigation</span>
+            <div className="mt-10 h-px w-full bg-zinc-200" />
+
+            <div className="mt-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+              <div className="text-[13px] text-zinc-600">
+                프로그램 상세는 각 페이지에서 확인할 수 있어요.
+              </div>
+
               <a
                 href={BOOKING_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="text-[12px] font-medium text-zinc-900 hover:text-[#B90E0A]"
+                className="
+                  inline-flex h-[44px] items-center justify-center rounded-full
+                  bg-[#B90E0A] px-6 text-[14px] font-semibold text-white
+                  hover:bg-[#a40c09]
+                "
               >
-                예약하기 →
+                예약하기
               </a>
             </div>
           </div>
@@ -322,4 +342,33 @@ function MegaMenuTossWhite({
       </div>
     </div>
   );
+}
+
+function getMegaMeta(label: string): { title: string; desc: string; allHref: string } {
+  if (label === "얼굴 관리") {
+    return {
+      title: "얼굴관리",
+      desc: "라인과 밸런스를 정교하게 다듬는 페이스 프로그램을 한 번에 확인하세요.",
+      allHref: "/face",
+    };
+  }
+  if (label === "바디 관리") {
+    return {
+      title: "바디관리",
+      desc: "컨디션과 순환을 기반으로, 바디 라인을 깔끔하게 설계합니다.",
+      allHref: "/body",
+    };
+  }
+  if (label === "맞춤 케어") {
+    return {
+      title: "맞춤케어",
+      desc: "목적 기반 조합으로 개인에게 맞춘 집중 케어를 제공합니다.",
+      allHref: "/custom",
+    };
+  }
+  return {
+    title: displayLabel(label),
+    desc: "WeMD 프로그램을 확인하세요.",
+    allHref: "/",
+  };
 }
