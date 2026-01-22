@@ -156,10 +156,10 @@ export default function HomePage() {
           {/* ✅ HERO 스타일/애니메이션 */}
           <style jsx>{`
             .hero-h1 {
-              font-weight: 800;
+              font-weight: 400;
               letter-spacing: -0.03em;
               line-height: 1.05;
-              font-size: 48px;
+              font-size: 40px;
               display: flex;
               justify-content: center;
             }
@@ -170,7 +170,7 @@ export default function HomePage() {
             }
             @media (min-width: 1024px) {
               .hero-h1 {
-                font-size: 92px;
+                font-size: 62px;
               }
             }
 

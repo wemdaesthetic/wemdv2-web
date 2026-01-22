@@ -11,3 +11,10 @@ html {
   scroll-behavior: smooth;
 }
 
+html, body {
+  overscroll-behavior-y: none; /* 위로 땡길 때 끝없이 밀리는 느낌 방지 */
+}
+
+body {
+  -webkit-overflow-scrolling: touch;
+}

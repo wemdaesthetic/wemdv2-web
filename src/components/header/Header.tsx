@@ -33,7 +33,8 @@ export default function Header() {
   const body = getItem("바디 관리");
   const custom = getItem("맞춤 케어");
   const branches = getItem("지점 소개");
-  const franchise = getItem("입점 문의");
+  // ✅ 입점 문의 제거
+  // const franchise = getItem("입점 문의");
 
   const activeItem = useMemo(() => {
     if (!activeMega) return null;
@@ -75,8 +76,6 @@ export default function Header() {
   }, []);
 
   /* ---------- 헤더 색 판정 ---------- */
-  // 히어로 위에서는 투명 + 흰글씨, 그 외는 흰배경 + 검정글씨
-  // 메가메뉴가 열리면 항상 흰배경 + 검정글씨
   const headerIsWhite = !onHero || Boolean(activeMega);
 
   const topText = headerIsWhite ? "text-zinc-900" : "text-white";
@@ -155,14 +154,21 @@ export default function Header() {
           {/* RIGHT */}
           <div className="flex items-center gap-7">
             <div className="hidden items-center gap-7 md:flex">
-              {branches?.type === "link" && (
-                <a
-                  href={branches.href}
-                  className={cn("text-[14px] font-medium transition-colors", topText, topTextHover)}
-                >
-                  {branches.label}
-                </a>
-              )}
+              {/* ✅ 지점소개 → 지점안내 + ↗ + 외부로 */}
+              {branches && (
+  <Link
+    href="/branches/dunchon"
+    className={cn("text-[14px] font-medium transition-colors", topText, topTextHover)}
+  >
+    지점안내
+    <span className="ml-1 align-middle text-[14px]" aria-hidden>
+      ↗
+    </span>
+  </Link>
+)}
+
+              {/* ✅ 입점 문의 제거 */}
+              {/*
               {franchise?.type === "link" && (
                 <a
                   href={franchise.href}
@@ -171,6 +177,7 @@ export default function Header() {
                   {franchise.label}
                 </a>
               )}
+              */}
             </div>
 
             <Link href="/" className="flex items-center">
@@ -211,11 +218,8 @@ function MegaTopButton({
 }) {
   if (!item || !isMega(item)) return null;
 
-  // 상단바 글씨 크기 절대 줄이지 않음
-  const base =
-    "h-[68px] text-[18px] font-semibold transition-colors";
+  const base = "h-[68px] text-[18px] font-semibold transition-colors";
 
-  // 히어로 위(투명)일 때는 흰색 계열, 흰배경일 때는 레드 포인트
   const color = headerIsWhite
     ? open
       ? "text-[#B90E0A]"
@@ -284,7 +288,6 @@ function MegaMenuTossLike({ item }: { item: NavMega | null }) {
             >
               {item.sections.map((section) => (
                 <div key={section.title} className="min-w-0">
-                  {/* section title */}
                   <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">
                     {section.title || "MENU"}
                   </div>

@@ -2,56 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
-function useReveal<T extends HTMLElement>() {
-  const ref = useRef<T | null>(null);
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setShow(true);
-      },
-      { threshold: 0.25 }
-    );
-
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  return { ref, show };
-}
-
-function SectionHeader({
-  title,
-  desc,
-}: {
-  title: string;
-  desc: string;
-}) {
-  const { ref, show } = useReveal<HTMLDivElement>();
-
-  return (
-    <div
-      ref={ref}
-      className={[
-        "mx-auto mb-16 max-w-3xl text-center",
-        "transition-all duration-[900ms] ease-out",
-        show ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
-      ].join(" ")}
-    >
-      <h2 className="text-[40px] font-semibold tracking-tight text-zinc-900 md:text-[52px]">
-        {title}
-      </h2>
-      <p className="mt-4 text-[15px] leading-relaxed text-zinc-600 md:text-[16px]">
-        {desc}
-      </p>
-    </div>
-  );
-}
-
 export default function BrandStorySection() {
   const frames = useMemo(
     () => [
@@ -95,7 +45,10 @@ export default function BrandStorySection() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [total]);
 
-  const counter = `${String(idx + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
+  const counter = `${String(idx + 1).padStart(2, "0")} / ${String(total).padStart(
+    2,
+    "0"
+  )}`;
 
   // ===================== SWIPE =====================
   const startXRef = useRef<number | null>(null);
@@ -141,30 +94,64 @@ export default function BrandStorySection() {
     startXRef.current = null;
   };
 
+  // ✅ /public/core/ 아래에 넣은 아이콘 파일명에 맞춰서만 수정
   const values = [
-    { en: "Human", ko: "사람" },
-    { en: "Technology", ko: "기술" },
-    { en: "Culture", ko: "문화" },
-    { en: "Harmony", ko: "조화" },
-    { en: "Rest", ko: "쉼" },
+    {
+      ko: "사람",
+      desc: "사람을 중심에 둔 섬세한 케어",
+      icon: "/core/human.svg",
+      alt: "Human",
+    },
+    {
+      ko: "기술",
+      desc: "근거 기반의 정교한 테크닉",
+      icon: "/core/technology.svg",
+      alt: "Technology",
+    },
+    {
+      ko: "문화",
+      desc: "라이프스타일을 담은 경험",
+      icon: "/core/culture.svg",
+      alt: "Culture",
+    },
+    {
+      ko: "조화",
+      desc: "균형과 흐름을 설계하는 미학",
+      icon: "/core/harmony.svg",
+      alt: "Harmony",
+    },
+    {
+      ko: "쉼",
+      desc: "긴장을 풀고 회복에 집중하는 시간",
+      icon: "/core/rest.svg",
+      alt: "Rest",
+    },
   ];
 
   return (
     <section id="brand" className="bg-white scroll-mt-[78px]">
       <div className="mx-auto max-w-6xl px-4 py-28">
-        {/* ✅ 섹션 타이틀: 통일 + 페이드/슬로우업 */}
-        <SectionHeader
-          title="위엠디 스토리"
-          desc="사람·기술·문화가 조화와 쉼으로 이어지는 WeMD의 브랜드 아이덴티티를 소개합니다."
-        />
+        {/* ✅ 섹션 타이틀 (가운데 정렬) */}
+        <div className="mx-auto mb-16 max-w-3xl text-center">
+          <h2 className="text-[40px] font-semibold tracking-tight text-zinc-900 md:text-[52px]">
+            브랜드 스토리
+          </h2>
+          <p className="mt-4 text-[15px] leading-relaxed text-zinc-600 md:text-[16px]">
+            손끝에서 피어나는 조화의 예술, K-Beauty의 새로운 기준을 제시합니다
+          </p>
+        </div>
 
+        {/* ===== 2 CARDS ===== */}
         <div className="grid items-stretch gap-8 md:grid-cols-2">
           {/* ===================== LEFT CARD ===================== */}
           <div className="h-full rounded-[28px] bg-white p-10 shadow-[0_18px_70px_rgba(15,23,42,0.10)]">
             <div className="flex h-full flex-col">
-              <div className="text-[12px] tracking-[0.22em] text-zinc-500">BRAND STORY</div>
+              <div className="text-[12px] tracking-[0.22em] text-zinc-500">
+                WeMD Slogan
+              </div>
 
-              <h3 className="mt-6 text-[62px] font-semibold leading-[1.03] tracking-[-0.03em] md:text-[76px]">
+              {/* ✅ We/M/D만 회색->빨강 반복 + a는 회색 */}
+              <h3 className="mt-6 text-[62px] font-normal leading-[1.03] tracking-[-0.03em] md:text-[76px]">
                 <span className="text-zinc-400">
                   <span className="pulseRed pulseDelay0">We</span>{" "}
                   <span className="pulseRed pulseDelay1">M</span>ake{" "}
@@ -179,6 +166,7 @@ export default function BrandStorySection() {
                 조화와 쉼으로 완성하는 토탈 에스테틱 경험을 제공합니다.
               </p>
 
+              {/* ✅ 태그는 카드 하단에 붙임 */}
               <div className="mt-auto pt-10">
                 <div className="flex flex-wrap gap-2">
                   <span className="rounded-full bg-zinc-100 px-4 py-2 text-[13px] text-zinc-600 shadow-sm">
@@ -195,6 +183,7 @@ export default function BrandStorySection() {
           {/* ===================== RIGHT CARD ===================== */}
           <div className="h-full rounded-[28px] bg-white shadow-[0_18px_70px_rgba(15,23,42,0.10)]">
             <div className="relative h-full overflow-hidden rounded-[28px] p-10">
+              {/* grid bg */}
               <div
                 className="pointer-events-none absolute inset-0 opacity-[0.20]"
                 style={{
@@ -204,13 +193,17 @@ export default function BrandStorySection() {
                 }}
               />
 
+              {/* top bar */}
               <div className="relative z-10 flex items-center justify-between">
                 <div className="text-[12px] tracking-[0.22em] text-zinc-500">
-                  WE MAKE A DIFFERENCE
+                  WeMD CI
                 </div>
-                <div className="text-[12px] tracking-[0.18em] text-zinc-500">{counter}</div>
+                <div className="text-[12px] tracking-[0.18em] text-zinc-500">
+                  {counter}
+                </div>
               </div>
 
+              {/* ✅ 이미지 슬롯 */}
               <div className="relative z-10 mt-7 rounded-[22px] bg-white/70 p-6 backdrop-blur">
                 <div
                   className="relative h-[220px] w-full overflow-hidden rounded-[18px] bg-zinc-50 md:h-[280px]"
@@ -254,6 +247,7 @@ export default function BrandStorySection() {
                 </div>
               </div>
 
+              {/* ✅ 인디케이터: 점 + 빨간 바 */}
               <div className="relative z-10 mt-6 flex items-center gap-2">
                 {frames.map((_, i) => (
                   <span
@@ -267,6 +261,7 @@ export default function BrandStorySection() {
                 ))}
               </div>
 
+              {/* ✅ 설명 문장 */}
               <div className="relative z-10 mt-4 max-w-[46ch] text-[15px] leading-relaxed text-zinc-600 md:text-[16px]">
                 위엠디(WeMD)의 디테일은 “보이지 않는 정교함”에서 시작합니다.
               </div>
@@ -274,42 +269,56 @@ export default function BrandStorySection() {
           </div>
         </div>
 
-        {/* ===================== CORE VALUES ===================== */}
-        <div className="mt-16">
-          {/* ✅ CORE VALUES 텍스트: “설명문구(서브카피)” 톤으로 통일 */}
-          <p className="text-center text-[15px] leading-relaxed text-zinc-600 md:text-[16px]">
-            CORE VALUES
-          </p>
+     {/* ===================== CORE VALUES (타일) ===================== */}
+<div className="mt-16">
+  {/* 타이틀 */}
+  <div className="mx-auto max-w-3xl text-center">
+    <div className="text-[15px] leading-relaxed text-zinc-600 md:text-[16px]">
+      CORE VALUES
+    </div>
+  </div>
 
-          <div className="mt-6 grid grid-cols-2 gap-5 md:grid-cols-5">
-            {values.map((v) => (
-              <div
-                key={v.en}
-                className="coreCard group relative overflow-hidden rounded-2xl bg-white px-6 py-10 text-center shadow-[0_16px_52px_rgba(15,23,42,0.10)]"
-              >
-                <div className="relative z-10">
-                  <div className="text-[12px] tracking-[0.22em] text-zinc-500">
-                    {v.en.toUpperCase()}
-                  </div>
-                  <div className="mt-3 text-[18px] font-semibold tracking-tight text-zinc-900">
-                    {v.ko}
-                  </div>
+  {/* 타일 */}
+  <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
+    {values.map((v) => (
+      <div
+        key={v.ko}
+        className="coreTile group rounded-2xl bg-white px-6 py-8 text-center"
+      >
+        {/* 아이콘 */}
+        <div className="mx-auto flex h-[150px] w-[150px] items-center justify-center lg:h-[170px] lg:w-[170px]">
+          <img
+            src={v.icon}
+            alt={v.alt}
+            className="h-full w-full object-contain"
+            draggable={false}
+          />
+        </div>
 
-                  {/* ✅ 여기(설명문구)는 너가 계속 수정한다고 했으니 유지 */}
-                  <div className="mt-6 text-[13px] leading-relaxed text-zinc-600">
-                    (설명문구 자리)
-                  </div>
-                </div>
-              </div>
-            ))}
+        {/* 텍스트 */}
+        <div className="mt-6">
+          <div className="text-[16px] font-semibold tracking-tight text-zinc-900">
+            {v.ko}
+          </div>
+          <div className="mt-1 text-[11px] tracking-[0.18em] text-zinc-400">
+            {v.alt.toUpperCase()}
+          </div>
+          <div className="mt-3 text-[13px] leading-relaxed text-zinc-600">
+            {v.desc}
           </div>
         </div>
       </div>
+    ))}
+  </div>
+</div>
+      </div>
 
+      {/* ✅ We / M / D 애니메이션 + 타일 hover (커지는 것만) */}
       <style jsx>{`
         .pulseRed {
           color: rgba(161, 161, 170, 1);
           animation: wemdPulse 6.2s ease-in-out infinite;
+          font-weight: 600;
         }
         .pulseDelay0 {
           animation-delay: 0s;
@@ -338,13 +347,14 @@ export default function BrandStorySection() {
           }
         }
 
-        .coreCard {
-          transform: translateY(0);
-          transition: transform 240ms ease, box-shadow 240ms ease;
+        .coreTile {
+          transform: translateY(0) scale(1);
+          transition: transform 220ms ease, box-shadow 220ms ease;
+          box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
         }
-        .coreCard:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 22px 64px rgba(15, 23, 42, 0.14);
+        .coreTile:hover {
+          transform: translateY(-2px) scale(1.03);
+          box-shadow: 0 18px 48px rgba(15, 23, 42, 0.1);
         }
       `}</style>
     </section>

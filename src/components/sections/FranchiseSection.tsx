@@ -50,8 +50,8 @@ export default function FranchiseSection() {
     <section id="franchise" className="bg-zinc-50 scroll-mt-[78px]">
       <div className="mx-auto max-w-6xl px-4 py-28">
         <SectionHeader
-          title="입점 문의"
-          desc="입점 및 제휴 관련 문의를 남겨주세요. (폼/연락처/카카오 채널 링크 등을 연결하면 됩니다.)"
+          title="가맹 문의"
+          desc="가맹 및 제휴 관련 문의를 남겨주세요. (폼/연락처/카카오 채널 링크 등을 연결하면 됩니다.)"
         />
 
         <div className="mt-10 rounded-3xl bg-white p-8 shadow-sm">
