@@ -11,7 +11,6 @@ export default function Footer() {
           {/* LEFT: LOGO + TEXT */}
           <div className="flex items-start gap-6">
             <div className="shrink-0">
-              {/* 로고: 요청 반영(너무 크지 않게, 기존 대비 1.5배 내린 상태로 가정) */}
               <Image
                 src="/logo-footer.svg"
                 alt="WeMD"
@@ -35,39 +34,45 @@ export default function Footer() {
           </div>
 
           {/* RIGHT: SNS */}
-          <div className="flex items-center gap-3 md:gap-3">
-            {/* 테두리 원 제거 + 아이콘 키움(요청 1.7배 정도) */}
+          <div className="flex items-center gap-2 md:gap-3">
+            {/* ✅ 터치영역 크게 + 아이콘 크게 */}
             <Link
               href="#"
-              className="grid h-10 w-10 place-items-center rounded-full hover:bg-white/10 transition"
+              className="grid h-12 w-12 place-items-center rounded-full transition hover:bg-white/10 active:scale-[0.98]"
               aria-label="Instagram"
             >
-              <Image src="/icons/instagram.svg" alt="" width={22} height={22} />
+              <Image src="/icons/instagram.svg" alt="" width={44} height={44} />
             </Link>
+
             <Link
               href="#"
-              className="grid h-10 w-10 place-items-center rounded-full hover:bg-white/10 transition"
+              className="grid h-12 w-12 place-items-center rounded-full transition hover:bg-white/10 active:scale-[0.98]"
               aria-label="YouTube"
             >
-              <Image src="/icons/youtube.svg" alt="" width={24} height={24} />
+              <Image src="/icons/youtube.svg" alt="" width={44} height={44} />
             </Link>
+
             <Link
               href="#"
-              className="grid h-10 w-10 place-items-center rounded-full hover:bg-white/10 transition"
+              className="grid h-12 w-12 place-items-center rounded-full transition hover:bg-white/10 active:scale-[0.98]"
               aria-label="Naver"
             >
-              <Image src="/icons/naver.svg" alt="" width={20} height={20} />
+              <Image src="/icons/naver.svg" alt="" width={44} height={44} />
             </Link>
           </div>
         </div>
 
         <div className="mt-10 border-t border-white/10 pt-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="text-[12px] text-zinc-400">
-            © 2025 WeMD lbs. All rights reseved.
+            © 2025 WeMD lbs. All rights reserved.
           </div>
           <div className="flex gap-6 text-[12px] text-zinc-400">
-            <Link href="#" className="hover:text-white transition">개인정보처리방침</Link>
-            <Link href="#" className="hover:text-white transition">이용약관</Link>
+            <Link href="#" className="transition hover:text-white">
+              개인정보처리방침
+            </Link>
+            <Link href="#" className="transition hover:text-white">
+              이용약관
+            </Link>
           </div>
         </div>
       </div>

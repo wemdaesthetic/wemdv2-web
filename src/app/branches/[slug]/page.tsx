@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { BRANCHES } from "@/config/branches";
 import { BOOKING_URL } from "@/config/nav";
 import { yeonwoo } from "@/app/fonts";
+import Footer from "@/components/footer/Footer"; // ✅ 추가
+
 type Props = { params: { slug: string } };
 
 export default function BranchDetailPage({ params }: Props) {
@@ -24,7 +26,9 @@ export default function BranchDetailPage({ params }: Props) {
             뒤로
           </button>
 
-          <div className="mt-8 text-[16px] text-zinc-700">존재하지 않는 지점입니다.</div>
+          <div className="mt-8 text-[16px] text-zinc-700">
+            존재하지 않는 지점입니다.
+          </div>
         </section>
       </main>
     );
@@ -43,11 +47,14 @@ export default function BranchDetailPage({ params }: Props) {
   }, [branch.director]);
 
   // 지도 embed URL (있으면 iframe로 직접 표시)
-    const mapEmbedUrl: string | null = useMemo(() => {
+  const mapEmbedUrl: string | null = useMemo(() => {
     const anyBranch = branch as any;
 
     // 1) config에 mapEmbedUrl이 있으면 그걸 우선 사용
-    if (typeof anyBranch.mapEmbedUrl === "string" && anyBranch.mapEmbedUrl.length > 0) {
+    if (
+      typeof anyBranch.mapEmbedUrl === "string" &&
+      anyBranch.mapEmbedUrl.length > 0
+    ) {
       return anyBranch.mapEmbedUrl;
     }
 
@@ -127,7 +134,9 @@ export default function BranchDetailPage({ params }: Props) {
             className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-[13px] font-semibold text-zinc-800 shadow-[0_10px_30px_rgba(15,23,42,0.06)] transition hover:bg-zinc-50"
             aria-label="뒤로가기"
           >
-            <span aria-hidden className="text-[16px] leading-none">←</span>
+            <span aria-hidden className="text-[16px] leading-none">
+              ←
+            </span>
             뒤로
           </button>
         </div>
@@ -186,7 +195,9 @@ export default function BranchDetailPage({ params }: Props) {
                   "
                   aria-label="이전 사진"
                 >
-                  <span className="text-[18px]" aria-hidden>‹</span>
+                  <span className="text-[18px]" aria-hidden>
+                    ‹
+                  </span>
                 </button>
 
                 <button
@@ -201,7 +212,9 @@ export default function BranchDetailPage({ params }: Props) {
                   "
                   aria-label="다음 사진"
                 >
-                  <span className="text-[18px]" aria-hidden>›</span>
+                  <span className="text-[18px]" aria-hidden>
+                    ›
+                  </span>
                 </button>
               </>
             ) : null}
@@ -251,7 +264,6 @@ export default function BranchDetailPage({ params }: Props) {
         </div>
 
         {/* ===================== PROFILE + INFO + CTA ===================== */}
-        {/* ✅ 높이 동일: items-stretch + 카드 h-full + 내부 flex-col */}
         <div className="mt-8 grid items-stretch gap-6 md:grid-cols-12">
           {/* DIRECTOR */}
           <div className="md:col-span-5">
@@ -260,7 +272,6 @@ export default function BranchDetailPage({ params }: Props) {
                 DIRECTOR
               </div>
 
-              {/* ✅ 더 예쁜 따옴표 + 균형 */}
               <div className="mt-6 flex h-[calc(100%-24px)] flex-col">
                 <div className="flex items-stretch gap-6">
                   {/* 사진 영역 */}
@@ -287,10 +298,12 @@ export default function BranchDetailPage({ params }: Props) {
                       </div>
 
                       <div className="mt-6">
-                        <div className={`${yeonwoo.className} text-[18px] leading-relaxed text-zinc-800`}
-                        > 최고가 되고야 말겠어.
+                        <div
+                          className={`${yeonwoo.className} text-[18px] leading-relaxed text-zinc-800`}
+                        >
+                          최고가 되고야 말겠어.
                         </div>
-                        </div>
+                      </div>
                     </div>
 
                     <div className="flex items-end justify-between">
@@ -304,11 +317,11 @@ export default function BranchDetailPage({ params }: Props) {
                       <div className="text-[13px] text-zinc-500">
                         {director?.title ?? "대표원장"}
                       </div>
-                      <div className={`mt-1 text-[18px] font-normal tracking-[0.1em] text-zinc-800
-                        ${yeonwoo.className}`}
-                        >
-                            {director?.name ?? "신 예 나"}
-                            </div>
+                      <div
+                        className={`mt-1 text-[18px] font-normal tracking-[0.1em] text-zinc-800 ${yeonwoo.className}`}
+                      >
+                        {director?.name ?? "신 예 나"}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -319,7 +332,6 @@ export default function BranchDetailPage({ params }: Props) {
           {/* INFORMATION */}
           <div className="md:col-span-7">
             <div className="relative h-full overflow-hidden rounded-3xl bg-white p-8 shadow-[0_18px_70px_rgba(15,23,42,0.06)]">
-              {/* 아주 은은한 하이라이트 */}
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_0%,rgba(185,14,10,0.06),transparent_44%)]" />
 
               <div className="relative z-10 flex h-full flex-col">
@@ -327,17 +339,14 @@ export default function BranchDetailPage({ params }: Props) {
                   INFORMATION
                 </div>
 
-                {/* ✅ 아이콘으로 변경 */}
                 <div className="mt-6 space-y-4 text-[15px] leading-relaxed">
                   <InfoItem icon="pin" value={branch.address || "준비중"} />
                   <InfoItem icon="clock" value={branch.hours || "준비중"} />
                   <InfoItem icon="phone" value={branch.phone || "준비중"} />
                 </div>
 
-                {/* ✅ CTA를 하단으로 */}
                 <div className="mt-auto pt-8">
                   <div className="flex flex-wrap items-center gap-3">
-                    {/* “구식” 느낌 줄이기: 그림자 최소 + 눌림만 */}
                     <a
                       href={BOOKING_URL}
                       target="_blank"
@@ -377,27 +386,34 @@ export default function BranchDetailPage({ params }: Props) {
           </div>
         </div>
 
-     {/* ===================== MAP ===================== */}
-<div className="mt-10">
-  <div className="mb-3 text-[14px] font-semibold text-zinc-900">오시는 길</div>
+        {/* ===================== MAP ===================== */}
+        <div className="mt-10">
+          <div className="mb-3 text-[14px] font-semibold text-zinc-900">
+            오시는 길
+          </div>
 
-  <div className="overflow-hidden rounded-3xl bg-white shadow-[0_18px_70px_rgba(15,23,42,0.08)]">
-    {mapEmbedUrl ? (
-      <iframe
-        title={`${branch.name} 지도`}
-        src={mapEmbedUrl}
-        className="h-[260px] w-full md:h-[420px]"
-        loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
-      />
-    ) : (
-      <div className="flex h-[260px] w-full items-center justify-center bg-zinc-50 text-[14px] text-zinc-500 md:h-[420px]">
-        지도 준비중
-      </div>
-    )}
-  </div>
-</div>
+          <div className="overflow-hidden rounded-3xl bg-white shadow-[0_18px_70px_rgba(15,23,42,0.08)]">
+            {mapEmbedUrl ? (
+              <iframe
+                title={`${branch.name} 지도`}
+                src={mapEmbedUrl}
+                className="h-[260px] w-full md:h-[420px]"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            ) : (
+              <div className="flex h-[260px] w-full items-center justify-center bg-zinc-50 text-[14px] text-zinc-500 md:h-[420px]">
+                지도 준비중
+              </div>
+            )}
+          </div>
+        </div>
       </section>
+
+      {/* ✅ 맵 아래 여백 아주 조금 + Footer 추가 */}
+      <div className="mt-6 bg-[#1A1A1A]">
+        <Footer />
+      </div>
 
       {/* ✅ webkit scrollbar hide (styled-jsx 중첩 방지: 여기 1번만) */}
       <style jsx global>{`
@@ -409,7 +425,7 @@ export default function BranchDetailPage({ params }: Props) {
   );
 }
 
-/** 아이콘 + 텍스트 (구식 동그라미 대신) */
+/** 아이콘 + 텍스트 */
 function InfoItem({
   icon,
   value,

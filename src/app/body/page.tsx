@@ -10,11 +10,6 @@ import { BOOKING_URL } from "@/config/nav";
 
 const HEADER_H = 78;
 
-/**
- * ✅ 고급 스무스 스냅
- * - 스크롤이 잠깐 멈추면(사용자 스크롤 끝나면) 가장 가까운 섹션 top으로 부드럽게 정렬
- * - “딱 붙는” mandatory snap 느낌 없음
- */
 export default function HomePage() {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
 
@@ -33,10 +28,7 @@ export default function HomePage() {
         .map((id) => {
           const el = document.getElementById(id);
           if (!el) return null;
-
-          // scroller 기준으로 섹션 top 계산
-          const top = el.offsetTop;
-          return { id, top };
+          return { id, top: el.offsetTop };
         })
         .filter(Boolean) as { id: string; top: number }[];
     };
@@ -49,8 +41,6 @@ export default function HomePage() {
 
       const current = scroller.scrollTop;
 
-      // 헤더 보정: 실제로 보여야 하는 "정렬" 위치 = 섹션 top
-      // (우리는 main 안에서만 스크롤하므로 offsetTop이 정확함)
       let nearest = tops[0];
       let minDist = Math.abs(current - nearest.top);
 
@@ -62,28 +52,18 @@ export default function HomePage() {
         }
       }
 
-      // 너무 가까우면(사용자가 이미 거의 맞춘 상태) 자동 스냅 안 함 → 자연스러움
       if (minDist < 18) return;
 
       isAutoSnapping = true;
+      scroller.scrollTo({ top: nearest.top, behavior: "smooth" });
 
-      scroller.scrollTo({
-        top: nearest.top,
-        behavior: "smooth",
-      });
-
-      // 스무스 스크롤 끝날 때까지 잠깐 락
       window.setTimeout(() => {
         isAutoSnapping = false;
       }, 520);
     };
 
     const onScroll = () => {
-      // 사용자 스크롤 중에는 계속 대기하다가,
-      // 스크롤이 "멈추면" 스냅 실행
       if (timer) clearTimeout(timer);
-
-      // 자동 스냅 중이면 무시
       if (isAutoSnapping) return;
 
       timer = setTimeout(() => {
@@ -94,9 +74,7 @@ export default function HomePage() {
 
     scroller.addEventListener("scroll", onScroll, { passive: true });
 
-    // 리사이즈 시에도 정확도 유지
     const onResize = () => {
-      // 리사이즈 후 살짝 기다렸다가 nearest로 재정렬(튀지 않게)
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => {
         if (!isAutoSnapping) smoothSnapToNearest();
@@ -117,12 +95,16 @@ export default function HomePage() {
       <Header />
 
       {/* ✅ 스크롤은 이 컨테이너에서만 */}
-      <div
-        ref={scrollerRef}
-        className="snap-container h-screen overflow-y-auto bg-white"
-      >
+      <div ref={scrollerRef} className="snap-container h-screen overflow-y-auto bg-white">
         {/* HERO */}
-        <section id="hero" className="relative h-[92vh] min-h-[720px] w-full overflow-hidden">
+        <section
+          id="hero"
+          className="
+            relative w-full overflow-hidden
+            h-[100svh] min-h-[100svh]
+            md:h-[92vh] md:min-h-[720px]
+          "
+        >
           <video
             className="absolute inset-0 h-full w-full object-cover"
             src="/intro/hero.mp4"
@@ -134,8 +116,36 @@ export default function HomePage() {
           />
           <div className="absolute inset-0 bg-black/35" />
 
-          {/* fixed header 보정 */}
-          <div className="relative z-10 mx-auto flex h-full max-w-6xl items-center px-4 pt-[78px]">
+          {/* ✅ MOBILE: 위쪽 배치 + 'WeMD Aesthetic' 제거 + 버튼 크게 + '더 알아보기' 제거 */}
+          <div className="relative z-10 mx-auto h-full max-w-6xl px-4 pt-[72px] md:hidden">
+            <div className="max-w-[320px]">
+              <h1 className="mt-2 text-[34px] font-semibold leading-[1.15] tracking-tight text-white">
+                웨딩관리는 위엠디
+              </h1>
+
+              <p className="mt-4 text-[14px] leading-relaxed text-white/85">
+                손끝에서 피어나는 감동을 경험해보세요
+              </p>
+
+              <div className="mt-7">
+                <a
+                  href={BOOKING_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="
+                    inline-flex h-[52px] w-full items-center justify-center
+                    rounded-full bg-white px-6 text-[15px] font-semibold text-zinc-900
+                    transition hover:bg-white/90
+                  "
+                >
+                  예약하기
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* ✅ DESKTOP: 기존 느낌 유지(PC 절대 건드리지 않기) */}
+          <div className="relative z-10 mx-auto hidden h-full max-w-6xl items-center px-4 pt-[78px] md:flex">
             <div className="max-w-2xl">
               <div className="text-[12px] tracking-[0.22em] text-white/85">WeMD Aesthetic</div>
 
@@ -172,7 +182,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ✅ 섹션 래퍼: 컴포넌트는 그대로, wrapper에서만 높이/정렬 안정화 */}
+        {/* ✅ 섹션 래퍼 */}
         <section id="brand" className="min-h-[calc(100vh-78px)] bg-white pt-[78px]">
           <BrandStorySection />
         </section>
