@@ -1,4 +1,5 @@
-export const BOOKING_URL = "https://booking.naver.com/"; // 네이버 예약 링크로 바꿔
+export const BOOKING_URL =
+  "https://map.naver.com/p/entry/place/1063607602?placePath=/ticket?entry=plt&fromPanelNum=1&additionalHeight=76&timestamp=202601231203&locale=ko&svcName=map_pcv5&from=map&fromPanelNum=1&additionalHeight=76&timestamp=202601231203&locale=ko&svcName=map_pcv5&searchType=place&lng=127.1360654&lat=37.5287128&c=15.00,0,0,0,dh";
 
 export type NavLink = { label: string; href: string };
 export type NavSection = { title?: string; links: NavLink[] };
@@ -70,6 +71,6 @@ export const NAV_ITEMS: NavItem[] = [
   },
 
   // ✅ 원페이지(섹션 이동)
-  { type: "link", label: "지점 소개", href: "#branches" },
-  { type: "link", label: "입점 문의", href: "#contact" },
+  { type: "link", label: "지점 안내", href: "#branches" },
+  { type: "link", label: "가맹 문의", href: "#contact" },
 ];

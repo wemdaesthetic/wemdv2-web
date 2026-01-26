@@ -13,6 +13,14 @@ export const metadata: Metadata = {
   description: "WeMD Aesthetic Official Website",
 };
 
+// ✅ 모바일 핀치 줌 완전 차단
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko" className={pretendard.variable}>

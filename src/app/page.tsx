@@ -95,6 +95,46 @@ export default function HomePage() {
       </div>
 
       <main className="bg-white">
+        {/* ✅ MOBILE FIXED TOPBAR: Brand 섹션에서도 항상 맨앞 */}
+        <div className="md:hidden fixed top-0 left-0 right-0 z-[10000] pointer-events-none">
+          <div
+            className="relative h-[88px] px-5 flex items-center justify-end"
+            style={{ paddingTop: "env(safe-area-inset-top)" }}
+          >
+            {/* 가운데 메인 로고 (1.5배) */}
+            <div className="pointer-events-auto absolute left-1/2 -translate-x-1/2">
+              <img
+                src="/logo-main.png"
+                alt="WeMD Aesthetic"
+                className="h-16 w-auto object-contain"
+                draggable={false}
+              />
+            </div>
+
+            {/* 햄버거 (1.5배) */}
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(true)}
+              className="
+                pointer-events-auto
+                inline-flex h-16 w-16 items-center justify-center
+                rounded-full bg-black/25 text-white backdrop-blur
+                transition hover:bg-black/35 active:scale-[0.96]
+              "
+              aria-label="메뉴 열기"
+            >
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <path
+                  d="M4 7h16M4 12h16M4 17h16"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
         {/* ===== HERO ===== */}
         <section
           id="hero"
@@ -115,62 +155,16 @@ export default function HomePage() {
           />
           <div className="absolute inset-0 bg-black/40" />
 
-          {/* ✅ MOBILE: 상단 '고정' 로고 + 햄버거 (1.5배) */}
-          <div
-            className="
-              md:hidden
-              fixed top-0 left-0 right-0 z-30
-              h-[88px]
-              px-5
-              flex items-center justify-between
-              pointer-events-none
-            "
-            style={{ paddingTop: "env(safe-area-inset-top)" }}
-          >
-            {/* 가운데 메인 로고 (1.5배: h-16) */}
-            <div className="pointer-events-auto absolute left-1/2 -translate-x-1/2">
-              <img
-                src="/logo-main.png"
-                alt="WeMD Aesthetic"
-                className="h-16 w-auto object-contain"
-                draggable={false}
-              />
-            </div>
-
-            {/* 햄버거 (1.5배: 버튼 16, 아이콘 28) */}
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(true)}
-              className="
-                pointer-events-auto
-                ml-auto
-                inline-flex h-16 w-16 items-center justify-center
-                rounded-full bg-black/25 text-white backdrop-blur
-                transition hover:bg-black/35 active:scale-[0.96]
-              "
-              aria-label="메뉴 열기"
-            >
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden>
-                <path
-                  d="M4 7h16M4 12h16M4 17h16"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </button>
-          </div>
-
           {/* ✅ CONTENT */}
           <div
             className="
               relative z-10 mx-auto flex h-full max-w-6xl items-center px-4
               md:pt-[78px]
-              pt-0
+              pt-[88px]
             "
           >
             <div className="mx-auto w-full max-w-5xl text-center">
-              {/* ✅ H1 (PC는 기존 그대로, 모바일은 위로 조금 올림) */}
+              {/* ✅ H1 */}
               <h1 className="hero-h1 mx-auto text-white md:mt-0 mt-10">
                 {/* 측정용 */}
                 <span
@@ -352,7 +346,7 @@ export default function HomePage() {
 
         {/* ===================== MOBILE DRAWER MENU ===================== */}
         {mobileMenuOpen ? (
-          <div className="md:hidden fixed inset-0 z-[999]">
+          <div className="md:hidden fixed inset-0 z-[99999]">
             {/* overlay */}
             <button
               type="button"
@@ -377,26 +371,37 @@ export default function HomePage() {
                 <div className="text-[14px] font-semibold text-zinc-900">메뉴</div>
                 <button
                   type="button"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-zinc-100 active:scale-[0.98]"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-zinc-100"
                   onClick={() => setMobileMenuOpen(false)}
                   aria-label="닫기"
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
-                    <path
-                      d="M6 6l12 12M18 6L6 18"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                    />
-                  </svg>
+                  ✕
                 </button>
               </div>
 
               {/* menu list */}
-              <div className="mt-4 px-5 pb-5">
-                <div className="text-[13px] font-semibold text-zinc-400">WeMD 에스테틱</div>
+              <div className="mt-6 px-5 pb-5 overflow-y-auto">
+                {/* BRAND */}
+                <div className="mb-2 text-[12px] font-semibold tracking-[0.18em] text-zinc-400">
+                  BRAND
+                </div>
+                <nav className="flex flex-col">
+                  <a
+                    href="/"
+                    className="py-3 text-[16px] font-semibold text-zinc-900"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    WeMD 에스테틱
+                  </a>
+                </nav>
 
-                <nav className="mt-4 flex flex-col">
+                <div className="my-4 h-px w-full bg-zinc-200" />
+
+                {/* TREATMENT */}
+                <div className="mb-2 text-[12px] font-semibold tracking-[0.18em] text-zinc-400">
+                  TREATMENT
+                </div>
+                <nav className="flex flex-col">
                   <a
                     href="/face"
                     className="py-3 text-[16px] font-semibold text-zinc-900"
@@ -418,11 +423,17 @@ export default function HomePage() {
                   >
                     맞춤 케어
                   </a>
+                </nav>
 
-                  <div className="my-4 h-px w-full bg-zinc-200" />
+                <div className="my-4 h-px w-full bg-zinc-200" />
 
+                {/* INFO */}
+                <div className="mb-2 text-[12px] font-semibold tracking-[0.18em] text-zinc-400">
+                  INFO
+                </div>
+                <nav className="flex flex-col">
                   <a
-                    href="/branches/dunchon"
+                    href="#branches"
                     className="py-3 text-[16px] font-semibold text-zinc-900"
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -442,13 +453,12 @@ export default function HomePage() {
               <div className="mt-auto border-t border-zinc-200 p-5">
                 <div className="grid gap-3">
                   <a
-                    href={BOOKING_URL}
+                    href="https://map.naver.com/p/entry/place/1063607602"
                     target="_blank"
                     rel="noreferrer"
                     className="
                       inline-flex h-[52px] w-full items-center justify-center
                       rounded-2xl bg-zinc-900 text-[15px] font-semibold text-white
-                      active:scale-[0.99]
                     "
                   >
                     예약하기
@@ -458,7 +468,6 @@ export default function HomePage() {
                     className="
                       inline-flex h-[52px] w-full items-center justify-center
                       rounded-2xl bg-zinc-100 text-[15px] font-semibold text-zinc-900
-                      active:scale-[0.99]
                     "
                   >
                     전화상담

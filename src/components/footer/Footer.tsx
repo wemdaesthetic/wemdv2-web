@@ -28,36 +28,56 @@ export default function Footer() {
               <div className="mt-3 text-[13px] leading-relaxed text-zinc-300">
                 본사 서울특별시 강동구 양재대로 1371, 둔촌빌딩 307호
                 <br />
-                TEL: 02)6959-8989
+                TEL: 02-6959-8989
               </div>
             </div>
           </div>
 
           {/* RIGHT: SNS */}
           <div className="flex items-center gap-2 md:gap-3">
-            {/* ✅ 터치영역 크게 + 아이콘 크게 */}
+            {/* Instagram */}
             <Link
-              href="#"
+              href="https://www.instagram.com/wemd_official/"
+              target="_blank"
+              rel="noreferrer"
               className="grid h-12 w-12 place-items-center rounded-full transition hover:bg-white/10 active:scale-[0.98]"
               aria-label="Instagram"
             >
-              <Image src="/icons/instagram.svg" alt="" width={44} height={44} />
+              <Image
+                src="/icons/instagram.svg"
+                alt="Instagram"
+                width={44}
+                height={44}
+              />
             </Link>
 
-            <Link
-              href="#"
-              className="grid h-12 w-12 place-items-center rounded-full transition hover:bg-white/10 active:scale-[0.98]"
-              aria-label="YouTube"
+            {/* YouTube (비활성) */}
+            <div
+              className="grid h-12 w-12 place-items-center rounded-full opacity-40 cursor-not-allowed"
+              aria-label="YouTube (준비중)"
             >
-              <Image src="/icons/youtube.svg" alt="" width={44} height={44} />
-            </Link>
+              <Image
+                src="/icons/youtube.svg"
+                alt="YouTube"
+                width={44}
+                height={44}
+              />
+            </div>
 
+            {/* Naver */}
             <Link
-              href="#"
+              href="https://naver.me/Gal4wfkv"
+              target="_blank"
+              rel="noreferrer"
               className="grid h-12 w-12 place-items-center rounded-full transition hover:bg-white/10 active:scale-[0.98]"
               aria-label="Naver"
             >
-              <Image src="/icons/naver.svg" alt="" width={44} height={44} />
+              <Image
+                src="/icons/naver.svg"
+                alt="Naver"
+                width={44}
+                height={44}
+              />
             </Link>
           </div>
         </div>
