@@ -3,8 +3,41 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { BOOKING_URL, NAV_ITEMS, type NavItem, type NavMega } from "@/config/nav";
 import { cn } from "@/lib/cn";
+
+/* ---------- ROUTE MAP (요청사항 고정) ---------- */
+const ROUTES = {
+  face: {
+    default: "/face?p=facial-lifting",
+    items: [
+      { label: "얼굴 리프팅 관리", href: "/face?p=facial-lifting" },
+      { label: "얼굴 V라인 관리", href: "/face?p=facial-contouring" },
+      { label: "작은 얼굴 관리", href: "/face?p=face-slimming" },
+      { label: "얼굴 균형 관리", href: "/face?p=facial-balance" },
+    ],
+  },
+  body: {
+    default: "/body?p=upper-body",
+    items: [
+      { label: "상체 관리", href: "/body?p=upper-body" },
+      { label: "하체 관리", href: "/body?p=lower-body" },
+      { label: "S라인 관리", href: "/body?p=s-line" },
+    ],
+  },
+  custom: {
+    default: "/custom?p=wedding-standard",
+    items: [
+      { label: "웨딩 관리 Standard", href: "/custom?p=wedding-standard" },
+      { label: "웨딩 관리 Special", href: "/custom?p=wedding-special" },
+      { label: "라운드 숄더 관리", href: "/custom?p=rounded-shoulder" },
+      { label: "애플 힙 관리", href: "/custom?p=apple-hip" },
+      { label: "러닝 후 관리", href: "/custom?p=runner-recovery" },
+      { label: "골프 관리", href: "/custom?p=golf-recovery" },
+    ],
+  },
+};
 
 /* ---------- utils ---------- */
 function isMega(item: NavItem): item is NavMega {
@@ -24,6 +57,8 @@ function displayLabel(label: string) {
 
 /* ---------- Header ---------- */
 export default function Header() {
+  const router = useRouter();
+
   const [activeMega, setActiveMega] = useState<string | null>(null);
   const [onHero, setOnHero] = useState(true);
   const headerRef = useRef<HTMLElement | null>(null);
@@ -181,18 +216,21 @@ export default function Header() {
                 open={activeMega === face?.label}
                 headerIsWhite={headerIsWhite}
                 onOpen={setActiveMega}
+                onClickDefault={() => router.push(ROUTES.face.default)}
               />
               <MegaTopButton
                 item={body}
                 open={activeMega === body?.label}
                 headerIsWhite={headerIsWhite}
                 onOpen={setActiveMega}
+                onClickDefault={() => router.push(ROUTES.body.default)}
               />
               <MegaTopButton
                 item={custom}
                 open={activeMega === custom?.label}
                 headerIsWhite={headerIsWhite}
                 onOpen={setActiveMega}
+                onClickDefault={() => router.push(ROUTES.custom.default)}
               />
             </nav>
 
@@ -242,11 +280,7 @@ export default function Header() {
       {mobileOpen ? (
         <div className="md:hidden">
           {/* dim */}
-          <div
-            className="fixed inset-0 z-[999] bg-black/35"
-            onClick={closeMobile}
-            aria-hidden
-          />
+          <div className="fixed inset-0 z-[999] bg-black/35" onClick={closeMobile} aria-hidden />
 
           {/* panel */}
           <aside
@@ -261,9 +295,7 @@ export default function Header() {
           >
             {/* top */}
             <div className="flex items-center justify-between px-5 pt-5">
-              <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">
-                MENU
-              </div>
+              <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">MENU</div>
               <button
                 type="button"
                 onClick={closeMobile}
@@ -291,14 +323,15 @@ export default function Header() {
 
               <div className="mt-5 h-px w-full bg-zinc-100" />
 
+              {/* ✅ 여기: 기본 진입 slug로 이동 */}
               <div className="mt-5 space-y-1">
-                <MobileLink href="/face" onClick={closeMobile}>
+                <MobileLink href={ROUTES.face.default} onClick={closeMobile}>
                   얼굴 관리
                 </MobileLink>
-                <MobileLink href="/body" onClick={closeMobile}>
+                <MobileLink href={ROUTES.body.default} onClick={closeMobile}>
                   바디 관리
                 </MobileLink>
-                <MobileLink href="/custom" onClick={closeMobile}>
+                <MobileLink href={ROUTES.custom.default} onClick={closeMobile}>
                   맞춤 케어
                 </MobileLink>
               </div>
@@ -342,9 +375,7 @@ export default function Header() {
                 </a>
               </div>
 
-              <div className="mt-4 text-center text-[12px] text-zinc-400">
-                WeMD Aesthetic
-              </div>
+              <div className="mt-4 text-center text-[12px] text-zinc-400">WeMD Aesthetic</div>
             </div>
           </aside>
         </div>
@@ -355,13 +386,7 @@ export default function Header() {
 
 /* ---------- Components ---------- */
 
-function Divider({
-  className,
-  colorClass,
-}: {
-  className?: string;
-  colorClass?: string;
-}) {
+function Divider({ className, colorClass }: { className?: string; colorClass?: string }) {
   return <span className={cn("inline-block h-5 w-px", colorClass, className)} aria-hidden />;
 }
 
@@ -370,11 +395,13 @@ function MegaTopButton({
   open,
   headerIsWhite,
   onOpen,
+  onClickDefault,
 }: {
   item?: NavItem;
   open: boolean;
   headerIsWhite: boolean;
   onOpen: (v: string | null) => void;
+  onClickDefault: () => void;
 }) {
   if (!item || !isMega(item)) return null;
 
@@ -389,7 +416,12 @@ function MegaTopButton({
     : "text-white/90 hover:text-white";
 
   return (
-    <button type="button" className={cn(base, color)} onMouseEnter={() => onOpen(item.label)}>
+    <button
+      type="button"
+      className={cn(base, color)}
+      onMouseEnter={() => onOpen(item.label)}
+      onClick={onClickDefault} // ✅ 클릭하면 기본 프로그램으로 이동
+    >
       {displayLabel(item.label)}
     </button>
   );
@@ -428,6 +460,9 @@ function MegaMenuTossLike({ item }: { item: NavMega | null }) {
 
   const meta = getMegaMeta(item.label);
 
+  // ✅ 메가메뉴 링크를 "slug 기준"으로 덮어쓰기
+  const normalized = normalizeMegaItem(item);
+
   return (
     <div
       className="
@@ -439,9 +474,7 @@ function MegaMenuTossLike({ item }: { item: NavMega | null }) {
       <div className="mx-auto max-w-6xl px-4 py-10">
         <div className="grid grid-cols-12 gap-10">
           <div className="col-span-12 md:col-span-3">
-            <div className="text-[28px] font-semibold tracking-tight text-zinc-900">
-              {meta.title}
-            </div>
+            <div className="text-[28px] font-semibold tracking-tight text-zinc-900">{meta.title}</div>
             <p className="mt-3 text-[14px] leading-relaxed text-zinc-600">{meta.desc}</p>
 
             <div className="mt-6">
@@ -458,14 +491,14 @@ function MegaMenuTossLike({ item }: { item: NavMega | null }) {
             <div
               className={cn(
                 "grid gap-x-10 gap-y-10",
-                item.sections.length <= 3
+                normalized.sections.length <= 3
                   ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
-                  : item.sections.length === 4
+                  : normalized.sections.length === 4
                   ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-4"
                   : "grid-cols-1 sm:grid-cols-2 md:grid-cols-5"
               )}
             >
-              {item.sections.map((section) => (
+              {normalized.sections.map((section) => (
                 <div key={section.title} className="min-w-0">
                   <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">
                     {section.title || "MENU"}
@@ -502,9 +535,7 @@ function MegaMenuTossLike({ item }: { item: NavMega | null }) {
             <div className="mt-10 h-px w-full bg-zinc-200" />
 
             <div className="mt-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-              <div className="text-[13px] text-zinc-600">
-                프로그램 상세는 각 페이지에서 확인할 수 있어요.
-              </div>
+              <div className="text-[13px] text-zinc-600">프로그램 상세는 각 페이지에서 확인할 수 있어요.</div>
 
               <a
                 href={BOOKING_URL}
@@ -526,26 +557,27 @@ function MegaMenuTossLike({ item }: { item: NavMega | null }) {
   );
 }
 
+/* ---------- Mega meta ---------- */
 function getMegaMeta(label: string): { title: string; desc: string; allHref: string } {
   if (label === "얼굴 관리") {
     return {
       title: "얼굴관리",
       desc: "라인과 밸런스를 정교하게 다듬는 페이스 프로그램을 한 번에 확인하세요.",
-      allHref: "/face",
+      allHref: ROUTES.face.default, // ✅ 전체보기 -> 기본 슬러그
     };
   }
   if (label === "바디 관리") {
     return {
       title: "바디관리",
       desc: "컨디션과 순환을 기반으로, 바디 라인을 깔끔하게 설계합니다.",
-      allHref: "/body",
+      allHref: ROUTES.body.default, // ✅
     };
   }
   if (label === "맞춤 케어") {
     return {
       title: "맞춤케어",
       desc: "목적 기반 조합으로 개인에게 맞춘 집중 케어를 제공합니다.",
-      allHref: "/custom",
+      allHref: ROUTES.custom.default, // ✅
     };
   }
   return {
@@ -553,4 +585,42 @@ function getMegaMeta(label: string): { title: string; desc: string; allHref: str
     desc: "WeMD 프로그램을 확인하세요.",
     allHref: "/",
   };
+}
+
+/* ---------- NAV_ITEMS가 /face 같은 href를 가지고 있어도 여기서 강제로 slug링크로 교체 ---------- */
+function normalizeMegaItem(item: NavMega): NavMega {
+  if (item.label === "얼굴 관리") {
+    return {
+      ...item,
+      sections: [
+        {
+          title: item.sections?.[0]?.title || "FACE",
+          links: ROUTES.face.items,
+        },
+      ],
+    };
+  }
+  if (item.label === "바디 관리") {
+    return {
+      ...item,
+      sections: [
+        {
+          title: item.sections?.[0]?.title || "BODY",
+          links: ROUTES.body.items,
+        },
+      ],
+    };
+  }
+  if (item.label === "맞춤 케어") {
+    return {
+      ...item,
+      sections: [
+        {
+          title: item.sections?.[0]?.title || "CUSTOM",
+          links: ROUTES.custom.items,
+        },
+      ],
+    };
+  }
+  return item;
 }
