@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
@@ -135,77 +136,211 @@ export default function FaceCareClient() {
   const [selectValue, setSelectValue] = useState<string>("");
   useEffect(() => setSelectValue(""), [active]);
 
+  // ✅ 섹션 타이틀(Body/Face 통일)
   const SectionLabel = ({ children }: { children: React.ReactNode }) => (
     <div className="text-[12px] tracking-[0.30em] text-zinc-400">{children}</div>
   );
   const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-    <div className="mt-2 text-[18px] font-semibold tracking-tight md:text-[26px] font-semibold tracking-tight text-zinc-900">
-      {children}
-    </div>
+    <div className="mt-2 text-[18px] font-semibold tracking-tight md:text-[26px] text-zinc-900">{children}</div>
   );
+
+  /* -------------------- MOBILE: Drawer -------------------- */
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const openMobile = () => setMobileOpen(true);
+  const closeMobile = () => setMobileOpen(false);
+
+  // 드로어 열리면 스크롤 잠금
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileOpen]);
+
+  // ESC로 닫기
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setMobileOpen(false);
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  // 전화상담
+  const CONSULT_TEL = "02-6959-8989";
+  const consultTelHref = `tel:${CONSULT_TEL.replaceAll("-", "").replaceAll(" ", "")}`;
+
+  /* -------------------- MOBILE: TOP button -------------------- */
+  const [showTop, setShowTop] = useState(false);
+  useEffect(() => {
+    function onScroll() {
+      setShowTop(window.scrollY > 420);
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <>
+      {/* ✅ Desktop Header는 원래대로 */}
       <div className="hidden md:block">
         <Header />
       </div>
 
-      {/* MOBILE fixed top bar (그대로) */}
-      <div
-        className="md:hidden fixed left-0 right-0 top-0 z-[2000] h-[86px] px-4 flex items-center"
+      {/* ✅ MOBILE: 상단바 없음. 햄버거만 */}
+      <button
+        type="button"
+        onClick={openMobile}
+        aria-label="메뉴"
+        className="
+          md:hidden
+          fixed right-4 top-4 z-[3000]
+          inline-flex h-12 w-12 items-center justify-center rounded-full
+          bg-white/85 backdrop-blur
+          ring-1 ring-black/5
+          shadow-[0_12px_30px_rgba(15,23,42,0.10)]
+          active:scale-[0.98]
+        "
         style={{ paddingTop: "env(safe-area-inset-top)" }}
       >
-        <div className="absolute inset-0 bg-white/82 backdrop-blur border-b border-black/5" />
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      </button>
 
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="relative z-10 inline-flex h-12 w-12 items-center justify-center rounded-full bg-white ring-1 ring-black/5 shadow-[0_12px_30px_rgba(15,23,42,0.10)] active:scale-[0.98]"
-          aria-label="뒤로가기"
-        >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-            <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
+      {/* ✅ MOBILE DRAWER */}
+      {mobileOpen ? (
+        <div className="md:hidden">
+          <div className="fixed inset-0 z-[2999] bg-black/35" onClick={closeMobile} aria-hidden />
 
-        <div className="relative z-10 mx-auto">
-          <img src="/logo-main.png" alt="WeMD Aesthetic" className="h-12 w-auto object-contain" draggable={false} />
+          <aside
+            className="
+              fixed right-0 top-0 z-[3000] h-dvh w-[86vw] max-w-[360px]
+              bg-white shadow-[0_20px_80px_rgba(0,0,0,0.25)]
+              flex flex-col
+            "
+            role="dialog"
+            aria-modal="true"
+            aria-label="모바일 메뉴"
+          >
+            <div className="flex items-center justify-between px-5 pt-5">
+              <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">MENU</div>
+              <button
+                type="button"
+                onClick={closeMobile}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-zinc-50"
+                aria-label="메뉴 닫기"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-zinc-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="px-5 pb-6 pt-4">
+              <DrawerLink href="/#brand" onClick={closeMobile}>
+                WeMD 에스테틱
+              </DrawerLink>
+
+              <div className="mt-5 h-px w-full bg-zinc-100" />
+
+              <div className="mt-5 space-y-1">
+                <DrawerLink href="/face?p=facial-lifting" onClick={closeMobile}>
+                  얼굴 관리
+                </DrawerLink>
+                <DrawerLink href="/body?p=upper-body" onClick={closeMobile}>
+                  바디 관리
+                </DrawerLink>
+                <DrawerLink href="/custom?p=wedding-standard" onClick={closeMobile}>
+                  맞춤 케어
+                </DrawerLink>
+              </div>
+
+              <div className="mt-5 h-px w-full bg-zinc-100" />
+
+              <div className="mt-5 space-y-1">
+                <DrawerLink href="/branches/dunchon" onClick={closeMobile}>
+                  지점 안내
+                </DrawerLink>
+                <DrawerLink href="/franchise" onClick={closeMobile}>
+                  가맹 문의
+                </DrawerLink>
+              </div>
+            </div>
+
+            <div className="mt-auto px-5 pb-6">
+              <div className="grid grid-cols-1 gap-3">
+                <a
+                  href={BOOKING}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="
+                    inline-flex h-[50px] items-center justify-center rounded-2xl
+                    bg-zinc-900 text-[15px] font-semibold text-white
+                    active:scale-[0.99]
+                  "
+                >
+                  예약하기
+                </a>
+                <a
+                  href={consultTelHref}
+                  className="
+                    inline-flex h-[50px] items-center justify-center rounded-2xl
+                    border border-zinc-200 bg-white text-[15px] font-semibold text-zinc-900
+                    active:scale-[0.99]
+                  "
+                >
+                  전화상담
+                </a>
+              </div>
+
+              <div className="mt-4 text-center text-[12px] text-zinc-400">WeMD Aesthetic</div>
+            </div>
+          </aside>
         </div>
+      ) : null}
 
+      {/* ✅ MOBILE TOP 버튼만 */}
+      {showTop ? (
         <button
           type="button"
-          onClick={() => router.push("/#menu")}
-          className="relative z-10 inline-flex h-12 w-12 items-center justify-center rounded-full bg-white ring-1 ring-black/5 shadow-[0_12px_30px_rgba(15,23,42,0.10)] active:scale-[0.98]"
-          aria-label="메뉴"
+          onClick={scrollToTop}
+          aria-label="맨 위로"
+          className="
+            md:hidden
+            fixed bottom-5 right-5 z-[2500]
+            inline-flex h-12 w-12 items-center justify-center rounded-full
+            bg-zinc-900 text-white
+            shadow-[0_18px_50px_rgba(0,0,0,0.25)]
+            active:scale-[0.98]
+          "
         >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-            <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M6 14l6-6 6 6" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
-      </div>
+      ) : null}
 
       <main className="bg-white">
         {/* HERO */}
-        <section className="relative overflow-hidden md:pt-[78px] pt-[86px]">
+        <section className="relative overflow-hidden pt-0 md:pt-[78px]">
           <div className="relative">
-            <img
-              src="/programs/face-hero.jpg"
-              alt="Face Care Hero"
-              className="h-[240px] w-full object-cover md:h-[320px]"
-              draggable={false}
-            />
+            <img src="/programs/face-hero.jpg" alt="Face Care Hero" className="h-[240px] w-full object-cover md:h-[320px]" draggable={false} />
             <div className="absolute inset-0 bg-black/25" />
 
             <div className="absolute inset-0">
               <div className="mx-auto flex h-full max-w-6xl items-end px-4 pb-6 md:pb-9">
                 <div className="w-full">
                   <div className="text-[12px] tracking-[0.30em] text-white/80">PROGRAM</div>
-                  <h1 className="mt-2 text-[30px] font-semibold tracking-tight text-white md:text-[44px]">
-                    {current.titleKo}
-                  </h1>
-                  <div className="mt-2 text-[18px] font-semibold tracking-tight md:text-[26px] text-white/80 md:text-[18px]">
-                    {current.titleEn}
-                  </div>
+                  <h1 className="mt-2 text-[30px] font-semibold tracking-tight text-white md:text-[44px]">{current.titleKo}</h1>
+                  <div className="mt-2 text-[16px] text-white/80 md:text-[18px]">{current.titleEn}</div>
                 </div>
               </div>
             </div>
@@ -228,7 +363,8 @@ export default function FaceCareClient() {
                     goProgram(slug);
                   }}
                   className="
-                    w-full appearance-none rounded-2xl bg-white
+                    w-full appearance-none
+                    rounded-2xl bg-white
                     px-5 py-4 pr-12
                     text-[15px] font-semibold text-zinc-900
                     ring-1 ring-black/10
@@ -302,9 +438,7 @@ export default function FaceCareClient() {
                 <p className="text-[14px] leading-relaxed text-zinc-600">{current.introBody}</p>
               </div>
 
-              <div className="hidden md:block mt-4 max-w-3xl text-[16px] leading-relaxed text-zinc-600">
-                {current.introBody}
-              </div>
+              <div className="hidden md:block mt-4 max-w-3xl text-[16px] leading-relaxed text-zinc-600">{current.introBody}</div>
             </div>
 
             {/* EFFECT */}
@@ -334,10 +468,7 @@ export default function FaceCareClient() {
                         shadow-[0_14px_50px_rgba(15,23,42,0.06)]
                       "
                     >
-                      <div
-                        className="grid h-10 w-10 place-items-center rounded-xl text-[13px] font-semibold text-white"
-                        style={{ backgroundColor: ACCENT }}
-                      >
+                      <div className="grid h-10 w-10 place-items-center rounded-xl text-[13px] font-semibold text-white" style={{ backgroundColor: ACCENT }}>
                         {String(i + 1).padStart(2, "0")}
                       </div>
                       <div className="text-[15px] font-semibold text-zinc-900">{s}</div>
@@ -359,9 +490,7 @@ export default function FaceCareClient() {
                 />
                 <div className="relative">
                   <div className="text-[12px] tracking-[0.30em] text-white/85">RESERVATION</div>
-                  <div className="mt-2 text-[18px] font-semibold tracking-tight text-white md:text-[20px]">
-                    지금, {current.titleKo} 예약하기
-                  </div>
+                  <div className="mt-2 text-[18px] font-semibold tracking-tight text-white md:text-[20px]">지금, {current.titleKo} 예약하기</div>
                   <div className="mt-2 text-[13px] text-white/90">네이버 예약 페이지로 바로 이동합니다.</div>
 
                   <div className="mt-6">
@@ -385,6 +514,34 @@ export default function FaceCareClient() {
         </div>
       </main>
     </>
+  );
+}
+
+/* -------------------- Drawer UI -------------------- */
+function DrawerLink({
+  href,
+  onClick,
+  children,
+}: {
+  href: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className="
+        flex items-center justify-between rounded-2xl px-4 py-3
+        text-[16px] font-semibold text-zinc-900
+        hover:bg-zinc-50 active:bg-zinc-100
+      "
+    >
+      <span>{children}</span>
+      <span className="text-zinc-300" aria-hidden>
+        →
+      </span>
+    </Link>
   );
 }
 
