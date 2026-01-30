@@ -60,7 +60,6 @@ export default function Header() {
   const router = useRouter();
 
   const [activeMega, setActiveMega] = useState<string | null>(null);
-  const [onHero, setOnHero] = useState(true);
   const headerRef = useRef<HTMLElement | null>(null);
 
   // ✅ 모바일 드로어
@@ -73,33 +72,16 @@ export default function Header() {
   const body = getItem("바디 관리");
   const custom = getItem("맞춤 케어");
 
-  // ✅ PC 오른쪽 링크(기존 유지)
-  const branches = getItem("지점 소개");
-
   // ✅ 모바일 드로어용 링크 (가맹 문의)
-  const franchise = getItem("가맹 문의") || getItem("입점 문의"); // 혹시 라벨이 기존에 이거였을 수도
+  const franchise = getItem("가맹 문의") || getItem("입점 문의");
   const franchiseHref =
-    (franchise && franchise.type === "link" ? franchise.href : null) || "/franchise";
+    (franchise && franchise.type === "link" ? franchise.href : null) || "/#franchise";
 
   const activeItem = useMemo(() => {
     if (!activeMega) return null;
     const found = NAV_ITEMS.find((it) => isMega(it) && it.label === activeMega);
     return found && isMega(found) ? found : null;
   }, [activeMega]);
-
-  /* ---------- HERO 감지 ---------- */
-  useEffect(() => {
-    const hero = document.getElementById("hero");
-    if (!hero) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => setOnHero(entry.isIntersecting),
-      { threshold: 0.1 }
-    );
-
-    observer.observe(hero);
-    return () => observer.disconnect();
-  }, []);
 
   /* ---------- 외부 클릭 닫기 (PC Mega) ---------- */
   useEffect(() => {
@@ -140,7 +122,7 @@ export default function Header() {
   const topTextHover = headerIsWhite ? "hover:text-zinc-950" : "hover:text-white";
   const dividerColor = headerIsWhite ? "bg-zinc-300" : "bg-white/40";
 
-  // ✅ 전화상담 번호(원하는 번호로 변경)
+  // ✅ 전화상담 번호
   const CONSULT_TEL = "02-6959-8989";
   const consultTelHref = `tel:${CONSULT_TEL.replaceAll("-", "").replaceAll(" ", "")}`;
 
@@ -199,11 +181,7 @@ export default function Header() {
 
             <a
               href="#brand"
-              className={cn(
-                "ml-20 text-[16px] font-semibold transition-colors",
-                topText,
-                topTextHover
-              )}
+              className={cn("ml-20 text-[16px] font-semibold transition-colors", topText, topTextHover)}
             >
               WeMD 에스테틱
             </a>
@@ -250,25 +228,21 @@ export default function Header() {
             </a>
           </div>
 
-          {/* RIGHT */}
+          {/* RIGHT (✅ 서브로고 제거 + 지점안내/가맹문의 추가) */}
           <div className="flex items-center gap-7">
-            <div className="hidden items-center gap-7 md:flex">
-              {branches && (
-                <Link
-                  href="/branches/dunchon"
-                  className={cn("text-[14px] font-medium transition-colors", topText, topTextHover)}
-                >
-                  지점안내
-                  <span className="ml-1 align-middle text-[14px]" aria-hidden>
-                    ↗
-                  </span>
-                </Link>
-              )}
-            </div>
+            <a
+              href="/#branches"
+              className={cn("text-[14px] font-semibold transition-colors", topText, topTextHover)}
+            >
+              지점안내
+            </a>
 
-            <Link href="/" className="flex items-center">
-              <Image src="/logo-sub.svg" alt="WeMD Aesthetic" width={92} height={92} priority />
-            </Link>
+            <a
+              href="/#franchise"
+              className={cn("text-[14px] font-semibold transition-colors", topText, topTextHover)}
+            >
+              가맹문의
+            </a>
           </div>
         </div>
       </div>
@@ -323,7 +297,7 @@ export default function Header() {
 
               <div className="mt-5 h-px w-full bg-zinc-100" />
 
-              {/* ✅ 여기: 기본 진입 slug로 이동 */}
+              {/* ✅ 기본 진입 slug로 이동 */}
               <div className="mt-5 space-y-1">
                 <MobileLink href={ROUTES.face.default} onClick={closeMobile}>
                   얼굴 관리
@@ -339,7 +313,7 @@ export default function Header() {
               <div className="mt-5 h-px w-full bg-zinc-100" />
 
               <div className="mt-5 space-y-1">
-                <MobileLink href="/branches/dunchon" onClick={closeMobile}>
+                <MobileLink href="/#branches" onClick={closeMobile}>
                   지점 안내
                 </MobileLink>
                 <MobileLink href={franchiseHref} onClick={closeMobile}>
@@ -406,7 +380,6 @@ function MegaTopButton({
   if (!item || !isMega(item)) return null;
 
   const base = "h-[68px] text-[18px] font-semibold transition-colors";
-
   const color = headerIsWhite
     ? open
       ? "text-[#B90E0A]"
@@ -420,7 +393,7 @@ function MegaTopButton({
       type="button"
       className={cn(base, color)}
       onMouseEnter={() => onOpen(item.label)}
-      onClick={onClickDefault} // ✅ 클릭하면 기본 프로그램으로 이동
+      onClick={onClickDefault}
     >
       {displayLabel(item.label)}
     </button>
@@ -459,8 +432,6 @@ function MegaMenuTossLike({ item }: { item: NavMega | null }) {
   if (!item) return null;
 
   const meta = getMegaMeta(item.label);
-
-  // ✅ 메가메뉴 링크를 "slug 기준"으로 덮어쓰기
   const normalized = normalizeMegaItem(item);
 
   return (
@@ -563,21 +534,21 @@ function getMegaMeta(label: string): { title: string; desc: string; allHref: str
     return {
       title: "얼굴관리",
       desc: "라인과 밸런스를 정교하게 다듬는 페이스 프로그램을 한 번에 확인하세요.",
-      allHref: ROUTES.face.default, // ✅ 전체보기 -> 기본 슬러그
+      allHref: ROUTES.face.default,
     };
   }
   if (label === "바디 관리") {
     return {
       title: "바디관리",
       desc: "컨디션과 순환을 기반으로, 바디 라인을 깔끔하게 설계합니다.",
-      allHref: ROUTES.body.default, // ✅
+      allHref: ROUTES.body.default,
     };
   }
   if (label === "맞춤 케어") {
     return {
       title: "맞춤케어",
       desc: "목적 기반 조합으로 개인에게 맞춘 집중 케어를 제공합니다.",
-      allHref: ROUTES.custom.default, // ✅
+      allHref: ROUTES.custom.default,
     };
   }
   return {
@@ -587,7 +558,7 @@ function getMegaMeta(label: string): { title: string; desc: string; allHref: str
   };
 }
 
-/* ---------- NAV_ITEMS가 /face 같은 href를 가지고 있어도 여기서 강제로 slug링크로 교체 ---------- */
+/* ---------- NAV_ITEMS의 mega 링크를 slug 링크로 교체 ---------- */
 function normalizeMegaItem(item: NavMega): NavMega {
   if (item.label === "얼굴 관리") {
     return {

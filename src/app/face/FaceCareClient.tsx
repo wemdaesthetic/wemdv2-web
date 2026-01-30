@@ -1,3 +1,5 @@
+// FILE: src/app/face/FaceCareClient.tsx
+
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
@@ -63,8 +65,7 @@ export default function FaceCareClient() {
         priceTen: 1080000,
         steps: ["클렌징", "어깨 목 관리(데콜테)", "두피 관리", "골막 관리", "탄력 관리", "팩", "마무리"],
         introTitle: "골격 흐름을 고려해 더 또렷한 V라인으로",
-        introBody:
-          "골막 케어를 포함해 라인의 흐름을 정교하게 잡아, 무너진 윤곽을 보다 ‘정리된’ 인상으로 완성합니다.",
+        introBody: "골막 케어를 포함해 라인의 흐름을 정교하게 잡아, 무너진 윤곽을 보다 ‘정리된’ 인상으로 완성합니다.",
         concern: ["턱선이 흐릿함", "부기/뭉침이 잦음", "얼굴이 넓어 보임"],
         solve: ["선명한 턱선", "가벼운 인상", "정돈된 윤곽 밸런스"],
       },
@@ -89,24 +90,35 @@ export default function FaceCareClient() {
         durationMin: 100,
         priceOnce: 180000,
         priceTen: 1620000,
-        steps: [
-          "클렌징",
-          "골반 관리",
-          "어깨 목 관리(데콜테)",
-          "두피 관리",
-          "탄력 관리",
-          "골선 관리",
-          "비대칭 관리",
-          "팩",
-          "마무리",
-        ],
+        steps: ["클렌징", "골반 관리", "어깨 목 관리(데콜테)", "두피 관리", "탄력 관리", "골선 관리", "비대칭 관리", "팩", "마무리"],
         introTitle: "바디 밸런스부터 얼굴 비대칭까지 ‘전체’로 맞추는 케어",
-        introBody:
-          "얼굴은 자세/골반/목·어깨 흐름과 맞물립니다. 바디 밸런스를 포함해 전체적인 비대칭과 흐름을 함께 정돈합니다.",
+        introBody: "얼굴은 자세/골반/목·어깨 흐름과 맞물립니다. 바디 밸런스를 포함해 전체적인 비대칭과 흐름을 함께 정돈합니다.",
         concern: ["비대칭이 신경 쓰임", "자세/목·어깨 뭉침", "전체 밸런스가 무너진 느낌"],
         solve: ["균형감 있는 인상", "편안한 긴장 완화", "정돈된 전체 흐름"],
       },
     ],
+    []
+  );
+
+  // (Face 페이지에서는 body/custom 세부만 하드코딩해도 됨)
+  const bodyItems = useMemo(
+    () => [
+      { title: "상체 관리", href: "/body?p=upper-body" },
+      { title: "하체 관리", href: "/body?p=lower-body" },
+      { title: "S라인 관리", href: "/body?p=s-line" },
+    ],
+    []
+  );
+
+  const customItems = useMemo(
+      () => [
+        { title: "웨딩 관리 Standard", href: "/custom?p=wedding-standard" },
+        { title: "웨딩 관리 Special", href: "/custom?p=wedding-special" },
+        { title: "라운드 숄더 관리", href: "/custom?p=rounded-shoulder" },
+        { title: "애플 힙 관리", href: "/custom?p=apple-hip" },
+        { title: "러닝 후 관리", href: "/custom?p=runner-recovery" },
+        { title: "골프 관리", href: "/custom?p=golf-recovery" },
+      ],
     []
   );
 
@@ -133,10 +145,10 @@ export default function FaceCareClient() {
     }
   };
 
+  // ✅ 드롭다운: 닫혀있을 때 "현재 시술명"만 표시
   const [selectValue, setSelectValue] = useState<string>("");
   useEffect(() => setSelectValue(""), [active]);
 
-  // ✅ 섹션 타이틀(Body/Face 통일)
   const SectionLabel = ({ children }: { children: React.ReactNode }) => (
     <div className="text-[12px] tracking-[0.30em] text-zinc-400">{children}</div>
   );
@@ -146,8 +158,13 @@ export default function FaceCareClient() {
 
   /* -------------------- MOBILE: Drawer -------------------- */
   const [mobileOpen, setMobileOpen] = useState(false);
-  const openMobile = () => setMobileOpen(true);
-  const closeMobile = () => setMobileOpen(false);
+
+  // ✅ 단일 오픈 아코디언: 하나 열면 다른 건 닫힘
+  type DrawerSection = "face" | "body" | "custom" | null;
+  const [openSection, setOpenSection] = useState<DrawerSection>("face");
+  const toggleSection = (k: Exclude<DrawerSection, null>) => {
+    setOpenSection((prev) => (prev === k ? null : k));
+  };
 
   // 드로어 열리면 스크롤 잠금
   useEffect(() => {
@@ -183,30 +200,43 @@ export default function FaceCareClient() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
     <>
-      {/* ✅ Desktop Header는 원래대로 */}
+      {/* Desktop Header */}
       <div className="hidden md:block">
         <Header />
       </div>
 
-      {/* ✅ MOBILE: 상단바 없음. 햄버거만 */}
+      {/* MOBILE: 좌상단 홈 + 우상단 햄버거 */}
       <button
         type="button"
-        onClick={openMobile}
+        onClick={() => router.push("/")}
+        aria-label="홈으로"
+        className="
+          md:hidden fixed left-4 top-4 z-[3000]
+          inline-flex h-12 w-12 items-center justify-center rounded-full
+          bg-white/85 backdrop-blur ring-1 ring-black/5
+          shadow-[0_12px_30px_rgba(15,23,42,0.10)] active:scale-[0.98]
+        "
+        style={{ paddingTop: "env(safe-area-inset-top)" }}
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path d="M3 11.5l9-7 9 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M5.5 10.5V20h13V10.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        onClick={() => setMobileOpen(true)}
         aria-label="메뉴"
         className="
-          md:hidden
-          fixed right-4 top-4 z-[3000]
+          md:hidden fixed right-4 top-4 z-[3000]
           inline-flex h-12 w-12 items-center justify-center rounded-full
-          bg-white/85 backdrop-blur
-          ring-1 ring-black/5
-          shadow-[0_12px_30px_rgba(15,23,42,0.10)]
-          active:scale-[0.98]
+          bg-white/85 backdrop-blur ring-1 ring-black/5
+          shadow-[0_12px_30px_rgba(15,23,42,0.10)] active:scale-[0.98]
         "
         style={{ paddingTop: "env(safe-area-inset-top)" }}
       >
@@ -215,11 +245,10 @@ export default function FaceCareClient() {
         </svg>
       </button>
 
-      {/* ✅ MOBILE DRAWER */}
+      {/* MOBILE DRAWER */}
       {mobileOpen ? (
         <div className="md:hidden">
-          <div className="fixed inset-0 z-[2999] bg-black/35" onClick={closeMobile} aria-hidden />
-
+          <div className="fixed inset-0 z-[2999] bg-black/35" onClick={() => setMobileOpen(false)} aria-hidden />
           <aside
             className="
               fixed right-0 top-0 z-[3000] h-dvh w-[86vw] max-w-[360px]
@@ -234,7 +263,7 @@ export default function FaceCareClient() {
               <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">MENU</div>
               <button
                 type="button"
-                onClick={closeMobile}
+                onClick={() => setMobileOpen(false)}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-zinc-50"
                 aria-label="메뉴 닫기"
               >
@@ -245,31 +274,60 @@ export default function FaceCareClient() {
             </div>
 
             <div className="px-5 pb-6 pt-4">
-              <DrawerLink href="/#brand" onClick={closeMobile}>
+              <DrawerLink href="/#brand" onClick={() => setMobileOpen(false)}>
                 WeMD 에스테틱
               </DrawerLink>
 
               <div className="mt-5 h-px w-full bg-zinc-100" />
 
-              <div className="mt-5 space-y-1">
-                <DrawerLink href="/face?p=facial-lifting" onClick={closeMobile}>
-                  얼굴 관리
-                </DrawerLink>
-                <DrawerLink href="/body?p=upper-body" onClick={closeMobile}>
-                  바디 관리
-                </DrawerLink>
-                <DrawerLink href="/custom?p=wedding-standard" onClick={closeMobile}>
-                  맞춤 케어
-                </DrawerLink>
+              {/* ✅ 단일 오픈 아코디언 */}
+              <div className="mt-4 space-y-2">
+                <DrawerAccordion title="얼굴 관리" open={openSection === "face"} onToggle={() => toggleSection("face")} />
+                {openSection === "face" ? (
+                  <div className="ml-2 space-y-1">
+                    {programs.map((p) => (
+                      <DrawerSubLink
+                        key={p.slug}
+                        href={`/face?p=${p.slug}`}
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        {p.titleKo}
+                      </DrawerSubLink>
+                    ))}
+                  </div>
+                ) : null}
+
+                <DrawerAccordion title="바디 관리" open={openSection === "body"} onToggle={() => toggleSection("body")} />
+                {openSection === "body" ? (
+                  <div className="ml-2 space-y-1">
+                    {bodyItems.map((it) => (
+                      <DrawerSubLink key={it.href} href={it.href} onClick={() => setMobileOpen(false)}>
+                        {it.title}
+                      </DrawerSubLink>
+                    ))}
+                  </div>
+                ) : null}
+
+                {/* 맞춤 케어 */}
+                <DrawerAccordion title="맞춤 케어" open={openSection === "custom"} onToggle={() => toggleSection("custom")}/>
+                {openSection === "custom" ? (
+                  <div className="ml-2 mt-1 space-y-1">
+                    {customItems.map((it) => (
+                      <DrawerSubLink key={it.href} href={it.href} onClick={() => setMobileOpen(false)} >
+                        {it.title}
+                      </DrawerSubLink>
+                    ))}
+                  </div>
+                ) : null}
               </div>
 
               <div className="mt-5 h-px w-full bg-zinc-100" />
 
               <div className="mt-5 space-y-1">
-                <DrawerLink href="/branches/dunchon" onClick={closeMobile}>
+                <DrawerLink href="/branches/dunchon" onClick={() => setMobileOpen(false)}>
                   지점 안내
                 </DrawerLink>
-                <DrawerLink href="/franchise" onClick={closeMobile}>
+                <DrawerLink href="/franchise" onClick={() => setMobileOpen(false)}>
                   가맹 문의
                 </DrawerLink>
               </div>
@@ -281,44 +339,33 @@ export default function FaceCareClient() {
                   href={BOOKING}
                   target="_blank"
                   rel="noreferrer"
-                  className="
-                    inline-flex h-[50px] items-center justify-center rounded-2xl
-                    bg-zinc-900 text-[15px] font-semibold text-white
-                    active:scale-[0.99]
-                  "
+                  className="inline-flex h-[50px] items-center justify-center rounded-2xl bg-zinc-900 text-[15px] font-semibold text-white active:scale-[0.99]"
                 >
                   예약하기
                 </a>
                 <a
                   href={consultTelHref}
-                  className="
-                    inline-flex h-[50px] items-center justify-center rounded-2xl
-                    border border-zinc-200 bg-white text-[15px] font-semibold text-zinc-900
-                    active:scale-[0.99]
-                  "
+                  className="inline-flex h-[50px] items-center justify-center rounded-2xl border border-zinc-200 bg-white text-[15px] font-semibold text-zinc-900 active:scale-[0.99]"
                 >
                   전화상담
                 </a>
               </div>
-
               <div className="mt-4 text-center text-[12px] text-zinc-400">WeMD Aesthetic</div>
             </div>
           </aside>
         </div>
       ) : null}
 
-      {/* ✅ MOBILE TOP 버튼만 */}
+      {/* MOBILE TOP 버튼 */}
       {showTop ? (
         <button
           type="button"
           onClick={scrollToTop}
           aria-label="맨 위로"
           className="
-            md:hidden
-            fixed bottom-5 right-5 z-[2500]
+            md:hidden fixed bottom-5 right-5 z-[2500]
             inline-flex h-12 w-12 items-center justify-center rounded-full
-            bg-zinc-900 text-white
-            shadow-[0_18px_50px_rgba(0,0,0,0.25)]
+            bg-zinc-900 text-white shadow-[0_18px_50px_rgba(0,0,0,0.25)]
             active:scale-[0.98]
           "
         >
@@ -350,7 +397,7 @@ export default function FaceCareClient() {
           <div className="mx-auto max-w-6xl px-4">
             <div className="mt-5">
               <label className="sr-only" htmlFor="programSelect">
-                다른 시술 선택
+                프로그램 선택
               </label>
 
               <div className="relative">
@@ -361,10 +408,10 @@ export default function FaceCareClient() {
                     const slug = e.target.value;
                     if (!slug) return;
                     goProgram(slug);
+                    setSelectValue("");
                   }}
                   className="
-                    w-full appearance-none
-                    rounded-2xl bg-white
+                    w-full appearance-none rounded-2xl bg-white
                     px-5 py-4 pr-12
                     text-[15px] font-semibold text-zinc-900
                     ring-1 ring-black/10
@@ -373,7 +420,7 @@ export default function FaceCareClient() {
                   "
                 >
                   <option value="" disabled>
-                    다른 시술 선택 (현재: {current.titleKo})
+                    {current.titleKo}
                   </option>
                   {programs.map((p) => (
                     <option key={p.slug} value={p.slug}>
@@ -417,8 +464,8 @@ export default function FaceCareClient() {
                   "
                   style={{ WebkitOverflowScrolling: "touch", overscrollBehaviorX: "contain" }}
                 >
-                  <PriceCardTicket title="1회 이용" price={current.priceOnce} durationMin={current.durationMin} originalPrice={null} />
-                  <PriceCardTicket title="10회 이용" price={current.priceTen} durationMin={current.durationMin} originalPrice={current.priceOnce * 10} />
+                  <PriceCardTicket title="1회 이용권" price={current.priceOnce} durationMin={current.durationMin} originalPrice={null} />
+                  <PriceCardTicket title="10회 이용권" price={current.priceTen} durationMin={current.durationMin} originalPrice={current.priceOnce * 10} />
                 </div>
 
                 <style jsx global>{`
@@ -464,8 +511,7 @@ export default function FaceCareClient() {
                       key={`${current.slug}-${i}`}
                       className="
                         flex items-center gap-4 rounded-2xl bg-white px-5 py-4
-                        ring-1 ring-black/5
-                        shadow-[0_14px_50px_rgba(15,23,42,0.06)]
+                        ring-1 ring-black/5 shadow-[0_14px_50px_rgba(15,23,42,0.06)]
                       "
                     >
                       <div className="grid h-10 w-10 place-items-center rounded-xl text-[13px] font-semibold text-white" style={{ backgroundColor: ACCENT }}>
@@ -545,8 +591,64 @@ function DrawerLink({
   );
 }
 
-/* -------------------- UI Pieces -------------------- */
+function DrawerAccordion({
+  title,
+  open,
+  onToggle,
+}: {
+  title: string;
+  open: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      className="
+        w-full flex items-center justify-between
+        rounded-2xl px-4 py-3
+        text-[16px] font-semibold text-zinc-900
+        hover:bg-zinc-50 active:bg-zinc-100
+      "
+      aria-expanded={open}
+    >
+      <span>{title}</span>
+      <span className="text-zinc-400" aria-hidden>
+        {open ? "−" : "+"}
+      </span>
+    </button>
+  );
+}
 
+function DrawerSubLink({
+  href,
+  onClick,
+  children,
+}: {
+  href: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className="
+        flex items-center justify-between
+        rounded-2xl px-4 py-2
+        text-[14px] font-semibold text-zinc-700
+        hover:bg-zinc-50 active:bg-zinc-100
+      "
+    >
+      <span>{children}</span>
+      <span className="text-zinc-300" aria-hidden>
+        →
+      </span>
+    </Link>
+  );
+}
+
+/* -------------------- UI Pieces -------------------- */
 function ClockMini() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>

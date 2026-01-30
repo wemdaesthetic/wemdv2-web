@@ -1,10 +1,11 @@
+// FILE: src/app/body/BodyCareClient.tsx
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
+import MobileDrawer from "@/components/drawer/MobileDrawer";
 
 const ACCENT = "#B71919";
 
@@ -97,6 +98,9 @@ export default function BodyCareClient() {
   const BOOKING =
     "https://map.naver.com/p/entry/place/1063607602?placePath=/ticket?entry=plt&fromPanelNum=1&additionalHeight=76&timestamp=202601231203&locale=ko&svcName=map_pcv5&from=map&fromPanelNum=1&additionalHeight=76&timestamp=202601231203&locale=ko&svcName=map_pcv5&searchType=place&lng=127.1360654&lat=37.5287128&c=15.00,0,0,0,dh";
 
+  const CONSULT_TEL = "02-6959-8989";
+  const consultTelHref = `tel:${CONSULT_TEL.replaceAll("-", "").replaceAll(" ", "")}`;
+
   const [active, setActive] = useState(0);
 
   useEffect(() => {
@@ -117,149 +121,82 @@ export default function BodyCareClient() {
     }
   };
 
+  // ✅ 드롭다운: 닫혀있을 때 "현재 시술명"만 보이게
   const [selectValue, setSelectValue] = useState<string>("");
   useEffect(() => setSelectValue(""), [active]);
 
   /* -------------------- MOBILE: Drawer -------------------- */
   const [mobileOpen, setMobileOpen] = useState(false);
-  const openMobile = () => setMobileOpen(true);
-  const closeMobile = () => setMobileOpen(false);
-
-  useEffect(() => {
-    if (!mobileOpen) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, [mobileOpen]);
-
-  useEffect(() => {
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setMobileOpen(false);
-    }
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
-
-  const CONSULT_TEL = "02-6959-8989";
-  const consultTelHref = `tel:${CONSULT_TEL.replaceAll("-", "").replaceAll(" ", "")}`;
 
   /* -------------------- MOBILE: TOP button -------------------- */
   const [showTop, setShowTop] = useState(false);
   useEffect(() => {
-    function onScroll() {
-      setShowTop(window.scrollY > 420);
-    }
+    const onScroll = () => setShowTop(window.scrollY > 420);
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
     <>
-      {/* ✅ Desktop Header는 "원래대로" */}
+      {/* ✅ Desktop Header는 그대로 */}
       <div className="hidden md:block">
         <Header />
       </div>
 
-      {/* ✅ MOBILE: 상단바 없음. 햄버거만 */}
+      {/* ✅ MOBILE: 좌상단 홈 버튼 + 우상단 햄버거 (메인페이지처럼 더 투명한 원형 배경) */}
       <button
         type="button"
-        onClick={openMobile}
+        onClick={() => router.push("/")}
+        aria-label="홈으로"
+        className={[
+  "md:hidden fixed left-4 top-4 z-[3000]",
+  mobileOpen ? "hidden" : "",
+  "inline-flex h-12 w-12 items-center justify-center rounded-full",
+  "bg-white/85 backdrop-blur ring-1 ring-black/5",
+  "shadow-[0_12px_30px_rgba(15,23,42,0.10)] active:scale-[0.98]",
+].join(" ")}
+        style={{ top: "calc(env(safe-area-inset-top) + 12px)" }}
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path
+            d="M3 11.5l9-7 9 7"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M5.5 10.5V20h13V10.5"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        onClick={() => setMobileOpen(true)}
         aria-label="메뉴"
-        className="
-          md:hidden
-          fixed right-4 top-4 z-[3000]
-          inline-flex h-12 w-12 items-center justify-center rounded-full
-          bg-white/85 backdrop-blur
-          ring-1 ring-black/5
-          shadow-[0_12px_30px_rgba(15,23,42,0.10)]
-          active:scale-[0.98]
-        "
-        style={{ paddingTop: "env(safe-area-inset-top)" }}
+        className={[
+  "md:hidden fixed right-4 top-4 z-[3000]",
+  mobileOpen ? "hidden" : "",
+  "inline-flex h-12 w-12 items-center justify-center rounded-full",
+  "bg-white/85 backdrop-blur ring-1 ring-black/5",
+  "shadow-[0_12px_30px_rgba(15,23,42,0.10)] active:scale-[0.98]",
+].join(" ")}
+        style={{ top: "calc(env(safe-area-inset-top) + 12px)" }}
       >
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
           <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
         </svg>
       </button>
 
-      {/* ✅ MOBILE DRAWER */}
-      {mobileOpen ? (
-        <div className="md:hidden">
-          <div className="fixed inset-0 z-[2999] bg-black/35" onClick={closeMobile} aria-hidden />
-          <aside
-            className="
-              fixed right-0 top-0 z-[3000] h-dvh w-[86vw] max-w-[360px]
-              bg-white shadow-[0_20px_80px_rgba(0,0,0,0.25)]
-              flex flex-col
-            "
-            role="dialog"
-            aria-modal="true"
-            aria-label="모바일 메뉴"
-          >
-            <div className="flex items-center justify-between px-5 pt-5">
-              <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">MENU</div>
-              <button
-                type="button"
-                onClick={closeMobile}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-zinc-50"
-                aria-label="메뉴 닫기"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-zinc-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 6l12 12M18 6L6 18" />
-                </svg>
-              </button>
-            </div>
-
-            <div className="px-5 pb-6 pt-4">
-              <DrawerLink href="/#brand" onClick={closeMobile}>WeMD 에스테틱</DrawerLink>
-
-              <div className="mt-5 h-px w-full bg-zinc-100" />
-
-              <div className="mt-5 space-y-1">
-                <DrawerLink href="/face?p=facial-lifting" onClick={closeMobile}>얼굴 관리</DrawerLink>
-                <DrawerLink href="/body?p=upper-body" onClick={closeMobile}>바디 관리</DrawerLink>
-                <DrawerLink href="/custom?p=wedding-standard" onClick={closeMobile}>맞춤 케어</DrawerLink>
-              </div>
-
-              <div className="mt-5 h-px w-full bg-zinc-100" />
-
-              <div className="mt-5 space-y-1">
-                <DrawerLink href="/branches/dunchon" onClick={closeMobile}>지점 안내</DrawerLink>
-                <DrawerLink href="/franchise" onClick={closeMobile}>가맹 문의</DrawerLink>
-              </div>
-            </div>
-
-            <div className="mt-auto px-5 pb-6">
-              <div className="grid grid-cols-1 gap-3">
-                <a
-                  href={BOOKING}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex h-[50px] items-center justify-center rounded-2xl bg-zinc-900 text-[15px] font-semibold text-white active:scale-[0.99]"
-                >
-                  예약하기
-                </a>
-                <a
-                  href={consultTelHref}
-                  className="inline-flex h-[50px] items-center justify-center rounded-2xl border border-zinc-200 bg-white text-[15px] font-semibold text-zinc-900 active:scale-[0.99]"
-                >
-                  전화상담
-                </a>
-              </div>
-
-              <div className="mt-4 text-center text-[12px] text-zinc-400">WeMD Aesthetic</div>
-            </div>
-          </aside>
-        </div>
-      ) : null}
-
-      {/* ✅ MOBILE TOP 버튼만 */}
+      {/* ✅ MOBILE TOP 버튼: 메인페이지 TOP 색과 동일하게(ACCENT) */}
       {showTop ? (
         <button
           type="button"
@@ -267,31 +204,58 @@ export default function BodyCareClient() {
           aria-label="맨 위로"
           className="
             md:hidden
-            fixed bottom-5 right-5 z-[2500]
+            fixed right-5 z-[2500]
             inline-flex h-12 w-12 items-center justify-center rounded-full
-            bg-zinc-900 text-white
-            shadow-[0_18px_50px_rgba(0,0,0,0.25)]
-            active:scale-[0.98]
+            text-white
+            shadow-[0_18px_50px_rgba(183,25,25,0.35)]
+            active:scale-[0.95]
           "
+          style={{
+            backgroundColor: ACCENT,
+            bottom: "calc(env(safe-area-inset-bottom) + 20px)",
+          }}
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-            <path d="M6 14l6-6 6 6" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              d="M6 14l6-6 6 6"
+              stroke="currentColor"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </button>
       ) : null}
+
+      {/* ✅ MOBILE DRAWER: 재사용 컴포넌트로 교체 (이제 페이지에서 드로어 코드 없음) */}
+      <MobileDrawer
+        open={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+        bookingUrl={BOOKING}
+        consultTelHref={consultTelHref}
+        variant="manage"
+        showReviewsLink={false}
+      />
 
       <main className="bg-white">
         {/* HERO */}
         <section className="relative overflow-hidden pt-0 md:pt-[78px]">
           <div className="relative">
-            <img src="/programs/body-hero.jpg" alt="Body Care Hero" className="h-[240px] w-full object-cover md:h-[320px]" draggable={false} />
+            <img
+              src="/programs/body-hero.jpg"
+              alt="Body Care Hero"
+              className="h-[240px] w-full object-cover md:h-[320px]"
+              draggable={false}
+            />
             <div className="absolute inset-0 bg-black/25" />
 
             <div className="absolute inset-0">
               <div className="mx-auto flex h-full max-w-6xl items-end px-4 pb-6 md:pb-9">
                 <div className="w-full">
                   <div className="text-[12px] tracking-[0.30em] text-white/80">PROGRAM</div>
-                  <h1 className="mt-2 text-[30px] font-semibold tracking-tight text-white md:text-[44px]">{current.titleKo}</h1>
+                  <h1 className="mt-2 text-[30px] font-semibold tracking-tight text-white md:text-[44px]">
+                    {current.titleKo}
+                  </h1>
                   <div className="mt-2 text-[16px] text-white/80 md:text-[18px]">{current.titleEn}</div>
                 </div>
               </div>
@@ -301,7 +265,9 @@ export default function BodyCareClient() {
           {/* dropdown */}
           <div className="mx-auto max-w-6xl px-4">
             <div className="mt-5">
-              <label className="sr-only" htmlFor="programSelect">다른 시술 선택</label>
+              <label className="sr-only" htmlFor="programSelect">
+                프로그램 선택
+              </label>
 
               <div className="relative">
                 <select
@@ -311,6 +277,7 @@ export default function BodyCareClient() {
                     const slug = e.target.value;
                     if (!slug) return;
                     goProgram(slug);
+                    setSelectValue("");
                   }}
                   className="
                     w-full appearance-none rounded-2xl bg-white
@@ -321,15 +288,25 @@ export default function BodyCareClient() {
                     outline-none
                   "
                 >
-                  <option value="" disabled>다른 시술 선택 (현재: {current.titleKo})</option>
+                  <option value="" disabled>
+                    {current.titleKo}
+                  </option>
                   {programs.map((p) => (
-                    <option key={p.slug} value={p.slug}>{p.titleKo}</option>
+                    <option key={p.slug} value={p.slug}>
+                      {p.titleKo}
+                    </option>
                   ))}
                 </select>
 
                 <div className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-zinc-600">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-                    <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                    <path
+                      d="M6 9l6 6 6-6"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </div>
 
@@ -346,7 +323,9 @@ export default function BodyCareClient() {
             <div className="pt-0 pb-8 md:pb-14">
               <div className="mt-2">
                 <div className="text-[12px] tracking-[0.30em] text-zinc-400">PRICE</div>
-                <div className="mt-2 text-[18px] font-semibold tracking-tight md:text-[26px] text-zinc-900">관리 가격 안내</div>
+                <div className="mt-2 text-[18px] font-semibold tracking-tight md:text-[26px] text-zinc-900">
+                  관리 가격 안내
+                </div>
 
                 <div
                   className="
@@ -362,8 +341,8 @@ export default function BodyCareClient() {
                   "
                   style={{ WebkitOverflowScrolling: "touch", overscrollBehaviorX: "contain" }}
                 >
-                  <PriceCardTicket title="1회 이용" price={current.priceOnce} durationMin={current.durationMin} originalPrice={null} />
-                  <PriceCardTicket title="10회 이용" price={current.priceTen} durationMin={current.durationMin} originalPrice={current.priceOnce * 10} />
+                  <PriceCardTicket title="1회 이용권" price={current.priceOnce} durationMin={current.durationMin} originalPrice={null} />
+                  <PriceCardTicket title="10회 이용권" price={current.priceTen} durationMin={current.durationMin} originalPrice={current.priceOnce * 10} />
                 </div>
 
                 <style jsx global>{`
@@ -377,19 +356,25 @@ export default function BodyCareClient() {
             {/* INTRO */}
             <div className="py-8 md:py-14">
               <div className="text-[12px] tracking-[0.30em] text-zinc-400">INTRO</div>
-              <h3 className="mt-3 text-[20px] font-semibold tracking-tight text-zinc-900 md:text-[26px]">{current.introTitle}</h3>
+              <h3 className="mt-3 text-[20px] font-semibold tracking-tight text-zinc-900 md:text-[26px]">
+                {current.introTitle}
+              </h3>
 
               <div className="md:hidden mt-4 rounded-3xl bg-white p-7 ring-1 ring-black/5 shadow-[0_18px_70px_rgba(15,23,42,0.08)]">
                 <p className="text-[14px] leading-relaxed text-zinc-600">{current.introBody}</p>
               </div>
 
-              <div className="hidden md:block mt-4 max-w-3xl text-[16px] leading-relaxed text-zinc-600">{current.introBody}</div>
+              <div className="hidden md:block mt-4 max-w-3xl text-[16px] leading-relaxed text-zinc-600">
+                {current.introBody}
+              </div>
             </div>
 
             {/* EFFECT */}
             <div className="py-8 md:py-14">
               <div className="text-[12px] tracking-[0.30em] text-zinc-400">EFFECT</div>
-              <h3 className="mt-3 text-[20px] font-semibold tracking-tight text-zinc-900 md:text-[26px]">관리 효과</h3>
+              <h3 className="mt-3 text-[20px] font-semibold tracking-tight text-zinc-900 md:text-[26px]">
+                관리 효과
+              </h3>
 
               <div className="mt-5 grid gap-4 md:grid-cols-2 md:gap-6">
                 <EffectBox title="고민되시나요?" items={current.concern} tone="soft" />
@@ -401,7 +386,9 @@ export default function BodyCareClient() {
             <div className="py-8 md:py-14">
               <div id="composition">
                 <div className="text-[12px] tracking-[0.30em] text-zinc-400">COMPOSITION</div>
-                <div className="mt-2 text-[18px] font-semibold tracking-tight md:text-[26px] text-zinc-900">프로그램 구성</div>
+                <div className="mt-2 text-[18px] font-semibold tracking-tight md:text-[26px] text-zinc-900">
+                  프로그램 구성
+                </div>
 
                 <div className="mt-5 grid gap-3">
                   {current.steps.map((s, i) => (
@@ -409,7 +396,10 @@ export default function BodyCareClient() {
                       key={`${current.slug}-${i}`}
                       className="flex items-center gap-4 rounded-2xl bg-white px-5 py-4 ring-1 ring-black/5 shadow-[0_14px_50px_rgba(15,23,42,0.06)]"
                     >
-                      <div className="grid h-10 w-10 place-items-center rounded-xl text-[13px] font-semibold text-white" style={{ backgroundColor: ACCENT }}>
+                      <div
+                        className="grid h-10 w-10 place-items-center rounded-xl text-[13px] font-semibold text-white"
+                        style={{ backgroundColor: ACCENT }}
+                      >
                         {String(i + 1).padStart(2, "0")}
                       </div>
                       <div className="text-[15px] font-semibold text-zinc-900">{s}</div>
@@ -431,7 +421,9 @@ export default function BodyCareClient() {
                 />
                 <div className="relative">
                   <div className="text-[12px] tracking-[0.30em] text-white/85">RESERVATION</div>
-                  <div className="mt-2 text-[18px] font-semibold tracking-tight md:text-[20px]">지금, {current.titleKo} 예약하기</div>
+                  <div className="mt-2 text-[18px] font-semibold tracking-tight md:text-[20px]">
+                    지금, {current.titleKo} 예약하기
+                  </div>
                   <div className="mt-2 text-[13px] text-white/90">네이버 예약 페이지로 바로 이동합니다.</div>
 
                   <div className="mt-6">
@@ -458,34 +450,18 @@ export default function BodyCareClient() {
   );
 }
 
-/* -------------------- Drawer UI -------------------- */
-function DrawerLink({
-  href,
-  onClick,
-  children,
-}: {
-  href: string;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      onClick={onClick}
-      className="flex items-center justify-between rounded-2xl px-4 py-3 text-[16px] font-semibold text-zinc-900 hover:bg-zinc-50 active:bg-zinc-100"
-    >
-      <span>{children}</span>
-      <span className="text-zinc-300" aria-hidden>→</span>
-    </Link>
-  );
-}
-
 /* -------------------- UI Pieces -------------------- */
 function ClockMini() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path d="M12 22a10 10 0 110-20 10 10 0 010 20z" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M12 7v6l4 2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M12 7v6l4 2"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -525,7 +501,9 @@ function PriceCardTicket({
 
           <div className="mt-6 text-[16px] font-semibold text-zinc-700">
             <span className="inline-flex items-center gap-2">
-              <span className="text-zinc-600"><ClockMini /></span>
+              <span className="text-zinc-600">
+                <ClockMini />
+              </span>
               관리시간 <span className="text-zinc-900">{durationMin}분</span>
             </span>
           </div>
@@ -554,11 +532,7 @@ function EffectBox({
         isAccent ? "text-white" : "bg-white",
         isAccent ? "" : "shadow-[0_18px_70px_rgba(15,23,42,0.08)]",
       ].join(" ")}
-      style={
-        isAccent
-          ? { backgroundColor: ACCENT, boxShadow: "0 18px 70px rgba(183,25,25,0.18)" }
-          : undefined
-      }
+      style={isAccent ? { backgroundColor: ACCENT, boxShadow: "0 18px 70px rgba(183,25,25,0.18)" } : undefined}
     >
       <div className="text-[14px] font-semibold">{title}</div>
 

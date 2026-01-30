@@ -1,31 +1,44 @@
+// FILE: src/app/page.tsx
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+
 import Header from "@/components/header/Header";
+import ReviewsSection from "@/components/sections/ReviewsSection";
 import BrandStorySection from "@/components/brand/BrandStorySection";
 import BranchesSection from "@/components/sections/BranchesSection";
 import FranchiseSection from "@/components/sections/FranchiseSection";
 import Footer from "@/components/footer/Footer";
+
+import MobileDrawer from "@/components/drawer/MobileDrawer";
 import { BOOKING_URL } from "@/config/nav";
 
 const HEADER_H = 78;
+const ACCENT = "#B71919";
 
 export default function HomePage() {
-  const prefixes = useMemo(
-    () => ["작은얼굴은", "웨딩관리는", "체형개선은", "맞춤케어는"],
-    []
-  );
+  const prefixes = useMemo(() => ["작은얼굴은", "웨딩관리는", "체형개선은", "맞춤케어는"], []);
 
   const [wordIdx, setWordIdx] = useState(0);
   const [phase, setPhase] = useState<"in" | "out">("in");
 
-  // ✅ prefix 최대 폭(실제 H1 스타일로 측정해서 고정)
+  // prefix 최대 폭 측정
   const measureRef = useRef<HTMLSpanElement | null>(null);
   const [prefixW, setPrefixW] = useState<number>(0);
 
   // ✅ MOBILE DRAWER
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // ✅ CTA: 스크롤 내리면 우측하단 원형 버튼
+  const [showFab, setShowFab] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setShowFab(window.scrollY > 260);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // HERO prefix measure
   useEffect(() => {
     const el = measureRef.current;
     if (!el) return;
@@ -52,6 +65,7 @@ export default function HomePage() {
     };
   }, [prefixes]);
 
+  // HERO word animation
   useEffect(() => {
     const HOLD_MS = 2200;
     const OUT_MS = 420;
@@ -67,69 +81,53 @@ export default function HomePage() {
     return () => window.clearInterval(interval);
   }, [prefixes.length]);
 
-  // ✅ 모바일 메뉴 열렸을 때 배경 스크롤 잠금 + ESC 닫기
-  useEffect(() => {
-    if (!mobileMenuOpen) return;
-
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMobileMenuOpen(false);
-    };
-    window.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      document.body.style.overflow = prev;
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [mobileMenuOpen]);
-
   const currentPrefix = prefixes[wordIdx];
 
   return (
     <>
-      {/* ✅ PC에서만 Header 렌더 (모바일 상단바 완전 제거) */}
+      {/* ✅ PC에서만 Header */}
       <div className="hidden md:block">
         <Header />
       </div>
 
       <main className="bg-white">
-        {/* ✅ MOBILE FIXED TOPBAR: Brand 섹션에서도 항상 맨앞 */}
-        <div className="md:hidden fixed top-0 left-0 right-0 z-[10000] pointer-events-none">
+        {/* ✅ MOBILE FIXED TOPBAR: 로고 가운데 + 햄버거 */}
+        <div
+  className={[
+    "md:hidden fixed top-0 left-0 right-0 z-[10000] pointer-events-none",
+    mobileMenuOpen ? "hidden" : "",
+  ].join(" ")}
+>
           <div
-            className="relative h-[88px] px-5 flex items-center justify-end"
+            className="relative h-[88px] px-4 flex items-center justify-end"
             style={{ paddingTop: "env(safe-area-inset-top)" }}
           >
-            {/* 가운데 메인 로고 (1.5배) */}
-            <div className="pointer-events-auto absolute left-1/2 -translate-x-1/2">
+            <a
+              href="/"
+              className="pointer-events-auto absolute left-1/2 -translate-x-1/2"
+              aria-label="홈으로"
+            >
               <img
                 src="/logo-main.png"
                 alt="WeMD Aesthetic"
-                className="h-16 w-auto object-contain"
+                className="h-14 w-auto object-contain"
                 draggable={false}
               />
-            </div>
+            </a>
 
-            {/* 햄버거 (1.5배) */}
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
               className="
                 pointer-events-auto
-                inline-flex h-16 w-16 items-center justify-center
+                inline-flex h-14 w-14 items-center justify-center
                 rounded-full bg-black/25 text-white backdrop-blur
                 transition hover:bg-black/35 active:scale-[0.96]
               "
               aria-label="메뉴 열기"
             >
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden>
-                <path
-                  d="M4 7h16M4 12h16M4 17h16"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               </svg>
             </button>
           </div>
@@ -155,23 +153,10 @@ export default function HomePage() {
           />
           <div className="absolute inset-0 bg-black/40" />
 
-          {/* ✅ CONTENT */}
-          <div
-            className="
-              relative z-10 mx-auto flex h-full max-w-6xl items-center px-4
-              md:pt-[78px]
-              pt-[88px]
-            "
-          >
+          <div className="relative z-10 mx-auto flex h-full max-w-6xl items-center px-4 md:pt-[78px] pt-[88px]">
             <div className="mx-auto w-full max-w-5xl text-center">
-              {/* ✅ H1 */}
               <h1 className="hero-h1 mx-auto text-white md:mt-0 mt-10">
-                {/* 측정용 */}
-                <span
-                  ref={measureRef}
-                  className="hero-measure pointer-events-none absolute -z-10 opacity-0"
-                  aria-hidden="true"
-                />
+                <span ref={measureRef} className="hero-measure pointer-events-none absolute -z-10 opacity-0" aria-hidden="true" />
 
                 <span
                   className="hero-grid"
@@ -182,13 +167,7 @@ export default function HomePage() {
                   }
                 >
                   <span className="hero-prefix-col">
-                    <span
-                      className={
-                        phase === "out"
-                          ? "hero-word hero-word-out"
-                          : "hero-word hero-word-in"
-                      }
-                    >
+                    <span className={phase === "out" ? "hero-word hero-word-out" : "hero-word hero-word-in"}>
                       {currentPrefix}
                     </span>
                   </span>
@@ -202,24 +181,22 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* ✅ MOBILE: 하단 고정 CTA */}
+            {/* ✅ 모바일 큰 CTA는 일단 유지 (너 요청대로 “통일”은 다음 단계에서 여기 제거하면 됨) */}
             <div className="md:hidden absolute inset-x-0 bottom-0 z-20 px-4 pb-6">
               <a
                 href={BOOKING_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="
-                  inline-flex h-[54px] w-full items-center justify-center
-                  rounded-2xl bg-white
-                  text-[15px] font-semibold text-zinc-900
-                  transition active:scale-[0.99]
-                "
+                className={[
+                  "inline-flex h-[54px] w-full items-center justify-center rounded-2xl bg-white text-[15px] font-semibold text-zinc-900 transition active:scale-[0.99]",
+                  showFab ? "opacity-0 pointer-events-none translate-y-2" : "opacity-100",
+                ].join(" ")}
               >
                 예약하기
               </a>
             </div>
 
-            {/* ✅ PC 버튼은 기존 그대로 유지 */}
+            {/* ✅ PC 버튼 유지 */}
             <div className="hidden md:flex absolute left-1/2 top-[calc(50%+140px)] -translate-x-1/2 items-center justify-center gap-3">
               <a
                 href={BOOKING_URL}
@@ -239,7 +216,6 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* ✅ HERO 스타일/애니메이션 */}
           <style jsx>{`
             .hero-h1 {
               font-weight: 400;
@@ -259,7 +235,6 @@ export default function HomePage() {
                 font-size: 62px;
               }
             }
-
             .hero-measure {
               font-weight: inherit;
               font-size: inherit;
@@ -267,7 +242,6 @@ export default function HomePage() {
               line-height: inherit;
               white-space: nowrap;
             }
-
             .hero-grid {
               display: inline-grid;
               grid-template-columns: var(--prefixW) auto;
@@ -275,31 +249,26 @@ export default function HomePage() {
               column-gap: 14px;
               white-space: nowrap;
             }
-
             .hero-prefix-col {
               text-align: right;
               position: relative;
               height: 1.25em;
               overflow: visible;
             }
-
             .hero-fixed {
               display: inline-block;
             }
-
             .hero-word {
               display: inline-block;
               will-change: transform, opacity;
               transform: translateZ(0);
             }
-
             .hero-word-out {
               animation: wordOut 420ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
             }
             .hero-word-in {
               animation: wordIn 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
             }
-
             @keyframes wordOut {
               0% {
                 opacity: 1;
@@ -310,7 +279,6 @@ export default function HomePage() {
                 transform: translateY(14px);
               }
             }
-
             @keyframes wordIn {
               0% {
                 opacity: 0;
@@ -324,159 +292,90 @@ export default function HomePage() {
           `}</style>
         </section>
 
-        {/* ===== BRAND ===== */}
-        <section id="brand" style={{ scrollMarginTop: HEADER_H }}>
-          <BrandStorySection />
-        </section>
+        {/* ✅ MOBILE: 스크롤 후 우측하단 원형 CTA */}
+        {showFab ? (
+          <a
+            href={BOOKING_URL}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="예약하기"
+            className="
+              md:hidden
+              fixed right-5 z-[9000]
+              inline-flex h-14 w-14 items-center justify-center rounded-full
+              text-white text-[13px] font-extrabold tracking-tight
+              shadow-[0_18px_50px_rgba(183,25,25,0.35)]
+              active:scale-[0.95]
+            "
+            style={{
+              backgroundColor: ACCENT,
+              bottom: "calc(env(safe-area-inset-bottom) + 60px)",
+            }}
+          >
+            <span className="fab-pulse" aria-hidden />
+            <span className="relative z-10">예약</span>
 
-        {/* ===== BRANCHES ===== */}
-        <section id="branches" style={{ scrollMarginTop: HEADER_H }}>
-          <BranchesSection />
-        </section>
+            <style jsx>{`
+              .fab-pulse {
+                position: absolute;
+                inset: 0;
+                border-radius: 9999px;
+                box-shadow: 0 0 0 0 rgba(183, 25, 25, 0.55);
+                animation: pulse 1.6s ease-out infinite;
+              }
+              @keyframes pulse {
+                0% {
+                  transform: scale(1);
+                  opacity: 1;
+                  box-shadow: 0 0 0 0 rgba(183, 25, 25, 0.55);
+                }
+                100% {
+                  transform: scale(1.35);
+                  opacity: 0;
+                  box-shadow: 0 0 0 18px rgba(183, 25, 25, 0);
+                }
+              }
+            `}</style>
+          </a>
+        ) : null}
 
-        {/* ===== FRANCHISE ===== */}
-        <section id="franchise" style={{ scrollMarginTop: HEADER_H }}>
-          <FranchiseSection />
-        </section>
+        {/* ✅ 섹션들 */}
+        <div className="bg-white">
+          <section id="reviews" style={{ scrollMarginTop: HEADER_H }} className="bg-white">
+            <ReviewsSection />
+          </section>
 
-        {/* ===== FOOTER ===== */}
+          <div className="h-px w-full bg-zinc-100/80" />
+
+          <section id="brand" style={{ scrollMarginTop: HEADER_H }} className="bg-white">
+            <BrandStorySection />
+          </section>
+
+          <div className="h-px w-full bg-zinc-100/80" />
+
+          <section id="branches" style={{ scrollMarginTop: HEADER_H }} className="bg-white">
+            <BranchesSection />
+          </section>
+
+          <div className="h-px w-full bg-zinc-100/80" />
+
+          <section id="franchise" style={{ scrollMarginTop: HEADER_H }} className="bg-white">
+            <FranchiseSection />
+          </section>
+        </div>
+
         <div className="bg-[#1A1A1A]">
           <Footer />
         </div>
 
-        {/* ===================== MOBILE DRAWER MENU ===================== */}
-        {mobileMenuOpen ? (
-          <div className="md:hidden fixed inset-0 z-[99999]">
-            {/* overlay */}
-            <button
-              type="button"
-              className="absolute inset-0 bg-black/55"
-              aria-label="메뉴 닫기"
-              onClick={() => setMobileMenuOpen(false)}
-            />
-
-            {/* panel */}
-            <div
-              className="
-                absolute right-0 top-0 h-full w-[86%] max-w-[360px]
-                bg-white
-                shadow-[0_30px_80px_rgba(0,0,0,0.35)]
-                flex flex-col
-              "
-              role="dialog"
-              aria-modal="true"
-            >
-              {/* top */}
-              <div className="flex items-center justify-between px-5 pt-5">
-                <div className="text-[14px] font-semibold text-zinc-900">메뉴</div>
-                <button
-                  type="button"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-zinc-100"
-                  onClick={() => setMobileMenuOpen(false)}
-                  aria-label="닫기"
-                >
-                  ✕
-                </button>
-              </div>
-
-              {/* menu list */}
-              <div className="mt-6 px-5 pb-5 overflow-y-auto">
-                {/* BRAND */}
-                <div className="mb-2 text-[12px] font-semibold tracking-[0.18em] text-zinc-400">
-                  BRAND
-                </div>
-                <nav className="flex flex-col">
-                  <a
-                    href="/"
-                    className="py-3 text-[16px] font-semibold text-zinc-900"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    WeMD 에스테틱
-                  </a>
-                </nav>
-
-                <div className="my-4 h-px w-full bg-zinc-200" />
-
-                {/* TREATMENT */}
-                <div className="mb-2 text-[12px] font-semibold tracking-[0.18em] text-zinc-400">
-                  TREATMENT
-                </div>
-                <nav className="flex flex-col">
-                  <a
-                    href="/face"
-                    className="py-3 text-[16px] font-semibold text-zinc-900"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    얼굴 관리
-                  </a>
-                  <a
-                    href="/body"
-                    className="py-3 text-[16px] font-semibold text-zinc-900"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    바디 관리
-                  </a>
-                  <a
-                    href="/custom"
-                    className="py-3 text-[16px] font-semibold text-zinc-900"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    맞춤 케어
-                  </a>
-                </nav>
-
-                <div className="my-4 h-px w-full bg-zinc-200" />
-
-                {/* INFO */}
-                <div className="mb-2 text-[12px] font-semibold tracking-[0.18em] text-zinc-400">
-                  INFO
-                </div>
-                <nav className="flex flex-col">
-                  <a
-                    href="#branches"
-                    className="py-3 text-[16px] font-semibold text-zinc-900"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    지점 안내
-                  </a>
-                  <a
-                    href="#franchise"
-                    className="py-3 text-[16px] font-semibold text-zinc-900"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    가맹 문의
-                  </a>
-                </nav>
-              </div>
-
-              {/* bottom CTA */}
-              <div className="mt-auto border-t border-zinc-200 p-5">
-                <div className="grid gap-3">
-                  <a
-                    href="https://map.naver.com/p/entry/place/1063607602"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="
-                      inline-flex h-[52px] w-full items-center justify-center
-                      rounded-2xl bg-zinc-900 text-[15px] font-semibold text-white
-                    "
-                  >
-                    예약하기
-                  </a>
-                  <a
-                    href="tel:0269598989"
-                    className="
-                      inline-flex h-[52px] w-full items-center justify-center
-                      rounded-2xl bg-zinc-100 text-[15px] font-semibold text-zinc-900
-                    "
-                  >
-                    전화상담
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : null}
+        {/* ✅✅✅ 드로어: 페이지에선 이 한 줄로 끝 */}
+        <MobileDrawer
+          open={mobileMenuOpen}
+          onClose={() => setMobileMenuOpen(false)}
+          bookingUrl={BOOKING_URL}
+          variant="home"
+          showReviewsLink={true} // "WeMD 에스테틱" 대신 "고객후기" 노출
+        />
       </main>
     </>
   );

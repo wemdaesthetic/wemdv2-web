@@ -5,7 +5,6 @@ import Link from "next/link";
 import { BRANCHES } from "@/config/branches";
 
 export default function BranchesSection() {
-  // ✅ 모바일 옵션(요청대로)
   const mobileOptions = useMemo(
     () => [
       { slug: "dunchon", label: "서울 강동구 본점", enabled: true },
@@ -31,12 +30,8 @@ export default function BranchesSection() {
     <section id="branches" className="bg-white scroll-mt-[78px]">
       {/* ===================== MOBILE ONLY (md 미만) ===================== */}
       <div className="md:hidden">
-        <div className="relative px-4 pt-14 pb-16 overflow-hidden">
-          {/* 은은한 radial gradient 배경 */}
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_0%,rgba(185,14,10,0.08),transparent_45%)]" />
-
+        <div className="relative px-4 pt-14 pb-16 overflow-hidden bg-white">
           <div className="relative z-10">
-            {/* 타이틀 */}
             <div className="mx-auto max-w-[520px]">
               <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">
                 BRANCHES
@@ -61,7 +56,7 @@ export default function BranchesSection() {
                     onChange={(e) => setSelectedSlug(e.target.value)}
                     className="
                       w-full appearance-none
-                      rounded-2xl bg-white/95
+                      rounded-2xl bg-white
                       px-4 py-4 pr-12
                       text-[15px] font-semibold text-zinc-900
                       shadow-[0_18px_60px_rgba(15,23,42,0.10)]
@@ -75,7 +70,6 @@ export default function BranchesSection() {
                     ))}
                   </select>
 
-                  {/* chevron */}
                   <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
                       <path
@@ -94,12 +88,11 @@ export default function BranchesSection() {
               <div className="mt-6">
                 <div
                   className="
-                    rounded-3xl bg-white/95 p-6
+                    rounded-3xl bg-white p-6
                     shadow-[0_20px_70px_rgba(15,23,42,0.12)]
                     ring-1 ring-black/5
                   "
                 >
-                  {/* 상단 라벨 */}
                   <div className="flex items-center gap-2">
                     {isReady ? (
                       <>
@@ -126,12 +119,10 @@ export default function BranchesSection() {
                     )}
                   </div>
 
-                  {/* 지점명 */}
                   <div className="mt-3 text-[20px] font-semibold tracking-tight text-zinc-900">
                     {selected.branch?.name ?? "지점 준비중"}
                   </div>
 
-                  {/* 주소/전화 */}
                   <div className="mt-5 space-y-3 text-[14px] leading-relaxed">
                     <InfoRowMobile
                       label="주소"
@@ -145,7 +136,6 @@ export default function BranchesSection() {
                     />
                   </div>
 
-                  {/* CTA */}
                   <div className="mt-6">
                     {isReady ? (
                       <Link
@@ -176,7 +166,6 @@ export default function BranchesSection() {
                   </div>
                 </div>
 
-                {/* 선택 힌트 */}
                 <div className="mt-3 text-center text-[12px] text-zinc-400">
                   위 드롭다운에서 지점을 선택하세요
                 </div>
@@ -186,10 +175,9 @@ export default function BranchesSection() {
         </div>
       </div>
 
-      {/* ===================== PC ONLY (md 이상) — 기존 코드 그대로 ===================== */}
+      {/* ===================== PC ONLY (md 이상) ===================== */}
       <div className="hidden md:block">
         <div className="mx-auto max-w-6xl px-4 py-28">
-          {/* Section Title */}
           <div className="mx-auto mb-16 max-w-3xl text-center">
             <h2 className="text-[40px] font-semibold tracking-tight text-zinc-900 md:text-[52px]">
               지점 안내
@@ -199,7 +187,6 @@ export default function BranchesSection() {
             </p>
           </div>
 
-          {/* Cards */}
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {BRANCHES.map((b) => {
               const isReady = b.address && b.address !== "준비중";
@@ -207,7 +194,6 @@ export default function BranchesSection() {
 
               const CardInner = (
                 <>
-                  {/* TOP LABEL */}
                   <div className="flex items-center justify-between">
                     <div
                       className={
@@ -226,19 +212,16 @@ export default function BranchesSection() {
                     )}
                   </div>
 
-                  {/* NAME */}
                   <div className="mt-3 text-[18px] font-semibold tracking-tight text-zinc-900">
                     {b.name}
                   </div>
 
-                  {/* SHORT DESC */}
                   {b.short && (
                     <div className="mt-2 text-[13px] leading-relaxed text-zinc-600">
                       {b.short}
                     </div>
                   )}
 
-                  {/* INFO */}
                   <div className="mt-6 space-y-2 text-[13px] leading-relaxed text-zinc-600">
                     <div className="line-clamp-2">
                       <span className="text-zinc-400">주소</span>{" "}
@@ -250,7 +233,6 @@ export default function BranchesSection() {
                     </div>
                   </div>
 
-                  {/* CTA */}
                   <div
                     className={
                       isReady
