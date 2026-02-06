@@ -1,8 +1,9 @@
+// FILE: src/components/sections/FranchiseSection.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 
-const ACCENT = "#B71919"; // 관리페이지 예약 카드 톤
+const ACCENT = "#B71919";
 
 export default function FranchiseSection() {
   const email = "admin@wemdibs.com";
@@ -36,21 +37,37 @@ export default function FranchiseSection() {
     <section id="franchise" className="bg-white scroll-mt-[78px]">
       {/* ===================== MOBILE ONLY (md 미만) ===================== */}
       <div className="md:hidden">
-        {/* ✅ 섹션 배경 완전 화이트 + “회색 잔상” 원인(강한 shadow) 제거 */}
         <div className="relative px-4 pt-14 pb-16 bg-white">
           <div className="mx-auto max-w-[520px]">
-            <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">CONTACT</div>
-            <h2 className="mt-2 text-[28px] font-semibold tracking-tight text-zinc-900">가맹 문의</h2>
-            <p className="mt-2 text-[14px] leading-relaxed text-zinc-600">
-              WeMD ibs / WeMD Aesthetic 과 함께 성장할 기회를 만나보세요.
-            </p>
+            {/* ✅ 새 섹션 타이틀 규격: 모바일 left */}
+            <div className="text-left">
+              <div
+                className="font-['Pretendard'] font-bold text-[30px] leading-[36px]"
+                style={{ color: ACCENT }}
+              >
+                Contact
+              </div>
 
-            {/* ✅ 붉은 “예약 카드” 느낌의 컨테이너 */}
+              <div
+                className="mt-2 font-['Pretendard'] font-light text-[20px] leading-[24px]"
+                style={{ color: "#404040" }}
+              >
+                가맹 문의
+              </div>
+
+              <div
+                className="mt-2 font-['Pretendard'] font-light text-[18px] leading-[18px]"
+                style={{ color: "#9A9A9A" }}
+              >
+                WeMD Aesthetic 과 함께 성장할 기회를 만나보세요.
+              </div>
+            </div>
+
+            {/* ✅ 붉은 컨테이너 */}
             <div
               className="mt-6 overflow-hidden rounded-[32px] p-5 text-white relative"
               style={{ backgroundColor: ACCENT }}
             >
-              {/* 은은한 패턴 */}
               <div
                 className="pointer-events-none absolute inset-0 opacity-[0.22]"
                 style={{
@@ -60,7 +77,6 @@ export default function FranchiseSection() {
               />
 
               <div className="relative grid gap-3">
-                {/* 이메일 */}
                 <button
                   type="button"
                   onClick={onCopyEmail}
@@ -87,7 +103,6 @@ export default function FranchiseSection() {
                   </div>
                 </button>
 
-                {/* 전화 */}
                 <a
                   href={phoneHref}
                   className="
@@ -122,14 +137,34 @@ export default function FranchiseSection() {
       {/* ===================== PC ONLY (md 이상) ===================== */}
       <div className="hidden md:block">
         <div className="mx-auto max-w-6xl px-4 py-28">
+          {/* ✅ 새 섹션 타이틀 규격: 데스크탑 center */}
           <div className="mx-auto mb-16 max-w-3xl text-center">
-            <h2 className="text-[40px] font-semibold tracking-tight text-zinc-900 md:text-[52px]">가맹 문의</h2>
-            <p className="mt-4 text-[15px] leading-relaxed text-zinc-600 md:text-[16px]">
+            <div
+              className="font-['Pretendard'] font-bold text-[46px] leading-[55px]"
+              style={{ color: ACCENT }}
+            >
+              Contact
+            </div>
+
+            <div
+              className="mt-2 font-['Pretendard'] font-light text-[30px] leading-[36px]"
+              style={{ color: "#404040" }}
+            >
+              가맹 문의
+            </div>
+
+            <div
+              className="mt-2 font-['Pretendard'] font-light text-[20px] leading-[24px]"
+              style={{ color: "#9A9A9A" }}
+            >
               WeMD ibs / WeMD Aesthetic 과 함께 성장할 기회를 만나보세요.
-            </p>
+            </div>
           </div>
 
-          <div className="overflow-hidden rounded-[32px] p-8 text-white relative" style={{ backgroundColor: ACCENT }}>
+          <div
+            className="overflow-hidden rounded-[32px] p-8 text-white relative"
+            style={{ backgroundColor: ACCENT }}
+          >
             <div
               className="pointer-events-none absolute inset-0 opacity-[0.22]"
               style={{

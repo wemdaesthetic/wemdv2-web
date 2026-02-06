@@ -132,7 +132,7 @@ export default function TreatmentPage({
               className="h-full w-full object-cover opacity-75"
               draggable={false}
             />
-            <div className="absolute inset-0 bg-black/45" />
+            <div className="absolute inset-0 bg-transparent" />
           </div>
 
           <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-[110px] md:pt-[140px]">

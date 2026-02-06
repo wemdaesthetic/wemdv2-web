@@ -30,9 +30,17 @@ export const DRAWER_ROUTES = {
   },
 } as const;
 
+/**
+ * ✅ INFO 링크도 여기서 한 번에 관리
+ * - 지점 안내를 "/#branches"로 둘지, "/branches/dunchon"으로 둘지 여기서만 바꾸면 됨
+ */
 export const DRAWER_INFO_LINKS = {
   reviews: { label: "고객후기", href: "/#reviews" },
   brand: { label: "브랜드 스토리", href: "/#brand" },
-  branches: { label: "지점 안내", href: "/#branches" },
+
+  // 👇 너가 MobileDrawer에서 쓰던 동선 유지(지점 페이지로 이동)
+  branches: { label: "지점 안내", href: "/branches/dunchon" },
+
+  // 👇 가맹 문의는 섹션 앵커 유지
   franchise: { label: "가맹 문의", href: "/#franchise" },
 } as const;

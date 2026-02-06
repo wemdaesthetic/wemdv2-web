@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import IntroOverlay from "../components/intro/IntroOverlay";
+import IntroOverlay from "../../components/_legacy/intro/IntroOverlay";
 
 type Phase = "intro" | "revealing" | "done";
 

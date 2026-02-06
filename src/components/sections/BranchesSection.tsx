@@ -1,8 +1,11 @@
+// FILE: src/components/sections/BranchesSection.tsx
 "use client";
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { BRANCHES } from "@/config/branches";
+
+const ACCENT = "#B71919";
 
 export default function BranchesSection() {
   const mobileOptions = useMemo(
@@ -33,15 +36,29 @@ export default function BranchesSection() {
         <div className="relative px-4 pt-14 pb-16 overflow-hidden bg-white">
           <div className="relative z-10">
             <div className="mx-auto max-w-[520px]">
-              <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">
-                BRANCHES
+              {/* ✅ 새 섹션 타이틀 규격: 모바일 left / 데스크탑 center */}
+              <div className="text-left">
+                <div
+                  className="font-['Pretendard'] font-bold text-[30px] leading-[36px]"
+                  style={{ color: ACCENT }}
+                >
+                  Branches
+                </div>
+
+                <div
+                  className="mt-2 font-['Pretendard'] font-light text-[20px] leading-[24px]"
+                  style={{ color: "#404040" }}
+                >
+                  지점 안내
+                </div>
+
+                <div
+                  className="mt-2 font-['Pretendard'] font-light text-[18px] leading-[18px]"
+                  style={{ color: "#9A9A9A" }}
+                >
+                  가까운 WeMD 지점을 선택해 자세한 안내를 확인하세요.
+                </div>
               </div>
-              <h2 className="mt-2 text-[28px] font-semibold tracking-tight text-zinc-900">
-                지점 안내
-              </h2>
-              <p className="mt-2 text-[14px] leading-relaxed text-zinc-600">
-                가까운 WeMD 지점을 선택해 자세한 안내를 확인하세요.
-              </p>
 
               {/* 드롭다운 */}
               <div className="mt-6">
@@ -178,13 +195,28 @@ export default function BranchesSection() {
       {/* ===================== PC ONLY (md 이상) ===================== */}
       <div className="hidden md:block">
         <div className="mx-auto max-w-6xl px-4 py-28">
+          {/* ✅ 새 섹션 타이틀 규격: 데스크탑 center */}
           <div className="mx-auto mb-16 max-w-3xl text-center">
-            <h2 className="text-[40px] font-semibold tracking-tight text-zinc-900 md:text-[52px]">
+            <div
+              className="font-['Pretendard'] font-bold text-[46px] leading-[55px]"
+              style={{ color: ACCENT }}
+            >
+              Branches
+            </div>
+
+            <div
+              className="mt-2 font-['Pretendard'] font-light text-[30px] leading-[36px]"
+              style={{ color: "#404040" }}
+            >
               지점 안내
-            </h2>
-            <p className="mt-4 text-[15px] leading-relaxed text-zinc-600 md:text-[16px]">
+            </div>
+
+            <div
+              className="mt-2 font-['Pretendard'] font-light text-[20px] leading-[24px]"
+              style={{ color: "#9A9A9A" }}
+            >
               가까운 WeMD 지점을 선택해 자세한 안내를 확인하세요.
-            </p>
+            </div>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -217,9 +249,7 @@ export default function BranchesSection() {
                   </div>
 
                   {b.short && (
-                    <div className="mt-2 text-[13px] leading-relaxed text-zinc-600">
-                      {b.short}
-                    </div>
+                    <div className="mt-2 text-[13px] leading-relaxed text-zinc-600">{b.short}</div>
                   )}
 
                   <div className="mt-6 space-y-2 text-[13px] leading-relaxed text-zinc-600">

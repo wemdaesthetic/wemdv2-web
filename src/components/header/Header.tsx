@@ -55,27 +55,17 @@ function displayLabel(label: string) {
   return label;
 }
 
-/* ---------- Header ---------- */
+/* ---------- Header (PC ONLY) ---------- */
 export default function Header() {
   const router = useRouter();
 
   const [activeMega, setActiveMega] = useState<string | null>(null);
   const headerRef = useRef<HTMLElement | null>(null);
 
-  // ✅ 모바일 드로어
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const openMobile = () => setMobileOpen(true);
-  const closeMobile = () => setMobileOpen(false);
-
   // nav items
   const face = getItem("얼굴 관리");
   const body = getItem("바디 관리");
   const custom = getItem("맞춤 케어");
-
-  // ✅ 모바일 드로어용 링크 (가맹 문의)
-  const franchise = getItem("가맹 문의") || getItem("입점 문의");
-  const franchiseHref =
-    (franchise && franchise.type === "link" ? franchise.href : null) || "/#franchise";
 
   const activeItem = useMemo(() => {
     if (!activeMega) return null;
@@ -93,38 +83,20 @@ export default function Header() {
     return () => window.removeEventListener("mousedown", onClickOutside);
   }, [activeMega]);
 
-  /* ---------- ESC 닫기 (Mega + Mobile) ---------- */
+  /* ---------- ESC 닫기 (PC Mega) ---------- */
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") {
-        setActiveMega(null);
-        setMobileOpen(false);
-      }
+      if (e.key === "Escape") setActiveMega(null);
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  /* ---------- 모바일 드로어 열리면 스크롤 잠금 ---------- */
-  useEffect(() => {
-    if (!mobileOpen) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, [mobileOpen]);
-
   /* ---------- 헤더 색 판정 ---------- */
   const headerIsWhite = true; // ✅ PC는 항상 흰색
-
   const topText = headerIsWhite ? "text-zinc-900" : "text-white";
   const topTextHover = headerIsWhite ? "hover:text-zinc-950" : "hover:text-white";
   const dividerColor = headerIsWhite ? "bg-zinc-300" : "bg-white/40";
-
-  // ✅ 전화상담 번호
-  const CONSULT_TEL = "02-6959-8989";
-  const consultTelHref = `tel:${CONSULT_TEL.replaceAll("-", "").replaceAll(" ", "")}`;
 
   return (
     <header
@@ -137,41 +109,7 @@ export default function Header() {
       onMouseLeave={() => setActiveMega(null)}
     >
       <div className="mx-auto max-w-6xl px-4">
-        {/* ================= MOBILE HEADER (md 미만 전용) ================= */}
-        <div className="relative flex h-[64px] items-center md:hidden">
-          {/* 가운데 서브로고만 크게 */}
-          <div className="absolute left-1/2 -translate-x-1/2">
-            <Image
-              src="/logo-sub.svg"
-              alt="WeMD Aesthetic"
-              width={180}
-              height={180}
-              priority
-              className="h-[56px] w-auto"
-            />
-          </div>
-
-          {/* 햄버거: 우측 */}
-          <button
-            type="button"
-            aria-label="메뉴 열기"
-            className="ml-auto inline-flex h-10 w-10 items-center justify-center rounded-full"
-            onClick={openMobile}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className={cn("h-6 w-6", topText)}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={1.6}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 6h18M3 12h18M3 18h18" />
-            </svg>
-          </button>
-        </div>
-
-        {/* ================= PC HEADER (md 이상 전용) ================= */}
+        {/* ✅ PC HEADER ONLY (md 이상) */}
         <div className="hidden h-[78px] items-center justify-between md:flex">
           {/* LEFT */}
           <div className="flex items-center">
@@ -218,142 +156,26 @@ export default function Header() {
               href={BOOKING_URL}
               target="_blank"
               rel="noreferrer"
-              className={cn(
-                "ml-7 hidden text-[16px] font-medium transition-colors md:inline-block",
-                topText,
-                topTextHover
-              )}
+              className={cn("ml-7 hidden text-[16px] font-medium transition-colors md:inline-block", topText, topTextHover)}
             >
               예약하기
             </a>
           </div>
 
-          {/* RIGHT (✅ 서브로고 제거 + 지점안내/가맹문의 추가) */}
+          {/* RIGHT */}
           <div className="flex items-center gap-7">
-            <a
-              href="/#branches"
-              className={cn("text-[14px] font-semibold transition-colors", topText, topTextHover)}
-            >
+            <a href="/#branches" className={cn("text-[14px] font-semibold transition-colors", topText, topTextHover)}>
               지점안내
             </a>
-
-            <a
-              href="/#franchise"
-              className={cn("text-[14px] font-semibold transition-colors", topText, topTextHover)}
-            >
+            <a href="/#franchise" className={cn("text-[14px] font-semibold transition-colors", topText, topTextHover)}>
               가맹문의
             </a>
           </div>
         </div>
       </div>
 
-      {/* ✅ Toss-like Mega Menu (WHITE) */}
+      {/* ✅ PC Mega Menu */}
       <MegaMenuTossLike item={activeItem} />
-
-      {/* ================= MOBILE DRAWER ================= */}
-      {mobileOpen ? (
-        <div className="md:hidden">
-          {/* dim */}
-          <div className="fixed inset-0 z-[999] bg-black/35" onClick={closeMobile} aria-hidden />
-
-          {/* panel */}
-          <aside
-            className="
-              fixed right-0 top-0 z-[1000] h-dvh w-[86vw] max-w-[360px]
-              bg-white shadow-[0_20px_80px_rgba(0,0,0,0.25)]
-              flex flex-col
-            "
-            role="dialog"
-            aria-modal="true"
-            aria-label="모바일 메뉴"
-          >
-            {/* top */}
-            <div className="flex items-center justify-between px-5 pt-5">
-              <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">MENU</div>
-              <button
-                type="button"
-                onClick={closeMobile}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full hover:bg-zinc-50"
-                aria-label="메뉴 닫기"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-zinc-700"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1.8}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 6l12 12M18 6L6 18" />
-                </svg>
-              </button>
-            </div>
-
-            {/* menu list */}
-            <div className="px-5 pb-6 pt-4">
-              <MobileLink href="#brand" onClick={closeMobile}>
-                WeMD 에스테틱
-              </MobileLink>
-
-              <div className="mt-5 h-px w-full bg-zinc-100" />
-
-              {/* ✅ 기본 진입 slug로 이동 */}
-              <div className="mt-5 space-y-1">
-                <MobileLink href={ROUTES.face.default} onClick={closeMobile}>
-                  얼굴 관리
-                </MobileLink>
-                <MobileLink href={ROUTES.body.default} onClick={closeMobile}>
-                  바디 관리
-                </MobileLink>
-                <MobileLink href={ROUTES.custom.default} onClick={closeMobile}>
-                  맞춤 케어
-                </MobileLink>
-              </div>
-
-              <div className="mt-5 h-px w-full bg-zinc-100" />
-
-              <div className="mt-5 space-y-1">
-                <MobileLink href="/#branches" onClick={closeMobile}>
-                  지점 안내
-                </MobileLink>
-                <MobileLink href={franchiseHref} onClick={closeMobile}>
-                  가맹 문의
-                </MobileLink>
-              </div>
-            </div>
-
-            {/* bottom CTA */}
-            <div className="mt-auto px-5 pb-6">
-              <div className="grid grid-cols-1 gap-3">
-                <a
-                  href={BOOKING_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="
-                    inline-flex h-[50px] items-center justify-center rounded-2xl
-                    bg-zinc-900 text-[15px] font-semibold text-white
-                    active:scale-[0.99]
-                  "
-                >
-                  예약하기
-                </a>
-                <a
-                  href={consultTelHref}
-                  className="
-                    inline-flex h-[50px] items-center justify-center rounded-2xl
-                    border border-zinc-200 bg-white text-[15px] font-semibold text-zinc-900
-                    active:scale-[0.99]
-                  "
-                >
-                  전화상담
-                </a>
-              </div>
-
-              <div className="mt-4 text-center text-[12px] text-zinc-400">WeMD Aesthetic</div>
-            </div>
-          </aside>
-        </div>
-      ) : null}
     </header>
   );
 }
@@ -397,33 +219,6 @@ function MegaTopButton({
     >
       {displayLabel(item.label)}
     </button>
-  );
-}
-
-function MobileLink({
-  href,
-  onClick,
-  children,
-}: {
-  href: string;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      onClick={onClick}
-      className="
-        flex items-center justify-between rounded-2xl px-4 py-3
-        text-[16px] font-semibold text-zinc-900
-        hover:bg-zinc-50 active:bg-zinc-100
-      "
-    >
-      <span>{children}</span>
-      <span className="text-zinc-300" aria-hidden>
-        →
-      </span>
-    </Link>
   );
 }
 
@@ -471,9 +266,7 @@ function MegaMenuTossLike({ item }: { item: NavMega | null }) {
             >
               {normalized.sections.map((section) => (
                 <div key={section.title} className="min-w-0">
-                  <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">
-                    {section.title || "MENU"}
-                  </div>
+                  <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">{section.title || "MENU"}</div>
 
                   <div className="mt-4 flex flex-col gap-3">
                     {section.links.map((l) => (
@@ -563,34 +356,19 @@ function normalizeMegaItem(item: NavMega): NavMega {
   if (item.label === "얼굴 관리") {
     return {
       ...item,
-      sections: [
-        {
-          title: item.sections?.[0]?.title || "FACE",
-          links: ROUTES.face.items,
-        },
-      ],
+      sections: [{ title: item.sections?.[0]?.title || "FACE", links: ROUTES.face.items }],
     };
   }
   if (item.label === "바디 관리") {
     return {
       ...item,
-      sections: [
-        {
-          title: item.sections?.[0]?.title || "BODY",
-          links: ROUTES.body.items,
-        },
-      ],
+      sections: [{ title: item.sections?.[0]?.title || "BODY", links: ROUTES.body.items }],
     };
   }
   if (item.label === "맞춤 케어") {
     return {
       ...item,
-      sections: [
-        {
-          title: item.sections?.[0]?.title || "CUSTOM",
-          links: ROUTES.custom.items,
-        },
-      ],
+      sections: [{ title: item.sections?.[0]?.title || "CUSTOM", links: ROUTES.custom.items }],
     };
   }
   return item;

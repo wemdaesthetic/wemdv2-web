@@ -2,10 +2,14 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import SectionTitle from "@/components/common/SectionTitle";
+
+const ACCENT = "#AD161B";
+
+type Frame = { src: string; alt: string; label: string };
 
 export default function BrandStorySection() {
-  // ✅ PC(기존) 프레임
-  const frames = useMemo(
+  const frames: Frame[] = useMemo(
     () => [
       { src: "/brand/bi-step.svg", alt: "WeMD CI Guide", label: "CI GUIDE" },
       { src: "/brand/logo-signature.svg", alt: "WeMD Signature", label: "SIGNATURE" },
@@ -14,17 +18,12 @@ export default function BrandStorySection() {
   );
 
   const total = frames.length;
-
-  // --------- PC(기존)용 상태: 유지 ---------
   const [idx, setIdx] = useState(0);
   const [imgOk, setImgOk] = useState<boolean[]>(() => frames.map(() => true));
 
+  // autoplay
   const intervalRef = useRef<number | null>(null);
   const AUTOPLAY_MS = 6200;
-
-  const goTo = (nextIdx: number) => {
-    setIdx(() => ((nextIdx % total) + total) % total);
-  };
 
   const restartAutoplay = () => {
     if (intervalRef.current) window.clearInterval(intervalRef.current);
@@ -45,12 +44,9 @@ export default function BrandStorySection() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [total]);
 
-  const counter = `${String(idx + 1).padStart(2, "0")} / ${String(total).padStart(
-    2,
-    "0"
-  )}`;
+  const counter = `${String(idx + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
 
-  // ===================== PC: SWIPE =====================
+  // swipe (PC 카드 내부)
   const startXRef = useRef<number | null>(null);
   const draggingRef = useRef(false);
   const lockRef = useRef(false);
@@ -63,6 +59,10 @@ export default function BrandStorySection() {
     window.setTimeout(() => {
       lockRef.current = false;
     }, LOCK_MS);
+  };
+
+  const goTo = (nextIdx: number) => {
+    setIdx(() => ((nextIdx % total) + total) % total);
   };
 
   const onPointerDown = (e: React.PointerEvent) => {
@@ -96,19 +96,21 @@ export default function BrandStorySection() {
 
   return (
     <section className="bg-white scroll-mt-[78px]">
-      {/* ✅✅ MOBILE: 슬로건만 기본, CI는 더보기로 */}
+      {/* ===================== MOBILE ===================== */}
       <MobileBrandStack />
 
-      {/* ===================== PC (md 이상) ===================== */}
+      {/* ===================== DESKTOP (md+) ===================== */}
       <div className="hidden md:block">
         <div className="mx-auto max-w-6xl px-4 py-28">
-          <div className="mx-auto mb-16 max-w-3xl text-center">
-            <h2 className="text-[40px] font-semibold tracking-tight text-zinc-900 md:text-[52px]">
-              브랜드 스토리
-            </h2>
-            <p className="mt-4 text-[15px] leading-relaxed text-zinc-600 md:text-[16px]">
-              사람을 중심에 두고 기술과 문화로 확장하며, 조화와 쉼으로 완성하는 WeMD의 아이덴티티를 소개합니다.
-            </p>
+          {/* ✅ 새 타이틀 규격 (모바일 left / 데스크탑 center) */}
+          <div className="mb-16">
+            <SectionTitle
+              en="Brand Story"
+              ko="위엠디(WeMD)의 미션"
+              desc="WeMD의 슬로건, 브랜드 아이덴티티를 이야기합니다."
+              align="center"
+              accent={ACCENT}
+            />
           </div>
 
           <div className="grid items-stretch gap-8 md:grid-cols-2">
@@ -183,10 +185,10 @@ export default function BrandStorySection() {
                             alt={f.alt}
                             className="h-full w-full object-contain"
                             onError={() =>
-                              setImgOk((prevState) => {
-                                const nextState = [...prevState];
-                                nextState[i] = false;
-                                return nextState;
+                              setImgOk((prev) => {
+                                const next = [...prev];
+                                next[i] = false;
+                                return next;
                               })
                             }
                             draggable={false}
@@ -263,10 +265,8 @@ export default function BrandStorySection() {
 }
 
 function MobileBrandStack() {
-  // ✅ 모바일: CI 카드 "더보기"로 토글
   const [showCi, setShowCi] = useState(false);
 
-  // ====== CI 슬라이더(이미지 슬롯만) ======
   const ciImages = useMemo(() => ["/brand/bi-step.svg", "/brand/logo-signature.svg"], []);
   const ciRef = useRef<HTMLDivElement | null>(null);
   const [ciIdx, setCiIdx] = useState(0);
@@ -278,8 +278,8 @@ function MobileBrandStack() {
     const onScroll = () => {
       const w = el.clientWidth;
       if (!w) return;
-      const idx = Math.round(el.scrollLeft / w);
-      setCiIdx(Math.max(0, Math.min(ciImages.length - 1, idx)));
+      const nextIdx = Math.round(el.scrollLeft / w);
+      setCiIdx(Math.max(0, Math.min(ciImages.length - 1, nextIdx)));
     };
 
     el.addEventListener("scroll", onScroll, { passive: true });
@@ -291,22 +291,18 @@ function MobileBrandStack() {
       <div className="relative px-4 pt-14 pb-16 overflow-hidden bg-white">
         <div className="relative z-10">
           <div className="mx-auto max-w-[520px]">
-            {/* ✅ 모바일 섹션 타이틀 (sticky 제거 → 상단바 걸림 해결) */}
-            <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">
-              BRAND
-            </div>
-            <h2 className="mt-2 text-[28px] font-semibold tracking-tight text-zinc-900">
-              브랜드 스토리
-            </h2>
-            <p className="mt-2 text-[14px] leading-relaxed text-zinc-600">
-              WeMD의 슬로건과 브랜드 아이덴티티를 확인해보세요.
-            </p>
+            {/* ✅ 새 타이틀 규격 */}
+            <SectionTitle
+              en="Brand Story"
+              ko="위엠디(WeMD)의 미션"
+              desc="WeMD의 슬로건, 브랜드 아이덴티티를 이야기합니다."
+              align="left"
+              accent={ACCENT}
+            />
 
-            {/* 1) SLOGAN (기본 노출) */}
+            {/* 1) SLOGAN */}
             <div className="mt-6 rounded-3xl bg-white p-7 shadow-[0_20px_70px_rgba(15,23,42,0.12)] ring-1 ring-black/5">
-              <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">
-                WeMD SLOGAN
-              </div>
+              <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">WeMD SLOGAN</div>
 
               <div className="mt-5 text-[34px] leading-[1.06] tracking-tight text-zinc-900">
                 <span className="text-zinc-400">
@@ -333,46 +329,40 @@ function MobileBrandStack() {
               </div>
             </div>
 
-            {/* ✅ CI 더보기 토글 */}
+            {/* CI 더보기 */}
             <div className="mt-6 flex justify-center">
-  <button
-    type="button"
-    onClick={() => setShowCi((p) => !p)}
-    aria-expanded={showCi}
-    className="
-      group relative
-      text-[13px] font-semibold tracking-[0.12em]
-      text-zinc-500
-      transition-all duration-300
-      hover:text-zinc-900
-      active:opacity-70
-    "
-  >
-    <span className="relative z-10">
-      {showCi ? "CLOSE" : "MORE"}
-    </span>
+              <button
+                type="button"
+                onClick={() => setShowCi((p) => !p)}
+                aria-expanded={showCi}
+                className="
+                  group relative
+                  text-[13px] font-semibold tracking-[0.12em]
+                  text-zinc-500
+                  transition-all duration-300
+                  hover:text-zinc-900
+                  active:opacity-70
+                "
+              >
+                <span className="relative z-10">{showCi ? "CLOSE" : "MORE"}</span>
+                <span
+                  aria-hidden
+                  className="
+                    absolute left-1/2 -bottom-1 h-[1px] w-0
+                    -translate-x-1/2
+                    bg-zinc-900
+                    transition-all duration-300
+                    group-hover:w-full
+                  "
+                />
+              </button>
+            </div>
 
-    {/* underline interaction */}
-    <span
-      aria-hidden
-      className="
-        absolute left-1/2 -bottom-1 h-[1px] w-0
-        -translate-x-1/2
-        bg-zinc-900
-        transition-all duration-300
-        group-hover:w-full
-      "
-    />
-  </button>
-</div>
-
-            {/* 2) CI (더보기로만 노출) */}
+            {/* 2) CI */}
             {showCi ? (
               <div className="mt-4 rounded-3xl bg-white p-7 shadow-[0_20px_70px_rgba(15,23,42,0.12)] ring-1 ring-black/5">
                 <div className="flex items-start justify-between">
-                  <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">
-                    WeMD CI
-                  </div>
+                  <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">WeMD CI</div>
 
                   <div className="rounded-full bg-zinc-900/80 px-3 py-1 text-[12px] font-semibold text-white">
                     {ciIdx + 1}/{ciImages.length}

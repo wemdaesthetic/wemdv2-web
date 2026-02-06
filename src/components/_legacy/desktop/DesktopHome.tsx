@@ -1,5 +1,7 @@
+// FILE: src/components/_legacy/desktop/DesktopHome.tsx
 "use client";
 
+import type { CSSProperties } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Header from "@/components/header/Header";
 import BrandStorySection from "@/components/brand/BrandStorySection";
@@ -9,11 +11,10 @@ import { BOOKING_URL } from "@/config/nav";
 
 const HEADER_H = 78;
 
+type HeroVars = CSSProperties & Record<"--prefixW", string>;
+
 export default function HomePage() {
-  const prefixes = useMemo(
-    () => ["작은얼굴은", "웨딩관리는", "체형개선은", "맞춤케어는"],
-    []
-  );
+  const prefixes = useMemo(() => ["작은얼굴은", "웨딩관리는", "체형개선은", "맞춤케어는"], []);
 
   const [wordIdx, setWordIdx] = useState(0);
   const [phase, setPhase] = useState<"in" | "out">("in");
@@ -28,7 +29,6 @@ export default function HomePage() {
 
     const measure = () => {
       let max = 0;
-
       for (const t of prefixes) {
         el.textContent = t;
         const w = Math.ceil(el.getBoundingClientRect().width);
@@ -67,6 +67,10 @@ export default function HomePage() {
 
   const currentPrefix = prefixes[wordIdx];
 
+  const heroVars: HeroVars = {
+    "--prefixW": prefixW ? `${prefixW}px` : "11ch",
+  };
+
   return (
     <>
       <Header />
@@ -76,7 +80,7 @@ export default function HomePage() {
         <section
           id="hero"
           className="
-            relative w-full overflow-hidden bg-black
+            relative w-full overflow-hidden bg-transparent
             h-[100svh] min-h-[100svh]
             md:h-[92vh] md:min-h-[720px]
           "
@@ -90,7 +94,7 @@ export default function HomePage() {
             playsInline
             preload="auto"
           />
-          <div className="absolute inset-0 bg-black/40" />
+          <div className="absolute inset-0 bg-transparent" />
 
           <div className="relative z-10 mx-auto flex h-full max-w-6xl items-center px-4 pt-[78px]">
             <div className="mx-auto w-full max-w-5xl text-center">
@@ -101,22 +105,9 @@ export default function HomePage() {
                   aria-hidden="true"
                 />
 
-                <span
-                  className="hero-grid"
-                  style={
-                    {
-                      ["--prefixW" as any]: prefixW ? `${prefixW}px` : "11ch",
-                    } as React.CSSProperties
-                  }
-                >
+                <span className="hero-grid" style={heroVars}>
                   <span className="hero-prefix-col">
-                    <span
-                      className={
-                        phase === "out"
-                          ? "hero-word hero-word-out"
-                          : "hero-word hero-word-in"
-                      }
-                    >
+                    <span className={phase === "out" ? "hero-word hero-word-out" : "hero-word hero-word-in"}>
                       {currentPrefix}
                     </span>
                   </span>
@@ -247,8 +238,6 @@ export default function HomePage() {
         <section id="franchise" style={{ scrollMarginTop: HEADER_H }}>
           <FranchiseSection />
         </section>
-
-        {/* ✅ Footer는 여기서 제거! (다른 곳에서 한 번만 렌더되게) */}
       </main>
     </>
   );
