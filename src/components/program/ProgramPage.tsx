@@ -18,18 +18,29 @@ export type ProgramBase = {
   slug: string;
   titleKo: string;
   titleEn: string;
+
+  // ✅ 프로그램별 이미지(추가)
+  heroImgSrc?: string;
+  infoImgSrc?: string;
+
   durationMin: number;
   priceOnce: number;
   priceTen: number;
   steps: string[];
   introTitle: string;
   introBody: string;
+
+  // ✅ 추천대상
+  recommendedTargets?: string[];
 };
 
 export type ProgramPageConfig = {
   basePath: "/face" | "/body" | "/custom";
+
+  // ✅ fallback 이미지(프로그램별 이미지가 없거나 경로가 틀렸을 때 대비)
   heroImageSrc: string;
   infoImageSrc: string;
+
   bookingUrl: string;
   programs: ProgramBase[];
 };
@@ -81,6 +92,10 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
     }
   };
 
+  // ✅ 여기 핵심: 프로그램별 이미지 우선, 없으면 config fallback 사용
+  const heroSrc = current?.heroImgSrc || heroImageSrc;
+  const infoSrc = current?.infoImgSrc || infoImageSrc;
+
   // 섹션 refs
   const infoRef = useRef<HTMLElement | null>(null);
   const processRef = useRef<HTMLElement | null>(null);
@@ -114,7 +129,7 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
     return () => io.disconnect();
   }, []);
 
-  // ✅ 1) 모바일 TOP 버튼 복구
+  // ✅ 모바일 TOP 버튼
   const [showTop, setShowTop] = useState(false);
   useEffect(() => {
     function onScroll() {
@@ -128,10 +143,8 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
 
   return (
     <>
-      {/* ✅ 탭이 sticky면 MobileShell(홈/햄버거) 숨김 */}
       {showMobileTopButtons ? <MobileShell variant="manage" bookingUrl={bookingUrl} /> : null}
 
-      {/* ✅ 모바일 TOP 버튼은 유지 */}
       {showTop ? (
         <button
           type="button"
@@ -147,7 +160,13 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
           "
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-            <path d="M6 14l6-6 6 6" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              d="M6 14l6-6 6 6"
+              stroke="currentColor"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </button>
       ) : null}
@@ -157,30 +176,27 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
       </div>
 
       <main className="bg-white">
-       <ProgramHero
-  heroImgSrc={heroImageSrc} // ✅ heroImageSrc -> heroImgSrc 로 맞춤
-  titleKo={current.titleKo}
-  titleEn={current.titleEn}
-  items={programs.map((p) => ({ slug: p.slug, titleKo: p.titleKo }))}
-  currentSlug={current.slug}
-  onSelect={goProgram}
-/>
+        <ProgramHero
+          heroImgSrc={heroSrc}  // ✅ 프로그램별 heroSrc 적용
+          titleKo={current.titleKo}
+          titleEn={current.titleEn}
+          items={programs.map((p) => ({ slug: p.slug, titleKo: p.titleKo }))}
+          currentSlug={current.slug}
+          onSelect={goProgram}
+        />
 
-        {/* sentinel */}
         <div ref={tabsSentinelRef} className="h-[1px]" aria-hidden />
 
-        {/* ✅ 2) 데스크탑에서는 헤더 아래로 sticky */}
         <ProgramTabs accent={ACCENT} tabs={tabs} sectionRefs={sectionRefs} />
 
-        {/* 순서: 안내 -> 구성 -> 가격 -> 예약 */}
         <section id="프로그램 안내" ref={infoRef as any} className="bg-white">
           <div className="mx-auto max-w-6xl px-5 md:px-8 py-12 md:py-16">
             <ProgramInfo
               accent={ACCENT}
-              infoImageSrc={infoImageSrc}
+              infoImageSrc={infoSrc} // ✅ 프로그램별 infoSrc 적용
               introTitle={current.introTitle}
               introBody={current.introBody}
-              recommendedTargets={["대상1", "대상2", "대상3", "대상4", "대상5"]}
+              recommendedTargets={current.recommendedTargets ?? []}
             />
           </div>
         </section>
@@ -216,8 +232,18 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
               <PriceCards
                 accent={ACCENT}
                 cards={[
-                  { type: "once", price: current.priceOnce, originalPrice: current.priceOnce, durationMin: current.durationMin },
-                  { type: "ten", price: current.priceTen, originalPrice: current.priceOnce * 10, durationMin: current.durationMin },
+                  {
+                    type: "once",
+                    price: current.priceOnce,
+                    originalPrice: current.priceOnce,
+                    durationMin: current.durationMin,
+                  },
+                  {
+                    type: "ten",
+                    price: current.priceTen,
+                    originalPrice: current.priceOnce * 10,
+                    durationMin: current.durationMin,
+                  },
                 ]}
                 formatPrice={formatKRWSimple}
               />
@@ -227,7 +253,10 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
 
         <section id="예약" ref={reservationRef as any} className="bg-white">
           <div className="mx-auto max-w-6xl px-5 md:px-8 py-12 md:py-16">
-            <div className="relative overflow-hidden rounded-[28px] p-8 md:p-12 text-white" style={{ backgroundColor: ACCENT }}>
+            <div
+              className="relative overflow-hidden rounded-[28px] p-8 md:p-12 text-white"
+              style={{ backgroundColor: ACCENT }}
+            >
               <div
                 className="pointer-events-none absolute inset-0 opacity-[0.22]"
                 style={{
@@ -237,8 +266,12 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
               />
               <div className="relative">
                 <div className="text-[12px] font-semibold tracking-[0.30em] text-white/85">RESERVATION</div>
-                <div className="mt-3 text-[20px] font-semibold tracking-tight md:text-[28px]">지금, {current.titleKo} 예약하기</div>
-                <div className="mt-2 text-[13px] text-white/90 md:text-[15px]">네이버 예약 페이지로 바로 이동합니다.</div>
+                <div className="mt-3 text-[20px] font-semibold tracking-tight md:text-[28px]">
+                  지금, {current.titleKo} 예약하기
+                </div>
+                <div className="mt-2 text-[13px] text-white/90 md:text-[15px]">
+                  네이버 예약 페이지로 바로 이동합니다.
+                </div>
 
                 <div className="mt-8">
                   <a

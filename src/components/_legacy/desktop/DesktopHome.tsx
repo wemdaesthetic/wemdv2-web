@@ -19,7 +19,6 @@ export default function HomePage() {
   const [wordIdx, setWordIdx] = useState(0);
   const [phase, setPhase] = useState<"in" | "out">("in");
 
-  // ✅ prefix 최대 폭(실제 H1 스타일로 측정해서 고정)
   const measureRef = useRef<HTMLSpanElement | null>(null);
   const [prefixW, setPrefixW] = useState<number>(0);
 
@@ -49,7 +48,6 @@ export default function HomePage() {
     };
   }, [prefixes]);
 
-  // ✅ 전환 타이밍
   useEffect(() => {
     const HOLD_MS = 2200;
     const OUT_MS = 420;
@@ -98,28 +96,24 @@ export default function HomePage() {
 
           <div className="relative z-10 mx-auto flex h-full max-w-6xl items-center px-4 pt-[78px]">
             <div className="mx-auto w-full max-w-5xl text-center">
-              <h1 className="hero-h1 mx-auto text-white">
-                <span
-                  ref={measureRef}
-                  className="hero-measure pointer-events-none absolute -z-10 opacity-0"
-                  aria-hidden="true"
-                />
+              {/* ✅ HERO 타이틀 제거 */}
 
-                <span className="hero-grid" style={heroVars}>
-                  <span className="hero-prefix-col">
-                    <span className={phase === "out" ? "hero-word hero-word-out" : "hero-word hero-word-in"}>
-                      {currentPrefix}
-                    </span>
+              {/* 측정용 span은 남겨둠(로직 유지용) */}
+              <span
+                ref={measureRef}
+                className="hero-measure pointer-events-none absolute -z-10 opacity-0"
+                aria-hidden="true"
+              />
+              <span className="hero-grid pointer-events-none absolute -z-10 opacity-0" style={heroVars} aria-hidden="true">
+                <span className="hero-prefix-col">
+                  <span className={phase === "out" ? "hero-word hero-word-out" : "hero-word hero-word-in"}>
+                    {currentPrefix}
                   </span>
-
-                  <span className="hero-fixed">위엠디</span>
                 </span>
-              </h1>
+                <span className="hero-fixed">위엠디</span>
+              </span>
 
-              <div className="mt-7 text-[18px] font-semibold leading-relaxed text-white/90 md:text-[22px]">
-                손끝에서 피어나는 감동을 경험해보세요
-              </div>
-
+              {/* ✅ 버튼 유지 */}
               <div className="mt-10 flex items-center justify-center gap-3">
                 <a
                   href={BOOKING_URL}
@@ -224,17 +218,14 @@ export default function HomePage() {
           `}</style>
         </section>
 
-        {/* ===== BRAND ===== */}
         <section id="brand" style={{ scrollMarginTop: HEADER_H }}>
           <BrandStorySection />
         </section>
 
-        {/* ===== BRANCHES ===== */}
         <section id="branches" style={{ scrollMarginTop: HEADER_H }}>
           <BranchesSection />
         </section>
 
-        {/* ===== FRANCHISE ===== */}
         <section id="franchise" style={{ scrollMarginTop: HEADER_H }}>
           <FranchiseSection />
         </section>

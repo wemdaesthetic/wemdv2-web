@@ -1,4 +1,4 @@
-// FILE: src/components/mobile/MobileHome.tsx
+// FILE: src/components/_legacy/MobileHome.tsx
 "use client";
 
 import type { CSSProperties } from "react";
@@ -112,34 +112,24 @@ export default function HomePage() {
             "
           >
             <div className="mx-auto w-full max-w-5xl text-center">
-              <h1 className="hero-h1 mx-auto text-white">
-                <span
-                  ref={measureRef}
-                  className="hero-measure pointer-events-none absolute -z-10 opacity-0"
-                  aria-hidden="true"
-                />
+              {/* ✅ HERO 타이틀 제거 */}
 
-                <span className="hero-grid" style={heroVars}>
-                  <span className="hero-prefix-col">
-                    <span className={phase === "out" ? "hero-word hero-word-out" : "hero-word hero-word-in"}>
-                      {currentPrefix}
-                    </span>
+              {/* 측정용 span은 남겨둠(로직 유지용) */}
+              <span
+                ref={measureRef}
+                className="hero-measure pointer-events-none absolute -z-10 opacity-0"
+                aria-hidden="true"
+              />
+              <span className="hero-grid pointer-events-none absolute -z-10 opacity-0" style={heroVars} aria-hidden="true">
+                <span className="hero-prefix-col">
+                  <span className={phase === "out" ? "hero-word hero-word-out" : "hero-word hero-word-in"}>
+                    {currentPrefix}
                   </span>
-
-                  <span className="hero-fixed">위엠디</span>
                 </span>
-              </h1>
+                <span className="hero-fixed">위엠디</span>
+              </span>
 
-              <div
-                className="
-                  mt-6 text-white/90 font-semibold leading-relaxed
-                  text-[17px]
-                  md:mt-7 md:text-[22px]
-                "
-              >
-                손끝에서 피어나는 감동을 경험해보세요
-              </div>
-
+              {/* ✅ 버튼은 유지 */}
               <div className="mt-8 flex flex-col items-center justify-center gap-3 md:mt-10 md:flex-row md:gap-3">
                 <a
                   href={BOOKING_URL}

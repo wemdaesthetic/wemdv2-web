@@ -4,6 +4,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { DRAWER_INFO_LINKS, DRAWER_ROUTES } from "./drawerData";
 
 const ACCENT = "#B71919";
 
@@ -21,37 +22,6 @@ type SectionKey = "face" | "body" | "custom" | null;
 
 export default function MobileDrawer({ open, onClose, bookingUrl, consultTelHref }: Props) {
   const pathname = usePathname();
-
-  const faceItems = useMemo(
-    () => [
-      { title: "얼굴 리프팅 관리", href: "/face?p=facial-lifting" },
-      { title: "얼굴 V라인 관리", href: "/face?p=facial-contouring" },
-      { title: "작은 얼굴 관리", href: "/face?p=face-slimming" },
-      { title: "얼굴 균형 관리", href: "/face?p=facial-balance" },
-    ],
-    []
-  );
-
-  const bodyItems = useMemo(
-    () => [
-      { title: "상체 관리", href: "/body?p=upper-body" },
-      { title: "하체 관리", href: "/body?p=lower-body" },
-      { title: "S라인 관리", href: "/body?p=s-line" },
-    ],
-    []
-  );
-
-  const customItems = useMemo(
-    () => [
-      { title: "웨딩 관리 Standard", href: "/custom?p=wedding-standard" },
-      { title: "웨딩 관리 Special", href: "/custom?p=wedding-special" },
-      { title: "라운드 숄더 관리", href: "/custom?p=rounded-shoulder" },
-      { title: "애플 힙 관리", href: "/custom?p=apple-hip" },
-      { title: "러닝 후 관리", href: "/custom?p=runner-recovery" },
-      { title: "골프 관리", href: "/custom?p=golf-recovery" },
-    ],
-    []
-  );
 
   const defaultOpenSection: SectionKey = useMemo(() => {
     if (!pathname) return null;
@@ -93,10 +63,10 @@ export default function MobileDrawer({ open, onClose, bookingUrl, consultTelHref
 
   return (
     <div className="md:hidden">
-      {/* ✅ overlay: topbar보다 위로 */}
+      {/* overlay */}
       <div className="fixed inset-0 z-[20000] bg-black/35" onClick={onClose} aria-hidden />
 
-      {/* ✅ drawer: topbar보다 훨씬 위로 */}
+      {/* drawer */}
       <aside
         className="
           fixed right-0 top-0 z-[20001]
@@ -109,7 +79,7 @@ export default function MobileDrawer({ open, onClose, bookingUrl, consultTelHref
         aria-modal="true"
         aria-label="모바일 메뉴"
       >
-        {/* X (원형 없음) */}
+        {/* X */}
         <button
           type="button"
           onClick={onClose}
@@ -123,7 +93,7 @@ export default function MobileDrawer({ open, onClose, bookingUrl, consultTelHref
           ×
         </button>
 
-        {/* content: X보다 한참 아래부터 */}
+        {/* content */}
         <div
           className="px-6"
           style={{
@@ -133,8 +103,8 @@ export default function MobileDrawer({ open, onClose, bookingUrl, consultTelHref
           <div className="text-[13px] font-medium tracking-[0.18em] text-zinc-500">WeMD Aesthetic</div>
 
           <div className="mt-3">
-            <DrawerLink href="/#reviews" onClick={onClose}>
-              고객후기
+            <DrawerLink href={DRAWER_INFO_LINKS.reviews.href} onClick={onClose}>
+              {DRAWER_INFO_LINKS.reviews.label}
             </DrawerLink>
           </div>
 
@@ -143,10 +113,11 @@ export default function MobileDrawer({ open, onClose, bookingUrl, consultTelHref
           <div className="mt-6 text-[13px] font-semibold tracking-[0.22em] text-zinc-400">PROGRAM</div>
 
           <div className="mt-3 space-y-2">
+            {/* FACE */}
             <DrawerAccordion title="얼굴 관리" open={openSection === "face"} onToggle={() => toggleSection("face")} />
             {openSection === "face" ? (
               <div className="ml-1 space-y-1">
-                {faceItems.map((it) => (
+                {DRAWER_ROUTES.face.items.map((it) => (
                   <DrawerSubLink key={it.href} href={it.href} onClick={onClose}>
                     {it.title}
                   </DrawerSubLink>
@@ -154,10 +125,11 @@ export default function MobileDrawer({ open, onClose, bookingUrl, consultTelHref
               </div>
             ) : null}
 
+            {/* BODY */}
             <DrawerAccordion title="바디 관리" open={openSection === "body"} onToggle={() => toggleSection("body")} />
             {openSection === "body" ? (
               <div className="ml-1 space-y-1">
-                {bodyItems.map((it) => (
+                {DRAWER_ROUTES.body.items.map((it) => (
                   <DrawerSubLink key={it.href} href={it.href} onClick={onClose}>
                     {it.title}
                   </DrawerSubLink>
@@ -165,10 +137,11 @@ export default function MobileDrawer({ open, onClose, bookingUrl, consultTelHref
               </div>
             ) : null}
 
+            {/* CUSTOM */}
             <DrawerAccordion title="맞춤 케어" open={openSection === "custom"} onToggle={() => toggleSection("custom")} />
             {openSection === "custom" ? (
               <div className="ml-1 space-y-1">
-                {customItems.map((it) => (
+                {DRAWER_ROUTES.custom.items.map((it) => (
                   <DrawerSubLink key={it.href} href={it.href} onClick={onClose}>
                     {it.title}
                   </DrawerSubLink>
@@ -182,11 +155,11 @@ export default function MobileDrawer({ open, onClose, bookingUrl, consultTelHref
           <div className="mt-7 text-[13px] font-semibold tracking-[0.22em] text-zinc-400">INFO</div>
 
           <div className="mt-3 space-y-2">
-            <DrawerLink href="/branches/dunchon" onClick={onClose}>
-              지점 안내
+            <DrawerLink href={DRAWER_INFO_LINKS.branches.href} onClick={onClose}>
+              {DRAWER_INFO_LINKS.branches.label}
             </DrawerLink>
-            <DrawerLink href="/franchise" onClick={onClose}>
-              가맹 문의
+            <DrawerLink href={DRAWER_INFO_LINKS.franchise.href} onClick={onClose}>
+              {DRAWER_INFO_LINKS.franchise.label}
             </DrawerLink>
           </div>
         </div>
@@ -194,7 +167,6 @@ export default function MobileDrawer({ open, onClose, bookingUrl, consultTelHref
         {/* bottom CTA */}
         <div className="mt-auto px-6 pb-6" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 18px)" }}>
           <div className="grid grid-cols-1 gap-3">
-            {/* ✅ 예약하기: ACCENT */}
             <a
               href={bookingUrl}
               target="_blank"

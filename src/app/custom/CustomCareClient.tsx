@@ -10,9 +10,13 @@ export default function CustomCareClient() {
   const programs: ProgramBase[] = useMemo(
     () => [
       {
-        slug: "wedding-standard",
-        titleKo: "웨딩 관리 Standard",
-        titleEn: "Wedding Preparation Treatment",
+        slug: "wedding",
+        titleKo: "웨딩 관리",
+        titleEn: "Wedding Care",
+
+        heroImgSrc: "/programs/custom/wedding-hero.png",
+        infoImgSrc: "/programs/custom/wedding-info.png",
+
         durationMin: 90,
         priceOnce: 180000,
         priceTen: 1620000,
@@ -20,69 +24,92 @@ export default function CustomCareClient() {
           "클렌징",
           "등 관리",
           "팔 관리",
-          "어깨 목 관리(데콜테)",
+          "어깨·목 관리(데콜테)",
           "두피 관리",
           "탄력 관리",
           "골선 관리",
           "팩",
           "마무리",
         ],
-        introTitle: "예식 전, 상체 라인과 페이스 컨디션을 한 번에 정돈",
+        introTitle: "WeMD 웨딩 관리",
         introBody:
-          "클렌징부터 등·팔 라인, 목·어깨(데콜테)와 두피 흐름까지 연결해 케어합니다. 탄력/골선 관리와 팩 마무리로 또렷한 인상과 깔끔한 실루엣을 돕습니다.",
-      },
-      {
-        slug: "wedding-special",
-        titleKo: "웨딩 관리 Special",
-        titleEn: "Wedding Preparation Treatment",
-        durationMin: 100,
-        priceOnce: 240000,
-        priceTen: 2160000,
-        steps: [
-          "클렌징",
-          "등 골선 관리",
-          "등 크림 관리",
-          "팔 골선 관리",
-          "팔 크림 관리",
-          "어깨 목 관리(데콜테)",
-          "두피 관리",
-          "얼굴 탄력 관리",
-          "얼굴 골선 관리",
-          "팩",
-          "마무리",
+          "단순히 피부 관리에 그치지 않고, 드레스 핏부터 얼굴라인까지 밸런스를 섬세하게 만들어 드립니다.",
+        recommendedTargets: [
+          "결혼 전 아름다운 드레스 라인을 만들고 싶으신 분",
+          "결혼을 준비하시는 분",
+          "드레스 착용 시 얼굴 라인이나 실루엣이 고민이신 분",
+          "작은 얼굴 관리와 상체 관리를 함께 받고 싶으신 분",
+          "신부 화장이 얼굴에 잘 받길 원하시는 분",
+          "웃는 얼굴이 자연스럽지 않다고 느끼시는 분",
         ],
-        introTitle: "상체 라인 디테일 + 페이스 윤곽까지 선명하게",
-        introBody:
-          "등/팔 라인을 골선+크림으로 디테일하게 케어하고, 얼굴 탄력/골선 관리까지 포함해 예식/촬영에서 선명한 라인 연출을 돕습니다.",
       },
+
       {
-        slug: "rounded-shoulder",
+        slug: "round-shoulder",
         titleKo: "라운드 숄더 관리",
-        titleEn: "Rounded Shoulder Correction Treatment",
+        titleEn: "Round Shoulder Treatment",
+
+        heroImgSrc: "/programs/custom/round-shoulder-hero.png",
+        infoImgSrc: "/programs/custom/round-shoulder-info.png",
+
         durationMin: 60,
         priceOnce: 130000,
         priceTen: 1170000,
-        steps: ["등 골선 관리", "등 크림 관리", "어깨 목 관리(데콜테)", "두피 관리"],
-        introTitle: "말린 어깨·굽은 상체 흐름을 정돈하는 숄더 밸런스",
+        steps: [
+          "등 골선 관리",
+          "등 크림 관리",
+          "어깨·목 관리(데콜테)",
+          "두피 관리",
+        ],
+        introTitle: "WeMD 라운드 숄더 관리",
         introBody:
-          "등/어깨 라인을 중심으로 골선과 크림 관리를 진행하고, 목·어깨(데콜테)와 두피 흐름까지 함께 케어해 상체 라인이 편안하게 정돈되도록 돕습니다.",
+          "수술 없이도 굽은 등과 말린 어깨를 바로 잡고, 뭉친 근육을 섬세하게 풀어 어깨, 목, 쇄골 라인의 균형과 우아함을 동시에 연출하는 관리 프로그램입니다.",
+        recommendedTargets: [
+          "등이 자주 뭉치고 라운드 숄더가 고민이신 분",
+          "거북목이나 라운드 숄더가 고민이신 분",
+          "평소 등과 어깨가 쉽게 뭉치는 분",
+          "스트레스와 근육 긴장으로 상체 라인이 둔하게 느껴지는 분",
+          "어깨와 목선을 우아한 실루엣으로 만들고 싶으신 분",
+        ],
       },
+
       {
         slug: "apple-hip",
-        titleKo: "애플 힙 관리",
-        titleEn: "Hip Lifting & Shaping Treatment",
+        titleKo: "애플 힙(골반관리)",
+        titleEn: "Apple Hip & Pelvis Care",
+
+        heroImgSrc: "/programs/custom/apple-hip-hero.png",
+        infoImgSrc: "/programs/custom/apple-hip-info.png",
+
         durationMin: 60,
         priceOnce: 120000,
         priceTen: 1080000,
-        steps: ["하체 밸런스 관리", "골반 집중 관리", "등 기립근 관리", "마무리(힙 크림 관리)"],
-        introTitle: "하체 밸런스와 골반 흐름을 잡아 힙 라인을 탄탄하게",
+        steps: [
+          "하체 밸런스 관리",
+          "골반 집중 관리",
+          "기립근 관리",
+          "힙 크림 관리",
+        ],
+        introTitle: "WeMD 애플 힙(골반관리)",
         introBody:
-          "하체 밸런스와 골반 중심 케어로 흐름을 정돈하고, 등 기립근까지 함께 관리해 라인이 무너져 보이지 않도록 돕습니다.",
+          "골반을 바로 잡아 허리·힙·다리 라인을 고르게 정리하고, 하체 전체의 밸런스와 탄탄한 힙 라인을 만들어드립니다.",
+        recommendedTargets: [
+          "골반이 틀어지고 벌어져 힙이 처진 분",
+          "하체가 쉽게 붓는 분",
+          "균형 잡힌 하체 라인과 힙 라인을 원하시는 분",
+          "애플 힙이나 탄탄한 힙업을 원하시는 분",
+          "전신 균형과 하체 밸런스를 함께 원하시는 분",
+        ],
       },
+
       {
         slug: "runner-recovery",
         titleKo: "러닝 후 관리",
-        titleEn: "Runner Recovery Treatment",
+        titleEn: "Runner Recovery Care",
+
+        heroImgSrc: "/programs/custom/runner-recovery-hero.png",
+        infoImgSrc: "/programs/custom/runner-recovery-info.png",
+
         durationMin: 120,
         priceOnce: 200000,
         priceTen: 1800000,
@@ -91,39 +118,60 @@ export default function CustomCareClient() {
           "등 크림 관리",
           "애플 힙(골반) 관리",
           "종아리 관리",
-          "어깨 목 관리(데콜테)",
+          "어깨·목 관리(데콜테)",
           "두피 관리",
           "탄력 관리",
           "마무리",
         ],
-        introTitle: "러닝 후 피로 누적 부위를 집중 케어하는 리커버리",
+        introTitle: "WeMD 러닝 후 관리",
         introBody:
-          "러닝 후 뭉치기 쉬운 등·골반(힙)·종아리를 중심으로 케어하고, 목·어깨와 두피 흐름까지 연결해 전반적인 컨디션 회복을 돕습니다.",
+          "러닝 후 얼굴 라인과 전신 밸런스가 무너지는 원인을 고려해 얼굴과 바디를 동시에 관리해드립니다.",
+        recommendedTargets: [
+          "러닝 후 얼굴 탄력과 전신 관리를 함께 받고 싶으신 분",
+          "러닝·조깅·PT 후 얼굴 탄력이 고민이신 분",
+          "상체 긴장과 하체 순환 저하로 회복이 느린 분",
+          "하체 부종과 종아리·허벅지 뻣뻣함을 느끼시는 분",
+          "운동 직후 빠른 컨디션 회복을 원하시는 분",
+        ],
       },
+
       {
-        slug: "golf-recovery",
+        slug: "golf",
         titleKo: "골프 관리",
-        titleEn: "Golf Recovery Treatment",
+        titleEn: "Golf Care",
+
+        heroImgSrc: "/programs/custom/golf-hero.png",
+        infoImgSrc: "/programs/custom/golf-info.png",
+
         durationMin: 60,
         priceOnce: 120000,
         priceTen: 1080000,
-        steps: ["복부 골선 관리", "복부 크림 관리", "복부 지방 분해 기기 관리"],
-        introTitle: "복부 라인을 집중적으로 정돈하는 골프 리커버리",
+        steps: [
+          "복부 골선 관리",
+          "복부 크림 관리",
+          "복부 지방 분해 기기 관리",
+        ],
+        introTitle: "WeMD 골프 관리",
         introBody:
-          "복부 골선/크림 관리를 통해 라인 흐름을 정리하고, 컨디션에 맞춰 복부 지방 분해 기기 관리를 병행해 보다 깔끔한 인상을 돕습니다.",
+          "라운딩 전·후 사용이 많은 상체, 어깨, 등 라인의 긴장감을 부드럽게 가다듬어 플레이로 흐트러진 신체 밸런스를 자연스럽게 복원해드립니다.",
+        recommendedTargets: [
+          "골프 후 틀어진 바디 라인을 정리하고 싶은 분",
+          "라운딩 전·후 상체의 긴장과 피로를 풀고 싶은 분",
+          "장시간 플레이로 어깨·등·골반이 뻐근한 분",
+          "스윙 시 사용하는 특정 부위의 긴장이 부담인 분",
+          "라운딩 일정에 맞춘 고급 웰니스 케어를 원하시는 분",
+          "필드 일정 전 정돈된 컨디션을 원하시는 분",
+        ],
       },
     ],
     []
   );
 
-  const BOOKING =
-    "https://map.naver.com/p/entry/place/1063607602?placePath=/ticket?entry=plt&fromPanelNum=1&additionalHeight=76&timestamp=202601231203&locale=ko&svcName=map_pcv5&from=map&fromPanelNum=1&additionalHeight=76&timestamp=202601231203&locale=ko&svcName=map_pcv5&searchType=place&lng=127.1360654&lat=37.5287128&c=15.00,0,0,0,dh";
-
   const config: ProgramPageConfig = {
     basePath: "/custom",
-    heroImageSrc: "/programs/custom-hero.jpg",
-    infoImageSrc: "/programs/custom-hero.jpg",
-    bookingUrl: BOOKING,
+    heroImageSrc: "/programs/custom/wedding-hero.png",
+    infoImageSrc: "/programs/custom/wedding-info.png",
+    bookingUrl: process.env.NEXT_PUBLIC_BOOKING_URL!,
     programs,
   };
 

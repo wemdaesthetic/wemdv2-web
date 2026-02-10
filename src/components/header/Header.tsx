@@ -13,28 +13,30 @@ const ROUTES = {
     default: "/face?p=facial-lifting",
     items: [
       { label: "얼굴 리프팅 관리", href: "/face?p=facial-lifting" },
-      { label: "얼굴 V라인 관리", href: "/face?p=facial-contouring" },
+      // ✅ 표기명만 엘라조, slug는 실제 프로그램 slug로
+      { label: "엘라조 페이스 관리", href: "/face?p=ellazo-face" },
       { label: "작은 얼굴 관리", href: "/face?p=face-slimming" },
-      { label: "얼굴 균형 관리", href: "/face?p=facial-balance" },
+      // ✅ 얼굴 밸런스 관리(기존 균형) - slug 맞추기
+      { label: "얼굴 밸런스 관리", href: "/face?p=face-balance" },
     ],
   },
   body: {
-    default: "/body?p=upper-body",
+    default: "/body?p=body-upper",
     items: [
-      { label: "상체 관리", href: "/body?p=upper-body" },
-      { label: "하체 관리", href: "/body?p=lower-body" },
-      { label: "S라인 관리", href: "/body?p=s-line" },
+      { label: "상체 관리", href: "/body?p=body-upper" },
+      { label: "하체 관리", href: "/body?p=body-lower" },
+      { label: "S라인 관리", href: "/body?p=body-sline" },
     ],
   },
   custom: {
-    default: "/custom?p=wedding-standard",
+    default: "/custom?p=wedding",
     items: [
-      { label: "웨딩 관리 Standard", href: "/custom?p=wedding-standard" },
-      { label: "웨딩 관리 Special", href: "/custom?p=wedding-special" },
-      { label: "라운드 숄더 관리", href: "/custom?p=rounded-shoulder" },
-      { label: "애플 힙 관리", href: "/custom?p=apple-hip" },
+      // ✅ 웨딩은 단일(스페셜 제거)
+      { label: "웨딩 관리", href: "/custom?p=wedding" },
+      { label: "라운드 숄더 관리", href: "/custom?p=round-shoulder" },
+      { label: "애플 힙(골반관리)", href: "/custom?p=apple-hip" },
       { label: "러닝 후 관리", href: "/custom?p=runner-recovery" },
-      { label: "골프 관리", href: "/custom?p=golf-recovery" },
+      { label: "골프 관리", href: "/custom?p=golf" },
     ],
   },
 };

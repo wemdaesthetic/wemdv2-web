@@ -20,7 +20,10 @@ export default function ProgramInfo({
   return (
     <div>
       {/* 영문 라벨 */}
-      <div className="text-[12px] font-semibold tracking-[0.30em]" style={{ color: accent }}>
+      <div
+        className="text-[12px] font-semibold tracking-[0.30em]"
+        style={{ color: accent }}
+      >
         PROGRAM INFO
       </div>
 
@@ -49,7 +52,10 @@ export default function ProgramInfo({
             {introTitle}
           </h3>
 
-          <div className="mt-5 h-[3px] w-14 rounded-full" style={{ backgroundColor: accent }} />
+          <div
+            className="mt-5 h-[3px] w-14 rounded-full"
+            style={{ backgroundColor: accent }}
+          />
 
           <p className="mt-6 text-[16px] leading-relaxed text-zinc-700 md:text-[19px]">
             {introBody}
@@ -61,19 +67,25 @@ export default function ProgramInfo({
           </div>
         </div>
 
-        {/* 추천 대상(디자인은 다음 라운드에서 더 갈아엎을 수 있게 “기본 고급형”으로) */}
+        {/* 추천 대상 */}
         <div className="md:col-span-4">
           <div className="rounded-[24px] bg-white p-6 ring-1 ring-black/10 shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
-            <div className="text-[12px] font-semibold tracking-[0.30em]" style={{ color: accent }}>
+            <div
+              className="text-[12px] font-semibold tracking-[0.30em]"
+              style={{ color: accent }}
+            >
               RECOMMENDED
             </div>
-            <div className="mt-2 text-[18px] font-semibold text-zinc-900">추천 대상</div>
+            <div className="mt-2 text-[18px] font-semibold text-zinc-900">
+              추천 대상
+            </div>
 
-            <div className="mt-5 flex flex-wrap gap-2">
-              {recommendedTargets.map((t) => (
+            {/* ✅ 한 줄에 하나씩만 (두 개씩 배치되는 문제 해결) */}
+            <div className="mt-5 flex flex-col gap-2">
+              {recommendedTargets.map((t, idx) => (
                 <span
-                  key={t}
-                  className="inline-flex items-center rounded-full px-3 py-1.5 text-[13px] font-semibold"
+                  key={`${idx}-${t}`}
+                  className="inline-flex w-full items-center rounded-full px-3 py-2 text-[13px] font-semibold"
                   style={{
                     backgroundColor: "rgba(183,25,25,0.08)",
                     color: accent,
@@ -84,9 +96,7 @@ export default function ProgramInfo({
               ))}
             </div>
 
-            <div className="mt-6 rounded-2xl bg-zinc-50 p-4 text-[13px] leading-relaxed text-zinc-600">
-              중요한 일정 전, 라인/탄력/컨디션을 한 번에 정돈하고 싶은 분께 추천해요.
-            </div>
+            {/* ✅ 하단 설명 박스 제거 */}
           </div>
         </div>
       </div>
