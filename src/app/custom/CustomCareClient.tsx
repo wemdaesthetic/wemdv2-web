@@ -24,7 +24,7 @@ export default function CustomCareClient() {
           "클렌징",
           "등 관리",
           "팔 관리",
-          "어깨·목 관리(데콜테)",
+          "어깨·목 관리",
           "두피 관리",
           "탄력 관리",
           "골선 관리",
@@ -56,9 +56,8 @@ export default function CustomCareClient() {
         priceOnce: 130000,
         priceTen: 1170000,
         steps: [
-          "등 골선 관리",
           "등 크림 관리",
-          "어깨·목 관리(데콜테)",
+          "어깨·목 관리",
           "두피 관리",
         ],
         introTitle: "WeMD 라운드 숄더 관리",
@@ -87,8 +86,8 @@ export default function CustomCareClient() {
         steps: [
           "하체 밸런스 관리",
           "골반 집중 관리",
-          "기립근 관리",
-          "힙 크림 관리",
+          "등 기립근 관리",
+          "마무리(힙 크림 관리)",
         ],
         introTitle: "WeMD 애플 힙(골반관리)",
         introBody:
@@ -115,11 +114,11 @@ export default function CustomCareClient() {
         priceTen: 1800000,
         steps: [
           "클렌징",
-          "등 크림 관리",
+          "등 크림",
           "애플 힙(골반) 관리",
           "종아리 관리",
           "어깨·목 관리(데콜테)",
-          "두피 관리",
+          "두피",
           "탄력 관리",
           "마무리",
         ],
@@ -147,9 +146,9 @@ export default function CustomCareClient() {
         priceOnce: 120000,
         priceTen: 1080000,
         steps: [
-          "복부 골선 관리",
-          "복부 크림 관리",
-          "복부 지방 분해 기기 관리",
+          "애플 힙(골반) 관리",
+          "등 크림 관리",
+          "어깨·목(데콜테)",
         ],
         introTitle: "WeMD 골프 관리",
         introBody:

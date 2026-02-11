@@ -11,7 +11,7 @@ export default function ProgramProcess({
 }) {
   return (
     <section className="mt-6">
-      {/* 모바일: 세로 타임라인 (카드 안에 넣어서 좌우가 안 비게) */}
+      {/* 모바일 */}
       <div className="md:hidden">
         <div
           className="
@@ -21,11 +21,12 @@ export default function ProgramProcess({
             p-6
           "
         >
-          <div className="text-[12px] tracking-[0.30em]" style={{ color: accent }}>
-            PROCESS
+          {/* ❌ PROCESS 삭제 */}
+          {/* ❌ 설명 문구 삭제 */}
+
+          <div className="text-[20px] font-semibold tracking-tight text-zinc-900">
+            관리 순서
           </div>
-          <div className="mt-2 text-[20px] font-semibold tracking-tight text-zinc-900">프로그램 구성</div>
-          <div className="mt-2 text-[13px] text-zinc-500">단계별로 흐름을 따라가며 진행돼요.</div>
 
           <div className="mt-6 space-y-4">
             {steps.map((s, i) => (
@@ -50,9 +51,6 @@ export default function ProgramProcess({
                 {/* 단계 카드 */}
                 <div className="rounded-2xl bg-zinc-50 ring-1 ring-black/5 px-4 py-3">
                   <div className="text-[15px] font-semibold text-zinc-900">{s}</div>
-                  <div className="mt-1 text-[13px] text-zinc-500">
-                    컨디션에 맞춰 강도/구성을 조절해요.
-                  </div>
                 </div>
               </div>
             ))}
@@ -60,7 +58,7 @@ export default function ProgramProcess({
         </div>
       </div>
 
-      {/* 데스크탑: 가로 스텝퍼 (카드 형태로 정보량/여백 확보) */}
+      {/* 데스크탑 */}
       <div className="hidden md:block">
         <div
           className="
@@ -72,12 +70,9 @@ export default function ProgramProcess({
         >
           <div className="flex items-end justify-between">
             <div>
-              <div className="text-[12px] tracking-[0.30em]" style={{ color: accent }}>
-                PROCESS
-              </div>
-              <div className="mt-2 text-[26px] font-semibold tracking-tight text-zinc-900">프로그램 구성</div>
-              <div className="mt-2 text-[14px] text-zinc-500">
-                전체 흐름을 한 번에 이해할 수 있도록 정리했어요.
+              {/* ❌ PROCESS 삭제 */}
+              <div className="text-[26px] font-semibold tracking-tight text-zinc-900">
+                관리 순서
               </div>
             </div>
 
@@ -109,24 +104,16 @@ export default function ProgramProcess({
                     >
                       {i + 1}
                     </div>
-                    <div className="text-[14px] font-semibold text-zinc-900 truncate">Step {i + 1}</div>
                   </div>
                 </div>
 
                 <div className="mt-3 rounded-2xl bg-zinc-50 ring-1 ring-black/5 px-4 py-4">
-                  <div className="text-[15px] font-semibold text-zinc-900 leading-snug">{s}</div>
-                  <div className="mt-2 text-[13px] text-zinc-500 leading-relaxed">
-                    집중 부위/목적에 따라 순서는 달라질 수 있어요.
+                  <div className="text-[15px] font-semibold text-zinc-900 leading-snug">
+                    {s}
                   </div>
                 </div>
               </div>
             ))}
-          </div>
-
-          <div className="mt-8 h-px w-full bg-zinc-200" />
-
-          <div className="mt-5 text-[13px] text-zinc-500">
-            ※ 프로그램 구성은 상담 후 개인 컨디션에 맞춰 조정될 수 있어요.
           </div>
         </div>
       </div>

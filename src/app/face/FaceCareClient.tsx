@@ -15,7 +15,7 @@ export default function FaceCareClient() {
         durationMin: 50,
         priceOnce: 100000,
         priceTen: 900000,
-        steps: ["클렌징", "탄력 집중 관리", "윤곽 라인 관리", "마스크/팩", "마무리"],
+        steps: ["클렌징", "어깨·목 (데콜테)", "두피", "탄력관리", "팩", "마무리"],
         introTitle: "WeMD 얼굴 리프팅 관리",
         introBody:
           "수술없이 자연스러운 리프팅 전문가의 섬세한 테크닉으로 고객님의 세련되고 정제된 인상을 만들어 드립니다.",
@@ -33,10 +33,10 @@ export default function FaceCareClient() {
         titleEn: "Elastic · Line · Sculpted Image Care",
         heroImgSrc: "/programs/face/ellazo-face-hero.png",
         infoImgSrc: "/programs/face/ellazo-face-info.png",
-        durationMin: 50,
-        priceOnce: 120000,
-        priceTen: 1080000,
-        steps: ["클렌징", "라인 밸런스 관리", "페이스 리듬 케어", "마스크/팩", "마무리"],
+        durationMin: 60,
+        priceOnce: 130000,
+        priceTen: 1170000,
+        steps: ["클렌징", "데콜테", "두피", "페이스 라인 관리", "팩", "마무리"],
         introTitle: "WeMD 엘라조 페이스 관리",
         introBody:
           "강한 자극이나 압에 의존하지 않고 얼굴의 움직임과 리듬에 집중해 페이스 라인을 세련되게 완성하는 WeMD만의 프리미엄 프로그램입니다.",
@@ -57,7 +57,7 @@ export default function FaceCareClient() {
         durationMin: 60,
         priceOnce: 130000,
         priceTen: 1170000,
-        steps: ["클렌징", "골선 테라피", "윤곽 정돈", "마스크/팩", "마무리"],
+        steps: ["클렌징", "어깨·목", "두피", "탄력 관리", "골선 관리", "팩", "마무리"],
         introTitle: "WeMD 작은 얼굴 관리",
         introBody:
           "WeMD만의 독창적인 골선 테라피로 수술 없이 자연스럽게 얼굴형을 다듬어 동안 이미지와 다운사이징 효과를 연출합니다.",

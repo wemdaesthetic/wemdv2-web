@@ -84,9 +84,9 @@ export default function MobileDrawer({ open, onClose, bookingUrl, consultTelHref
           type="button"
           onClick={onClose}
           aria-label="메뉴 닫기"
-          className="absolute right-4 z-[10] text-[30px] leading-none hover:opacity-70 active:opacity-60"
+          className="absolute right-9 z-[10] text-[30px] leading-none hover:opacity-70 active:opacity-60"
           style={{
-            top: "calc(env(safe-area-inset-top) + 10px)",
+            top: "calc(env(safe-area-inset-top) + 26px)",
             color: ACCENT,
           }}
         >
@@ -164,29 +164,9 @@ export default function MobileDrawer({ open, onClose, bookingUrl, consultTelHref
           </div>
         </div>
 
-        {/* bottom CTA */}
         <div className="mt-auto px-6 pb-6" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 18px)" }}>
-          <div className="grid grid-cols-1 gap-3">
-            <a
-              href={bookingUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex h-[52px] items-center justify-center rounded-2xl text-[15px] font-semibold text-white active:scale-[0.99]"
-              style={{ backgroundColor: ACCENT }}
-            >
-              예약하기
-            </a>
-
-            <a
-              href={consultTelHref}
-              className="inline-flex h-[52px] items-center justify-center rounded-2xl border border-zinc-200 bg-white text-[15px] font-semibold text-zinc-900 active:scale-[0.99]"
-            >
-              전화상담
-            </a>
-          </div>
-
-          <div className="mt-5 text-center text-[12px] text-zinc-400">WeMD Aesthetic</div>
-        </div>
+  <div className="text-center text-[12px] text-zinc-400">WeMD Aesthetic</div>
+</div>
       </aside>
     </div>
   );

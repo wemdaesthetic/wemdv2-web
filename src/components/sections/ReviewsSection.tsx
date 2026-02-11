@@ -189,7 +189,7 @@ export default function ReviewsSection() {
   return (
     <section className="bg-white">
       <div className="mx-auto max-w-6xl px-4 py-14 md:px-8">
-        {/* ✅ 새 섹션 타이틀 규격: 모바일 left / 데스크탑 center */}
+        {/* ✅ 타이틀 영역 유지 (여기서 화살표 제거) */}
         <div className="relative">
           <div className="text-left md:text-center">
             <div
@@ -213,42 +213,6 @@ export default function ReviewsSection() {
               WeMD에서 경험한 변화와 만족을 확인해보세요.
             </div>
           </div>
-
-          {/* 데스크탑 화살표(정중앙 방해 X) */}
-          <div className="hidden md:flex items-center gap-2 absolute right-0 top-2">
-            <button
-              type="button"
-              onClick={goPrev}
-              aria-label="이전 리뷰"
-              className="
-                inline-flex h-11 w-11 items-center justify-center rounded-full
-                bg-white/70 backdrop-blur-md
-                ring-1 ring-black/5
-                text-zinc-800
-                hover:bg-white
-                active:scale-[0.98]
-              "
-              style={{ boxShadow: "0 10px 26px rgba(15,23,42,0.08)" }}
-            >
-              <ArrowIcon dir="left" />
-            </button>
-            <button
-              type="button"
-              onClick={goNext}
-              aria-label="다음 리뷰"
-              className="
-                inline-flex h-11 w-11 items-center justify-center rounded-full
-                bg-white/70 backdrop-blur-md
-                ring-1 ring-black/5
-                text-zinc-800
-                hover:bg-white
-                active:scale-[0.98]
-              "
-              style={{ boxShadow: "0 10px 26px rgba(15,23,42,0.08)" }}
-            >
-              <ArrowIcon dir="right" />
-            </button>
-          </div>
         </div>
 
         {/* 캐러셀: 모바일 edge-to-edge / 데스크탑 페이드 */}
@@ -264,6 +228,57 @@ export default function ReviewsSection() {
               : "none",
           }}
         >
+          {/* ✅ 데스크탑 화살표: 카드 영역 좌/우 끝으로 이동 */}
+          {isDesktop ? (
+            <>
+              <button
+                type="button"
+                onClick={goPrev}
+                aria-label="이전 리뷰"
+                className="
+                  hidden md:inline-flex
+                  absolute left-0 top-1/2 -translate-y-1/2
+                  h-11 w-11 items-center justify-center rounded-full
+                  bg-white/70 backdrop-blur-md
+                  ring-1 ring-black/5
+                  text-zinc-800
+                  hover:bg-white
+                  active:scale-[0.98]
+                  z-20
+                "
+                style={{
+                  boxShadow: "0 10px 26px rgba(15,23,42,0.08)",
+                  transform: "translate(-110%, -50%)",
+                }}
+              >
+                <ArrowIcon dir="left" />
+              </button>
+
+              <button
+                type="button"
+                onClick={goNext}
+                aria-label="다음 리뷰"
+                className="
+                  hidden md:inline-flex
+                  absolute right-0 top-1/2 -translate-y-1/2
+                  h-11 w-11 items-center justify-center rounded-full
+                  bg-white/70 backdrop-blur-md
+                  ring-1 ring-black/5
+                  text-zinc-800
+                  hover:bg-white
+                  active:scale-[0.98]
+                  z-20
+                "
+                style={{
+                  boxShadow: "0 10px 26px rgba(15,23,42,0.08)",
+                  transform: "translate(110%, -50%)",
+                }}
+              >
+                <ArrowIcon dir="right" />
+              </button>
+            </>
+          ) : null}
+
           <div
             className="relative"
             onPointerDown={onPointerDown}
@@ -283,9 +298,7 @@ export default function ReviewsSection() {
               style={{
                 gap,
                 transform: `translate3d(${baseTranslateX + dragX}px, 0, 0)`,
-                transition: dragging.current
-                  ? "none"
-                  : "transform 420ms cubic-bezier(0.2,0.8,0.2,1)",
+                transition: dragging.current ? "none" : "transform 420ms cubic-bezier(0.2,0.8,0.2,1)",
                 willChange: "transform",
               }}
             >
@@ -317,11 +330,7 @@ export default function ReviewsSection() {
                           <span className="text-[12px] text-zinc-500">{r.date}</span>
                         </div>
 
-                        <p
-                          className={`mt-5 text-[15.5px] leading-relaxed text-zinc-800 ${
-                            isOpen ? "" : "line-clamp-6"
-                          }`}
-                        >
+                        <p className={`mt-5 text-[15.5px] leading-relaxed text-zinc-800 ${isOpen ? "" : "line-clamp-6"}`}>
                           {r.text}
                         </p>
 

@@ -107,7 +107,7 @@ export default function BranchesSection() {
                   className="
                     rounded-3xl bg-white p-6
                     shadow-[0_20px_70px_rgba(15,23,42,0.12)]
-                    ring-1 ring-black/5
+                    ring-1 ring-black/10
                   "
                 >
                   <div className="flex items-center gap-2">
@@ -244,13 +244,9 @@ export default function BranchesSection() {
                     )}
                   </div>
 
-                  <div className="mt-3 text-[18px] font-semibold tracking-tight text-zinc-900">
-                    {b.name}
-                  </div>
+                  <div className="mt-3 text-[18px] font-semibold tracking-tight text-zinc-900">{b.name}</div>
 
-                  {b.short && (
-                    <div className="mt-2 text-[13px] leading-relaxed text-zinc-600">{b.short}</div>
-                  )}
+                  {b.short && <div className="mt-2 text-[13px] leading-relaxed text-zinc-600">{b.short}</div>}
 
                   <div className="mt-6 space-y-2 text-[13px] leading-relaxed text-zinc-600">
                     <div className="line-clamp-2">
@@ -284,8 +280,9 @@ export default function BranchesSection() {
                 </>
               );
 
+              // ✅ 여기만 변경: PC 카드에도 연한 테두리(ring) 추가해서 다른 섹션 카드들과 톤 통일
               const cardBase =
-                "rounded-3xl bg-white p-7 shadow-[0_18px_70px_rgba(15,23,42,0.08)]";
+                "rounded-3xl bg-white p-7 ring-1 ring-black/10 shadow-[0_18px_70px_rgba(15,23,42,0.08)]";
 
               if (!isReady) {
                 return (
