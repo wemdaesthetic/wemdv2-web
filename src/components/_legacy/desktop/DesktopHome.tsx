@@ -96,9 +96,8 @@ export default function HomePage() {
 
           <div className="relative z-10 mx-auto flex h-full max-w-6xl items-center px-4 pt-[78px]">
             <div className="mx-auto w-full max-w-5xl text-center">
-              {/* ✅ HERO 타이틀 제거 */}
+              {/* HERO 타이틀 제거 */}
 
-              {/* 측정용 span은 남겨둠(로직 유지용) */}
               <span
                 ref={measureRef}
                 className="hero-measure pointer-events-none absolute -z-10 opacity-0"
@@ -113,7 +112,7 @@ export default function HomePage() {
                 <span className="hero-fixed">위엠디</span>
               </span>
 
-              {/* ✅ 버튼 유지 */}
+              {/* 버튼 유지 */}
               <div className="mt-10 flex items-center justify-center gap-3">
                 <a
                   href={BOOKING_URL}

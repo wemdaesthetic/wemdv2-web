@@ -25,8 +25,7 @@ export function useRevealOnScroll(options?: {
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          // ✅ 너무 빨리 true 되면 “이미 보이는 것처럼” 느껴져서 체감이 없음
-          // ✅ 그래서 약간 delay를 줘서 transition이 확실히 보이게 함
+
           window.setTimeout(() => setShown(true), delayMs);
           if (once) io.disconnect();
         } else if (!once) {

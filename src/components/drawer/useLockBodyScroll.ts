@@ -1,4 +1,4 @@
-// FILE: src/components/drawer/useLockBodyScroll.ts
+
 "use client";
 
 import { useEffect } from "react";

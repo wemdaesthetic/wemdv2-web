@@ -1,4 +1,4 @@
-// FILE: src/components/common/SectionTitle.tsx
+
 "use client";
 
 import React from "react";
@@ -8,10 +8,10 @@ const DEFAULT_ACCENT = "#AD161B";
 type Props = {
   en: string;                 // 예: "Contact"
   ko: string;                 // 예: "가맹 문의"
-  desc?: string;              // ✅ optional
-  className?: string;         // ✅ optional
+  desc?: string;              // optional
+  className?: string;         // optional
   align?: "auto" | "left" | "center"; // "auto"면 모바일 left / 데스크탑 center
-  accent?: string;            // ✅ optional (BrandStorySection에서 쓰고 있음)
+  accent?: string;            // optional (BrandStorySection에서 쓰고 있음)
 };
 
 export default function SectionTitle({

@@ -16,7 +16,7 @@ export default function ServiceHero({
 }) {
   return (
     <section className="relative overflow-hidden bg-white">
-      {/* 은은한 radial bg */}
+      {/* radial bg */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_0%,rgba(185,14,10,0.08),transparent_45%)]" />
 
       <div className="relative mx-auto max-w-6xl px-4 pt-14 pb-10 md:pt-[110px] md:pb-16">

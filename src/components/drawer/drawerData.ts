@@ -1,4 +1,3 @@
-// FILE: src/components/drawer/drawerData.ts
 
 export type DrawerSection = "face" | "body" | "custom" | null;
 
@@ -21,7 +20,7 @@ export const DRAWER_ROUTES = {
   custom: {
     items: [
       { title: "웨딩 관리", href: "/custom?p=wedding" }, // Standard -> 웨딩 관리
-      // ❌ 웨딩 관리 Special 제거
+      // 웨딩 관리 Special 제거
       { title: "라운드 숄더 관리", href: "/custom?p=round-shoulder" },
       { title: "애플 힙(골반관리)", href: "/custom?p=apple-hip" },
       { title: "러닝 후 관리", href: "/custom?p=runner-recovery" },
@@ -31,7 +30,7 @@ export const DRAWER_ROUTES = {
 } as const;
 
 /**
- * ✅ INFO 링크도 여기서 한 번에 관리
+ * INFO 링크도 여기서 한 번에 관리
  */
 export const DRAWER_INFO_LINKS = {
   reviews: { label: "고객후기", href: "/#reviews" },

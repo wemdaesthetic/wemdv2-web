@@ -21,8 +21,7 @@ export default function ProgramProcess({
             p-6
           "
         >
-          {/* ❌ PROCESS 삭제 */}
-          {/* ❌ 설명 문구 삭제 */}
+
 
           <div className="text-[20px] font-semibold tracking-tight text-zinc-900">
             관리 순서
@@ -70,7 +69,7 @@ export default function ProgramProcess({
         >
           <div className="flex items-end justify-between">
             <div>
-              {/* ❌ PROCESS 삭제 */}
+
               <div className="text-[26px] font-semibold tracking-tight text-zinc-900">
                 관리 순서
               </div>

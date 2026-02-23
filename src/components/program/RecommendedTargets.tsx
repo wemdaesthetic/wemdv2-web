@@ -23,7 +23,6 @@ export default function RecommendedTargets({ accent, targets }: Props) {
         추천 대상
       </h3>
 
-      {/* ✅ 한 줄에 하나씩만 */}
       <ul className="mt-6 space-y-3">
         {targets.map((t, i) => (
           <li

@@ -5,9 +5,9 @@ import { useEffect, useRef, useState } from "react";
 type RevealProps = {
   children: React.ReactNode;
   className?: string;
-  /** 뷰포트 몇 % 들어오면 발동할지 */
+
   threshold?: number;
-  /** 한번만 실행할지 */
+
   once?: boolean;
 };
 

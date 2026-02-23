@@ -27,7 +27,7 @@ export default function ProgramInfo({
         PROGRAM INFO
       </div>
 
-      {/* ✅ 한글 섹션 타이틀 */}
+      {/* 한글 섹션 타이틀 */}
       <h2 className="mt-3 text-[28px] font-semibold tracking-tight text-zinc-900 md:text-[44px]">
         프로그램 안내
       </h2>
@@ -80,7 +80,7 @@ export default function ProgramInfo({
               추천 대상
             </div>
 
-            {/* ✅ 한 줄에 하나씩만 (두 개씩 배치되는 문제 해결) */}
+            {/* 한 줄에 하나씩만 */}
             <div className="mt-5 flex flex-col gap-2">
               {recommendedTargets.map((t, idx) => (
                 <span
@@ -96,7 +96,7 @@ export default function ProgramInfo({
               ))}
             </div>
 
-            {/* ✅ 하단 설명 박스 제거 */}
+            {/* 하단 설명 박스 제거 */}
           </div>
         </div>
       </div>

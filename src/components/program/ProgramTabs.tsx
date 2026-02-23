@@ -21,7 +21,7 @@ export default function ProgramTabs({ accent, tabs, sectionRefs }: Props) {
     if (!ref) return;
 
     const isDesktop = window.matchMedia("(min-width: 768px)").matches;
-    const offset = isDesktop ? 78 + 16 : 12; // 데스크탑 헤더 아래 / 모바일은 살짝
+    const offset = isDesktop ? 78 + 16 : 12; 
     const y = ref.getBoundingClientRect().top + window.scrollY - offset;
     window.scrollTo({ top: y, behavior: "smooth" });
   };

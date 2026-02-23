@@ -81,7 +81,7 @@ export default function TreatmentPage({
       </div>
 
       <main className="bg-white">
-        {/* ✅ MOBILE: 고정 로고 + 햄버거 (홈이랑 동일 UX) */}
+        {/* MOBILE: 고정 로고 + 햄버거 (홈이랑 동일 UX) */}
         <div
           className="
             md:hidden

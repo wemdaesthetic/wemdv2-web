@@ -1,4 +1,4 @@
-// FILE: src/components/brand/BrandStorySection.tsx
+
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -102,7 +102,7 @@ export default function BrandStorySection() {
       {/* ===================== DESKTOP (md+) ===================== */}
       <div className="hidden md:block">
         <div className="mx-auto max-w-6xl px-4 py-28">
-          {/* ✅ 새 타이틀 규격 (모바일 left / 데스크탑 center) */}
+          {/* 새 타이틀 규격 (모바일 left / 데스크탑 center) */}
           <div className="mb-16">
             <SectionTitle
               en="Brand Story"
@@ -291,7 +291,7 @@ function MobileBrandStack() {
       <div className="relative px-4 pt-14 pb-16 overflow-hidden bg-white">
         <div className="relative z-10">
           <div className="mx-auto max-w-[520px]">
-            {/* ✅ 새 타이틀 규격 */}
+            {/* 새 타이틀 규격 */}
             <SectionTitle
               en="Brand Story"
               ko="위엠디(WeMD)의 미션"

@@ -1,3 +1,4 @@
+// FILE: src/app/branches/[slug]/page.tsx
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -5,60 +6,42 @@ import { useRouter } from "next/navigation";
 import { BRANCHES } from "@/config/branches";
 import { BOOKING_URL } from "@/config/nav";
 import { yeonwoo } from "@/app/fonts";
-import Footer from "@/components/footer/Footer"; // ✅ 추가
+import Footer from "@/components/footer/Footer";
 
 type Props = { params: { slug: string } };
 
 export default function BranchDetailPage({ params }: Props) {
   const router = useRouter();
-  const branch = BRANCHES.find((b) => b.slug === params.slug);
 
-  if (!branch) {
-    return (
-      <main className="bg-white">
-        <div className="h-[78px]" aria-hidden />
-        <section className="mx-auto max-w-6xl px-4 py-10">
-          <button
-            onClick={() => router.back()}
-            className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-[13px] font-semibold text-zinc-800 shadow-[0_10px_30px_rgba(15,23,42,0.06)] transition hover:bg-zinc-50"
-          >
-            <span aria-hidden className="text-[16px] leading-none">←</span>
-            뒤로
-          </button>
+  // ✅ branch는 memo로 고정(훅은 항상 호출되도록 위에서 처리)
+  const branch = useMemo(() => {
+    return BRANCHES.find((b) => b.slug === params.slug) ?? null;
+  }, [params.slug]);
 
-          <div className="mt-8 text-[16px] text-zinc-700">
-            존재하지 않는 지점입니다.
-          </div>
-        </section>
-      </main>
-    );
-  }
+  const isFlagship = branch?.slug === "dunchon";
 
-  const isFlagship = branch.slug === "dunchon";
-
-  // photos
+  // ✅ photos
   const photos: string[] = useMemo(() => {
-    return Array.isArray(branch.photos) ? branch.photos : [];
-  }, [branch.photos]);
+    const raw = branch?.photos;
+    return Array.isArray(raw) ? raw : [];
+  }, [branch?.photos]);
 
-  // director (선택)
+  // ✅ director
   const director = useMemo(() => {
-    return branch.director ?? null;
-  }, [branch.director]);
+    return branch?.director ?? null;
+  }, [branch?.director]);
 
-  // 지도 embed URL (있으면 iframe로 직접 표시)
+  // ✅ 지도 embed URL
   const mapEmbedUrl: string | null = useMemo(() => {
-    const anyBranch = branch as any;
+    if (!branch) return null;
 
-    // 1) config에 mapEmbedUrl이 있으면 그걸 우선 사용
-    if (
-      typeof anyBranch.mapEmbedUrl === "string" &&
-      anyBranch.mapEmbedUrl.length > 0
-    ) {
-      return anyBranch.mapEmbedUrl;
+    // 1) config에 mapEmbedUrl이 있으면 우선 사용 (no-any)
+    const mapEmbedCandidate = (branch as unknown as { mapEmbedUrl?: string }).mapEmbedUrl;
+    if (typeof mapEmbedCandidate === "string" && mapEmbedCandidate.length > 0) {
+      return mapEmbedCandidate;
     }
 
-    // 2) 없으면 주소로 구글맵 embed 자동 생성 (키 필요 없음)
+    // 2) 없으면 주소로 구글맵 embed 자동 생성
     const addr = branch.address;
     if (!addr || addr === "준비중") return null;
 
@@ -66,7 +49,7 @@ export default function BranchDetailPage({ params }: Props) {
     return `https://www.google.com/maps?q=${q}&output=embed`;
   }, [branch]);
 
-  // 상단 갤러리
+  // ✅ 상단 갤러리
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const [activeIdx, setActiveIdx] = useState(0);
 
@@ -114,19 +97,41 @@ export default function BranchDetailPage({ params }: Props) {
     });
   };
 
-  const telHref =
-    branch.phone && branch.phone !== "준비중"
-      ? `tel:${branch.phone.replaceAll("-", "").replaceAll(" ", "")}`
-      : null;
+  const telHref = useMemo(() => {
+    if (!branch?.phone || branch.phone === "준비중") return null;
+    return `tel:${branch.phone.replaceAll("-", "").replaceAll(" ", "")}`;
+  }, [branch?.phone]);
+
+  // ✅ 여기서 렌더만 분기 (훅은 이미 다 호출됨)
+  if (!branch) {
+    return (
+      <main className="bg-white">
+        <div className="h-[78px]" aria-hidden />
+        <section className="mx-auto max-w-6xl px-4 py-10">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-[13px] font-semibold text-zinc-800 shadow-[0_10px_30px_rgba(15,23,42,0.06)] transition hover:bg-zinc-50"
+          >
+            <span aria-hidden className="text-[16px] leading-none">
+              ←
+            </span>
+            뒤로
+          </button>
+
+          <div className="mt-8 text-[16px] text-zinc-700">존재하지 않는 지점입니다.</div>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <main className="bg-white">
       {/* fixed header space */}
       <div className="h-[78px]" aria-hidden />
 
-      {/* ✅ 상단 여백 줄임 */}
       <section className="mx-auto max-w-6xl px-4 py-6 md:py-8">
-        {/* ✅ 뒤로가기: 직관적인 pill */}
+        {/* 뒤로가기 */}
         <div className="flex items-center">
           <button
             type="button"
@@ -161,14 +166,10 @@ export default function BranchDetailPage({ params }: Props) {
             ) : null}
           </div>
 
-          <h1 className="text-[30px] font-semibold tracking-tight text-zinc-900 md:text-[44px]">
-            {branch.name}
-          </h1>
+          <h1 className="text-[30px] font-semibold tracking-tight text-zinc-900 md:text-[44px]">{branch.name}</h1>
 
           {branch.short ? (
-            <p className="max-w-2xl text-[15px] leading-relaxed text-zinc-600 md:text-[16px]">
-              {branch.short}
-            </p>
+            <p className="max-w-2xl text-[15px] leading-relaxed text-zinc-600 md:text-[16px]">{branch.short}</p>
           ) : null}
         </div>
 
@@ -180,7 +181,7 @@ export default function BranchDetailPage({ params }: Props) {
               {photos.length > 0 ? `${activeIdx + 1} / ${photos.length}` : "0 / 0"}
             </div>
 
-            {/* ✅ PC 전용 화살표 (md 이상) */}
+            {/* PC 전용 화살표 */}
             {photos.length > 1 ? (
               <>
                 <button
@@ -239,11 +240,8 @@ export default function BranchDetailPage({ params }: Props) {
                 aria-label="지점 사진 갤러리"
               >
                 {photos.map((src, i) => (
-                  <div
-                    key={`${src}-${i}`}
-                    className="relative w-full shrink-0 snap-center"
-                    aria-label={`${i + 1}번째 사진`}
-                  >
+                  <div key={`${src}-${i}`} className="relative w-full shrink-0 snap-center" aria-label={`${i + 1}번째 사진`}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={src}
                       alt={`${branch.name} 사진 ${i + 1}`}
@@ -257,9 +255,7 @@ export default function BranchDetailPage({ params }: Props) {
           </div>
 
           {photos.length > 1 ? (
-            <div className="mt-2 text-center text-[12px] text-zinc-400">
-              좌우로 스와이프해서 사진을 확인하세요
-            </div>
+            <div className="mt-2 text-center text-[12px] text-zinc-400">좌우로 스와이프해서 사진을 확인하세요</div>
           ) : null}
         </div>
 
@@ -268,15 +264,13 @@ export default function BranchDetailPage({ params }: Props) {
           {/* DIRECTOR */}
           <div className="md:col-span-5">
             <div className="h-full rounded-3xl bg-white p-8 shadow-[0_18px_70px_rgba(15,23,42,0.06)]">
-              <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">
-                DIRECTOR
-              </div>
+              <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">DIRECTOR</div>
 
               <div className="mt-6 flex h-[calc(100%-24px)] flex-col">
                 <div className="flex items-stretch gap-6">
-                  {/* 사진 영역 */}
                   <div className="w-[170px] shrink-0">
                     {director?.photo ? (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={director.photo}
                         alt={`${director.name} 프로필`}
@@ -290,7 +284,6 @@ export default function BranchDetailPage({ params }: Props) {
                     )}
                   </div>
 
-                  {/* 인용 + 이름 */}
                   <div className="flex min-w-0 flex-1 flex-col justify-between">
                     <div className="pt-2">
                       <div className="text-[32px] leading-none text-zinc-900/90">
@@ -298,9 +291,7 @@ export default function BranchDetailPage({ params }: Props) {
                       </div>
 
                       <div className="mt-6">
-                        <div
-                          className={`${yeonwoo.className} text-[18px] leading-relaxed text-zinc-800`}
-                        >
+                        <div className={`${yeonwoo.className} text-[18px] leading-relaxed text-zinc-800`}>
                           최고가 되고야 말겠어.
                         </div>
                       </div>
@@ -314,9 +305,7 @@ export default function BranchDetailPage({ params }: Props) {
                     </div>
 
                     <div className="pt-2 text-right">
-                      <div className="text-[13px] text-zinc-500">
-                        {director?.title ?? "대표원장"}
-                      </div>
+                      <div className="text-[13px] text-zinc-500">{director?.title ?? "대표원장"}</div>
                       <div
                         className={`mt-1 text-[18px] font-normal tracking-[0.1em] text-zinc-800 ${yeonwoo.className}`}
                       >
@@ -335,9 +324,7 @@ export default function BranchDetailPage({ params }: Props) {
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_0%,rgba(185,14,10,0.06),transparent_44%)]" />
 
               <div className="relative z-10 flex h-full flex-col">
-                <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">
-                  INFORMATION
-                </div>
+                <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">INFORMATION</div>
 
                 <div className="mt-6 space-y-4 text-[15px] leading-relaxed">
                   <InfoItem icon="pin" value={branch.address || "준비중"} />
@@ -373,6 +360,7 @@ export default function BranchDetailPage({ params }: Props) {
                       </a>
                     ) : (
                       <button
+                        type="button"
                         disabled
                         className="inline-flex h-[46px] cursor-not-allowed items-center justify-center rounded-full bg-zinc-100 px-6 text-[14px] font-semibold text-zinc-400"
                       >
@@ -388,9 +376,7 @@ export default function BranchDetailPage({ params }: Props) {
 
         {/* ===================== MAP ===================== */}
         <div className="mt-10">
-          <div className="mb-3 text-[14px] font-semibold text-zinc-900">
-            오시는 길
-          </div>
+          <div className="mb-3 text-[14px] font-semibold text-zinc-900">오시는 길</div>
 
           <div className="overflow-hidden rounded-3xl bg-white shadow-[0_18px_70px_rgba(15,23,42,0.08)]">
             {mapEmbedUrl ? (
@@ -410,12 +396,11 @@ export default function BranchDetailPage({ params }: Props) {
         </div>
       </section>
 
-      {/* ✅ 맵 아래 여백 아주 조금 + Footer 추가 */}
       <div className="mt-6 bg-[#1A1A1A]">
         <Footer />
       </div>
 
-      {/* ✅ webkit scrollbar hide (styled-jsx 중첩 방지: 여기 1번만) */}
+      {/* webkit scrollbar hide */}
       <style jsx global>{`
         .branchGallery::-webkit-scrollbar {
           display: none;
@@ -425,39 +410,20 @@ export default function BranchDetailPage({ params }: Props) {
   );
 }
 
-/** 아이콘 + 텍스트 */
-function InfoItem({
-  icon,
-  value,
-}: {
-  icon: "pin" | "clock" | "phone";
-  value: string;
-}) {
+function InfoItem({ icon, value }: { icon: "pin" | "clock" | "phone"; value: string }) {
   const Icon = () => {
     if (icon === "pin") {
       return (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-          <path
-            d="M12 22s7-4.5 7-12a7 7 0 10-14 0c0 7.5 7 12 7 12z"
-            stroke="currentColor"
-            strokeWidth="1.7"
-          />
-          <path
-            d="M12 13a3 3 0 100-6 3 3 0 000 6z"
-            stroke="currentColor"
-            strokeWidth="1.7"
-          />
+          <path d="M12 22s7-4.5 7-12a7 7 0 10-14 0c0 7.5 7 12 7 12z" stroke="currentColor" strokeWidth="1.7" />
+          <path d="M12 13a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" strokeWidth="1.7" />
         </svg>
       );
     }
     if (icon === "clock") {
       return (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-          <path
-            d="M12 22a10 10 0 110-20 10 10 0 010 20z"
-            stroke="currentColor"
-            strokeWidth="1.7"
-          />
+          <path d="M12 22a10 10 0 110-20 10 10 0 010 20z" stroke="currentColor" strokeWidth="1.7" />
           <path
             d="M12 7v6l4 2"
             stroke="currentColor"

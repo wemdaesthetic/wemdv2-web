@@ -73,7 +73,7 @@ function PriceCard({
   return (
     <div className="snap-start shrink-0 w-[260px] md:w-[280px]">
       <div className="overflow-hidden rounded-[20px] ring-1 ring-black/10 shadow-[0_18px_60px_rgba(15,23,42,0.14)]">
-        {/* HEADER: 더 차분한 프리미엄 그라데이션 + 얇은 쉬머 */}
+        {/* HEADER */}
         <div className="relative h-[128px]">
           <div
             className="absolute inset-0 bg-[length:200%_200%] animate-[gradmove_10s_ease_infinite]"
@@ -102,7 +102,7 @@ function PriceCard({
           </div>
         </div>
 
-        {/* BODY: 글래스 느낌 */}
+        {/* BODY */}
         <div className="bg-white/55 backdrop-blur-xl px-5 py-6">
           <div className="flex items-start justify-between">
             <div className="min-h-[22px]">
@@ -120,7 +120,7 @@ function PriceCard({
             {formatPrice(price)}
           </div>
 
-          {/* ✅ 구분선 제거 */}
+          {/* 구분선 제거 */}
           <div className="mt-7 space-y-2 text-right">
             <div className="text-[15px] font-medium text-zinc-600">관리 시간 {durationMin}분</div>
             <div className="text-[15px] font-bold text-zinc-600">VAT포함</div>

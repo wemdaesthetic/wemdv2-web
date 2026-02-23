@@ -1,4 +1,4 @@
-// FILE: src/app/layout.tsx
+
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "WeMD Aesthetic",
   description: "WeMD Aesthetic Official Website",
 
-  // ✅ Favicon / App Icons (public/ 기준)
+  // Favicon / App Icons 
   icons: {
     icon: [
       { url: "/favicon.ico" },

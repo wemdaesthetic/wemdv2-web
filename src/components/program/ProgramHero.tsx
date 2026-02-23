@@ -1,4 +1,4 @@
-// FILE: src/components/program/ProgramHero.tsx
+
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -56,7 +56,7 @@ export default function ProgramHero({
             <div className="w-full">
               <div className="text-[12px] tracking-[0.30em] text-white/80">PROGRAM</div>
 
-              {/* ✅ 제목 자체가 버튼 (버튼처럼 보이지 않게) */}
+              {/* 제목 자체가 버튼 */}
               <div ref={wrapRef} className="relative mt-2 inline-block">
                 <button
                   type="button"
@@ -80,7 +80,7 @@ export default function ProgramHero({
                   </span>
                 </button>
 
-                {/* ✅ 드롭다운: 묻힘 방지 (z 매우 크게) */}
+                {/* 드롭다운 */}
                 {open ? (
                   <div className="absolute left-0 top-full z-[9999] mt-3 w-[280px]">
                     <GlassCard className="overflow-hidden rounded-3xl">

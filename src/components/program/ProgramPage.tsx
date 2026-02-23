@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -19,7 +20,7 @@ export type ProgramBase = {
   titleKo: string;
   titleEn: string;
 
-  // ✅ 프로그램별 이미지(추가)
+  // 프로그램별 이미지
   heroImgSrc?: string;
   infoImgSrc?: string;
 
@@ -30,14 +31,14 @@ export type ProgramBase = {
   introTitle: string;
   introBody: string;
 
-  // ✅ 추천대상
+  // 추천대상
   recommendedTargets?: string[];
 };
 
 export type ProgramPageConfig = {
   basePath: "/face" | "/body" | "/custom";
 
-  // ✅ fallback 이미지(프로그램별 이미지가 없거나 경로가 틀렸을 때 대비)
+  // fallback 이미지
   heroImageSrc: string;
   infoImageSrc: string;
 
@@ -92,15 +93,15 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
     }
   };
 
-  // ✅ 여기 핵심: 프로그램별 이미지 우선, 없으면 config fallback 사용
+  // 프로그램별 이미지 우선, 없으면 config fallback 사용
   const heroSrc = current?.heroImgSrc || heroImageSrc;
   const infoSrc = current?.infoImgSrc || infoImageSrc;
 
-  // 섹션 refs
-  const infoRef = useRef<HTMLElement | null>(null);
-  const processRef = useRef<HTMLElement | null>(null);
-  const priceRef = useRef<HTMLElement | null>(null);
-  const reservationRef = useRef<HTMLElement | null>(null);
+  // ✅ 섹션 refs (any 제거: HTMLDivElement로 통일)
+  const infoRef = useRef<HTMLDivElement | null>(null);
+  const processRef = useRef<HTMLDivElement | null>(null);
+  const priceRef = useRef<HTMLDivElement | null>(null);
+  const reservationRef = useRef<HTMLDivElement | null>(null);
 
   const sectionRefs = useMemo(
     () => ({
@@ -112,7 +113,7 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
     []
   );
 
-  // ✅ 모바일 홈/햄버거: 탭이 sticky로 붙으면 숨기기
+  // 모바일 홈/햄버거: 탭이 sticky로 붙으면 숨기기
   const tabsSentinelRef = useRef<HTMLDivElement | null>(null);
   const [showMobileTopButtons, setShowMobileTopButtons] = useState(true);
 
@@ -129,7 +130,7 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
     return () => io.disconnect();
   }, []);
 
-  // ✅ 모바일 TOP 버튼
+  // 모바일 TOP 버튼
   const [showTop, setShowTop] = useState(false);
   useEffect(() => {
     function onScroll() {
@@ -177,7 +178,7 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
 
       <main className="bg-white">
         <ProgramHero
-          heroImgSrc={heroSrc}  // ✅ 프로그램별 heroSrc 적용
+          heroImgSrc={heroSrc}
           titleKo={current.titleKo}
           titleEn={current.titleEn}
           items={programs.map((p) => ({ slug: p.slug, titleKo: p.titleKo }))}
@@ -189,11 +190,12 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
 
         <ProgramTabs accent={ACCENT} tabs={tabs} sectionRefs={sectionRefs} />
 
-        <section id="프로그램 안내" ref={infoRef as any} className="bg-white">
-          <div className="mx-auto max-w-6xl px-5 md:px-8 py-12 md:py-16">
+        {/* ✅ ref가 필요한 곳은 section 대신 div wrapper로 ref를 달아서 any 제거 */}
+        <section id="프로그램 안내" className="bg-white">
+          <div ref={infoRef} className="mx-auto max-w-6xl px-5 py-12 md:px-8 md:py-16">
             <ProgramInfo
               accent={ACCENT}
-              infoImageSrc={infoSrc} // ✅ 프로그램별 infoSrc 적용
+              infoImageSrc={infoSrc}
               introTitle={current.introTitle}
               introBody={current.introBody}
               recommendedTargets={current.recommendedTargets ?? []}
@@ -201,8 +203,8 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
           </div>
         </section>
 
-        <section id="프로그램 구성" ref={processRef as any} className="bg-zinc-50">
-          <div className="mx-auto max-w-6xl px-5 md:px-8 py-12 md:py-16">
+        <section id="프로그램 구성" className="bg-zinc-50">
+          <div ref={processRef} className="mx-auto max-w-6xl px-5 py-12 md:px-8 md:py-16">
             <div className="text-[12px] font-semibold tracking-[0.30em]" style={{ color: ACCENT }}>
               PROCESS
             </div>
@@ -219,8 +221,8 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
           </div>
         </section>
 
-        <section id="가격" ref={priceRef as any} className="bg-white">
-          <div className="mx-auto max-w-6xl px-5 md:px-8 py-12 md:py-16">
+        <section id="가격" className="bg-white">
+          <div ref={priceRef} className="mx-auto max-w-6xl px-5 py-12 md:px-8 md:py-16">
             <div className="text-[12px] font-semibold tracking-[0.30em]" style={{ color: ACCENT }}>
               PRICE
             </div>
@@ -251,10 +253,10 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
           </div>
         </section>
 
-        <section id="예약" ref={reservationRef as any} className="bg-white">
-          <div className="mx-auto max-w-6xl px-5 md:px-8 py-12 md:py-16">
+        <section id="예약" className="bg-white">
+          <div ref={reservationRef} className="mx-auto max-w-6xl px-5 py-12 md:px-8 md:py-16">
             <div
-              className="relative overflow-hidden rounded-[28px] p-8 md:p-12 text-white"
+              className="relative overflow-hidden rounded-[28px] p-8 text-white md:p-12"
               style={{ backgroundColor: ACCENT }}
             >
               <div
@@ -269,9 +271,7 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
                 <div className="mt-3 text-[20px] font-semibold tracking-tight md:text-[28px]">
                   지금, {current.titleKo} 예약하기
                 </div>
-                <div className="mt-2 text-[13px] text-white/90 md:text-[15px]">
-                  네이버 예약 페이지로 바로 이동합니다.
-                </div>
+                <div className="mt-2 text-[13px] text-white/90 md:text-[15px]">네이버 예약 페이지로 바로 이동합니다.</div>
 
                 <div className="mt-8">
                   <a

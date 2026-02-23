@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 type Props = {
-  onStartReveal: () => void; // ✅ 메인 페이지를 뒤에서 먼저 띄우기 시작
-  onDone: () => void;        // ✅ 인트로 완전 종료
+  onStartReveal: () => void; // 메인 페이지를 뒤에서 먼저 띄우기 시작
+  onDone: () => void;        // 인트로 종료
 };
 
 export default function IntroOverlay({ onStartReveal, onDone }: Props) {
@@ -16,7 +16,7 @@ export default function IntroOverlay({ onStartReveal, onDone }: Props) {
   const revealCalled = useRef(false);
   const tRef = useRef<number | null>(null);
 
-  // 타이핑을 조금 더 “사람처럼” (살짝 랜덤 + 공백에서 약간 멈춤)
+
   function nextDelay(ch: string) {
     const base = 70; // 기본 속도 (크면 느림)
     const jitter = Math.floor(Math.random() * 40); // 0~39ms
@@ -78,7 +78,7 @@ export default function IntroOverlay({ onStartReveal, onDone }: Props) {
   const firstLine = lineIndex === 0 ? typed : lines[0];
   const secondLine = lineIndex === 1 ? typed : lineIndex > 1 ? lines[1] : "";
 
-  // ✅ 커서는 “현재 타이핑 중인 줄”에만 표시
+  // 커서는 “현재 타이핑 중인 줄”에만 표시
   const showCursorOnFirst = phase === "typing" && lineIndex === 0;
   const showCursorOnSecond = phase === "typing" && lineIndex === 1;
 

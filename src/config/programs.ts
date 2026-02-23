@@ -1,4 +1,4 @@
-// FILE: src/config/programs.ts
+
 export type Program = {
   slug: string;
   titleKo: string;

@@ -9,7 +9,7 @@ export default function BranchesPage() {
   return (
     <main className="bg-white">
       <section className="mx-auto max-w-6xl px-4 py-28">
-        {/* 타이틀(브랜드 섹션 톤) */}
+        {/* 타이틀 */}
         <div className="mx-auto mb-16 max-w-3xl text-center">
           <h1 className="text-[40px] font-semibold tracking-tight text-zinc-900 md:text-[52px]">
             지점 안내

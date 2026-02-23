@@ -1,4 +1,4 @@
-// FILE: src/components/mobile/MobileShell.tsx
+
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";

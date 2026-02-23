@@ -7,16 +7,16 @@ import { useRouter } from "next/navigation";
 import { BOOKING_URL, NAV_ITEMS, type NavItem, type NavMega } from "@/config/nav";
 import { cn } from "@/lib/cn";
 
-/* ---------- ROUTE MAP (요청사항 고정) ---------- */
+/* ---------- ROUTE MAP ---------- */
 const ROUTES = {
   face: {
     default: "/face?p=facial-lifting",
     items: [
       { label: "얼굴 리프팅 관리", href: "/face?p=facial-lifting" },
-      // ✅ 표기명만 엘라조, slug는 실제 프로그램 slug로
+      // 표기명만 엘라조, slug는 실제 프로그램 slug로
       { label: "엘라조 페이스 관리", href: "/face?p=ellazo-face" },
       { label: "작은 얼굴 관리", href: "/face?p=face-slimming" },
-      // ✅ 얼굴 밸런스 관리(기존 균형) - slug 맞추기
+      // 얼굴 밸런스 관리(기존 균형) - slug 맞추기
       { label: "얼굴 밸런스 관리", href: "/face?p=face-balance" },
     ],
   },
@@ -31,7 +31,7 @@ const ROUTES = {
   custom: {
     default: "/custom?p=wedding",
     items: [
-      // ✅ 웨딩은 단일(스페셜 제거)
+      // 웨딩은 단일(스페셜 제거)
       { label: "웨딩 관리", href: "/custom?p=wedding" },
       { label: "라운드 숄더 관리", href: "/custom?p=round-shoulder" },
       { label: "애플 힙(골반관리)", href: "/custom?p=apple-hip" },
@@ -95,7 +95,7 @@ export default function Header() {
   }, []);
 
   /* ---------- 헤더 색 판정 ---------- */
-  const headerIsWhite = true; // ✅ PC는 항상 흰색
+  const headerIsWhite = true; 
   const topText = headerIsWhite ? "text-zinc-900" : "text-white";
   const topTextHover = headerIsWhite ? "hover:text-zinc-950" : "hover:text-white";
   const dividerColor = headerIsWhite ? "bg-zinc-300" : "bg-white/40";
@@ -111,7 +111,7 @@ export default function Header() {
       onMouseLeave={() => setActiveMega(null)}
     >
       <div className="mx-auto max-w-6xl px-4">
-        {/* ✅ PC HEADER ONLY (md 이상) */}
+        {/* PC HEADER ONLY (md 이상) */}
         <div className="hidden h-[78px] items-center justify-between md:flex">
           {/* LEFT */}
           <div className="flex items-center">
@@ -176,7 +176,7 @@ export default function Header() {
         </div>
       </div>
 
-      {/* ✅ PC Mega Menu */}
+      {/* PC Mega Menu */}
       <MegaMenuTossLike item={activeItem} />
     </header>
   );
@@ -224,7 +224,6 @@ function MegaTopButton({
   );
 }
 
-/* ---------- Toss-like Mega Menu (WHITE) ---------- */
 function MegaMenuTossLike({ item }: { item: NavMega | null }) {
   if (!item) return null;
 

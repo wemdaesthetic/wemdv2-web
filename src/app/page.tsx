@@ -1,4 +1,4 @@
-// FILE: src/app/page.tsx
+
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -15,29 +15,33 @@ import { BOOKING_URL } from "@/config/nav";
 
 const HEADER_H = 78;
 
+// ✅ 팝업 이미지 경로(렌더마다 재선언 방지)
+const POPUP_IMG_SRC = "/popup/main-popup.png";
+
 export default function HomePage() {
-  // ✅ 팝업 상태
   const [openPopup, setOpenPopup] = useState(false);
 
-  // ✅ 최초 1회 자동 오픈 (지금은 테스트/디버깅용으로 무조건 뜨게)
+  // ✅ 최초 1회 자동 오픈
   useEffect(() => {
     setOpenPopup(true);
   }, []);
 
-  // ✅ 팝업 이미지 (public/popup/main-popup.png)
-  const POPUP_IMG_SRC = "/popup/main-popup.png";
-
   return (
     <>
-      {/* ✅ 팝업 (메인에서만) */}
+      {/* ✅ 팝업 */}
       {openPopup ? (
-        <div className="fixed inset-0 z-[99999]">
+        <div className="fixed inset-0 z-[2147483647]">
           {/* overlay */}
-          <button
-            type="button"
+          <div
+            role="button"
             aria-label="팝업 닫기"
+            tabIndex={0}
             className="absolute inset-0 bg-black/55"
             onClick={() => setOpenPopup(false)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") setOpenPopup(false);
+              if (e.key === "Escape") setOpenPopup(false);
+            }}
           />
 
           {/* popup */}
@@ -65,8 +69,8 @@ export default function HomePage() {
         </div>
       ) : null}
 
-      {/* ✅ Mobile UI (상단바/햄버거/드로어/FAB/TOP) 전부 여기서 통일 */}
-      <MobileShell variant="home" bookingUrl={BOOKING_URL} showReviewsLink={true} />
+      {/* ✅ Mobile UI (상단바/햄버거/드로어/FAB/TOP) */}
+      <MobileShell variant="home" bookingUrl={BOOKING_URL} showReviewsLink />
 
       {/* ✅ PC에서만 Header */}
       <div className="hidden md:block">
@@ -93,13 +97,10 @@ export default function HomePage() {
             preload="auto"
           />
 
-          {/* 기존 그대로 유지 */}
           <div className="absolute inset-0 bg-transparent" />
 
-          {/* ✅ 타이틀/서브문구 제거: 레이아웃 유지용 컨테이너만 남김 */}
-          <div className="relative z-10 mx-auto flex h-full max-w-6xl items-center px-4 md:pt-[78px] pt-[88px]">
-            {/* 텍스트 블록 제거 */}
-          </div>
+          {/* ✅ 타이틀/서브문구 제거: 레이아웃 유지용 컨테이너만 */}
+          <div className="relative z-10 mx-auto flex h-full max-w-6xl items-center px-4 pt-[88px] md:pt-[78px]" />
         </section>
 
         {/* ✅ 섹션들 */}

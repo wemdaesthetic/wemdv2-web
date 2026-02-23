@@ -3,13 +3,19 @@
 
 import React from "react";
 import { cn } from "@/lib/cn";
-import { glassBase } from "@/lib/glass";
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
-  as?: "div" | "section" | "article";
+  asChild?: false;
 };
 
-export default function GlassCard({ as = "div", className, ...rest }: Props) {
-  const Comp: any = as;
-  return <Comp className={glassBase(cn("rounded-3xl", className))} {...rest} />;
+export default function GlassCard({ className, ...props }: Props) {
+  return (
+    <div
+      className={cn(
+        "rounded-3xl bg-white/70 backdrop-blur-md ring-1 ring-black/5 shadow-[0_18px_70px_rgba(15,23,42,0.08)]",
+        className
+      )}
+      {...props}
+    />
+  );
 }

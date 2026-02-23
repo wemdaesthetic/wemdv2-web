@@ -1,4 +1,3 @@
-// FILE: src/components/sections/FranchiseSection.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -39,7 +38,7 @@ export default function FranchiseSection() {
       <div className="md:hidden">
         <div className="relative px-4 pt-14 pb-16 bg-white">
           <div className="mx-auto max-w-[520px]">
-            {/* ✅ 새 섹션 타이틀 규격: 모바일 left */}
+            {/* 새 섹션 타이틀 규격: 모바일 left */}
             <div className="text-left">
               <div
                 className="font-['Pretendard'] font-bold text-[30px] leading-[36px]"
@@ -63,7 +62,7 @@ export default function FranchiseSection() {
               </div>
             </div>
 
-            {/* ✅ 붉은 컨테이너 */}
+            {/* 붉은 컨테이너 */}
             <div
               className="mt-6 overflow-hidden rounded-[32px] p-5 text-white relative"
               style={{ backgroundColor: ACCENT }}
@@ -137,7 +136,7 @@ export default function FranchiseSection() {
       {/* ===================== PC ONLY (md 이상) ===================== */}
       <div className="hidden md:block">
         <div className="mx-auto max-w-6xl px-4 py-28">
-          {/* ✅ 새 섹션 타이틀 규격: 데스크탑 center */}
+          {/* 새 섹션 타이틀 규격: 데스크탑 center */}
           <div className="mx-auto mb-16 max-w-3xl text-center">
             <div
               className="font-['Pretendard'] font-bold text-[46px] leading-[55px]"

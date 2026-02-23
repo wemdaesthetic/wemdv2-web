@@ -1,4 +1,3 @@
-// FILE: src/components/sections/BranchesSection.tsx
 "use client";
 
 import { useMemo, useState } from "react";
@@ -36,7 +35,7 @@ export default function BranchesSection() {
         <div className="relative px-4 pt-14 pb-16 overflow-hidden bg-white">
           <div className="relative z-10">
             <div className="mx-auto max-w-[520px]">
-              {/* ✅ 새 섹션 타이틀 규격: 모바일 left / 데스크탑 center */}
+              {/* 새 섹션 타이틀 규격: 모바일 left / 데스크탑 center */}
               <div className="text-left">
                 <div
                   className="font-['Pretendard'] font-bold text-[30px] leading-[36px]"
@@ -195,7 +194,7 @@ export default function BranchesSection() {
       {/* ===================== PC ONLY (md 이상) ===================== */}
       <div className="hidden md:block">
         <div className="mx-auto max-w-6xl px-4 py-28">
-          {/* ✅ 새 섹션 타이틀 규격: 데스크탑 center */}
+          {/* 새 섹션 타이틀 규격: 데스크탑 center */}
           <div className="mx-auto mb-16 max-w-3xl text-center">
             <div
               className="font-['Pretendard'] font-bold text-[46px] leading-[55px]"
@@ -280,7 +279,7 @@ export default function BranchesSection() {
                 </>
               );
 
-              // ✅ 여기만 변경: PC 카드에도 연한 테두리(ring) 추가해서 다른 섹션 카드들과 톤 통일
+            
               const cardBase =
                 "rounded-3xl bg-white p-7 ring-1 ring-black/10 shadow-[0_18px_70px_rgba(15,23,42,0.08)]";
 

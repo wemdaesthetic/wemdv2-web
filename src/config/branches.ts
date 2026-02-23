@@ -1,4 +1,3 @@
-// src/config/branches.ts
 
 export type BranchDirector = {
   name: string;            // "신 예 나"
@@ -16,7 +15,7 @@ export type Branch = {
   hours?: string;
   mapUrl?: string;
 
-  // ✅ 추가 필드
+  // 추가 필드
   photos?: string[];
   director?: BranchDirector;
   mapEmbedUrl?: string; // iframe용 embed URL (있으면 최우선 사용)
@@ -46,7 +45,7 @@ export const BRANCHES: Branch[] = [
       quote: "난 최고야.",
     },
 
-    // ✅ 가능하면 이 값 넣는 게 제일 깔끔해(네이버/구글 embed 주소)
+  
     // mapEmbedUrl: "https://www.google.com/maps?q=...&output=embed",
   },
 

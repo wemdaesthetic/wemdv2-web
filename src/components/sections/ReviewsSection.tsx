@@ -1,4 +1,3 @@
-// FILE: src/components/sections/ReviewsSection.tsx
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -101,7 +100,7 @@ export default function ReviewsSection() {
   const [index, setIndex] = useState(0);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
-  // 반응형 측정
+  // 반응형
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const [vw, setVw] = useState(0);
   const [isDesktop, setIsDesktop] = useState(false);
@@ -189,7 +188,7 @@ export default function ReviewsSection() {
   return (
     <section className="bg-white">
       <div className="mx-auto max-w-6xl px-4 py-14 md:px-8">
-        {/* ✅ 타이틀 영역 유지 (여기서 화살표 제거) */}
+        {/* 타이틀 영역 유지 */}
         <div className="relative">
           <div className="text-left md:text-center">
             <div
@@ -228,7 +227,7 @@ export default function ReviewsSection() {
               : "none",
           }}
         >
-          {/* ✅ 데스크탑 화살표: 카드 영역 좌/우 끝으로 이동 */}
+          {/* 데스크탑 화살표: 카드 영역 좌/우 끝으로 이동 */}
           {isDesktop ? (
             <>
               <button

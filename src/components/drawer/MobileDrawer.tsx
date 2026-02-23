@@ -1,4 +1,4 @@
-// FILE: src/components/drawer/MobileDrawer.tsx
+
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
@@ -13,14 +13,16 @@ type Variant = "home" | "manage";
 type Props = {
   open: boolean;
   onClose: () => void;
-  bookingUrl: string;
-  consultTelHref: string;
-  variant: Variant;
+
+  // ✅ 과거 호출부 호환용 (MobileShell에서 넘겨도 에러 안 나게)
+  bookingUrl?: string;
+  consultTelHref?: string;
+  variant?: Variant;
 };
 
 type SectionKey = "face" | "body" | "custom" | null;
 
-export default function MobileDrawer({ open, onClose, bookingUrl, consultTelHref }: Props) {
+export default function MobileDrawer({ open, onClose }: Props) {
   const pathname = usePathname();
 
   const defaultOpenSection: SectionKey = useMemo(() => {
@@ -79,14 +81,15 @@ export default function MobileDrawer({ open, onClose, bookingUrl, consultTelHref
         aria-modal="true"
         aria-label="모바일 메뉴"
       >
-        {/* X */}
+        {/* X : ✅ 좌측으로 10px(= right +10px), 아래로 10px(top +10px) */}
         <button
           type="button"
           onClick={onClose}
           aria-label="메뉴 닫기"
-          className="absolute right-9 z-[10] text-[30px] leading-none hover:opacity-70 active:opacity-60"
+          className="absolute z-[10] text-[30px] leading-none hover:opacity-70 active:opacity-60"
           style={{
-            top: "calc(env(safe-area-inset-top) + 26px)",
+            right: "calc(2.25rem + 10px)", // 기존 right-9(2.25rem)에서 +10px => 더 왼쪽으로
+            top: "calc(env(safe-area-inset-top) + 26px + 10px)", // 기존 +26px에서 +10px => 더 아래로
             color: ACCENT,
           }}
         >
@@ -164,9 +167,10 @@ export default function MobileDrawer({ open, onClose, bookingUrl, consultTelHref
           </div>
         </div>
 
+        {/* ✅ 예약하기/전화상담 버튼 영역 제거 유지 */}
         <div className="mt-auto px-6 pb-6" style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 18px)" }}>
-  <div className="text-center text-[12px] text-zinc-400">WeMD Aesthetic</div>
-</div>
+          <div className="text-center text-[12px] text-zinc-400">WeMD Aesthetic</div>
+        </div>
       </aside>
     </div>
   );

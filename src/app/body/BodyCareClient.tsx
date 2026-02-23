@@ -95,7 +95,7 @@ export default function BodyCareClient() {
   const config: ProgramPageConfig = {
     basePath: "/body",
 
-    // fallback (혹시 경로 틀려도 깨지지 않게)
+    // fallback 
     heroImageSrc: "/programs/body/body-upper-hero.png",
     infoImageSrc: "/programs/body/body-upper-info.png",
 

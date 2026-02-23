@@ -14,10 +14,10 @@ export type NavItem =
   | NavMega;
 
 export const NAV_ITEMS: NavItem[] = [
-  // ✅ 원페이지(섹션 이동)
+  // 원페이지(섹션 이동)
   { type: "link", label: "WeMD 에스테틱", href: "#brand" },
 
-  // ✅ 2뎁스(메가메뉴)
+  // 2뎁스(메가메뉴)
   {
     type: "mega",
     label: "얼굴 관리",
@@ -70,7 +70,7 @@ export const NAV_ITEMS: NavItem[] = [
     promo: { href: "/custom" },
   },
 
-  // ✅ 원페이지(섹션 이동)
+  // 원페이지(섹션 이동)
   { type: "link", label: "지점 안내", href: "#branches" },
   { type: "link", label: "가맹 문의", href: "#contact" },
 ];
