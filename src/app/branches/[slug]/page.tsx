@@ -292,7 +292,7 @@ export default function BranchDetailPage({ params }: Props) {
 
                       <div className="mt-6">
                         <div className={`${yeonwoo.className} text-[18px] leading-relaxed text-zinc-800`}>
-                          최고가 되고야 말겠어.
+                          15년 경력으로 고객님만의 황금비율을 찾아드립니다.
                         </div>
                       </div>
                     </div>

@@ -15,20 +15,20 @@ import { BOOKING_URL } from "@/config/nav";
 
 const HEADER_H = 78;
 
-// ✅ 팝업 이미지 경로(렌더마다 재선언 방지)
+// 팝업 이미지 경로(렌더마다 재선언 방지)
 const POPUP_IMG_SRC = "/popup/main-popup.png";
 
 export default function HomePage() {
   const [openPopup, setOpenPopup] = useState(false);
 
-  // ✅ 최초 1회 자동 오픈
+  // 최초 1회 자동 오픈
   useEffect(() => {
     setOpenPopup(true);
   }, []);
 
   return (
     <>
-      {/* ✅ 팝업 */}
+      {/* 팝업 */}
       {openPopup ? (
         <div className="fixed inset-0 z-[2147483647]">
           {/* overlay */}
@@ -69,10 +69,10 @@ export default function HomePage() {
         </div>
       ) : null}
 
-      {/* ✅ Mobile UI (상단바/햄버거/드로어/FAB/TOP) */}
+      {/* Mobile UI (상단바/햄버거/드로어/FAB/TOP) */}
       <MobileShell variant="home" bookingUrl={BOOKING_URL} showReviewsLink />
 
-      {/* ✅ PC에서만 Header */}
+      {/* PC에서만 Header */}
       <div className="hidden md:block">
         <Header />
       </div>
@@ -99,11 +99,11 @@ export default function HomePage() {
 
           <div className="absolute inset-0 bg-transparent" />
 
-          {/* ✅ 타이틀/서브문구 제거: 레이아웃 유지용 컨테이너만 */}
+          {/* 타이틀/서브문구 제거: 레이아웃 유지용 컨테이너만 */}
           <div className="relative z-10 mx-auto flex h-full max-w-6xl items-center px-4 pt-[88px] md:pt-[78px]" />
         </section>
 
-        {/* ✅ 섹션들 */}
+        {/* 섹션들 */}
         <div className="bg-white">
           <section id="reviews" style={{ scrollMarginTop: HEADER_H }} className="bg-white">
             <ReviewsSection />
