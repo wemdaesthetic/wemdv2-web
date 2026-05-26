@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   },
 };
 
-// ✅ 모바일 핀치 줌 완전 차단
+// 모바일 핀치 줌 완전 차단
 export const viewport = {
   width: "device-width",
   initialScale: 1,

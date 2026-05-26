@@ -18,8 +18,8 @@ export default function BodyCareClient() {
         infoImgSrc: "/programs/body/body-upper-info.png",
 
         durationMin: 50,
-        priceOnce: 120000,
-        priceTen: 1080000,
+        priceOnce: 130000,
+        priceTen: 110000,
         steps: ["등 크림", "팔 크림", "어깨·목", "두피", "마무리"],
         introTitle: "WeMD 상체 관리",
         introBody:
@@ -41,8 +41,8 @@ export default function BodyCareClient() {
         infoImgSrc: "/programs/body/body-lower-info.png",
 
         durationMin: 50,
-        priceOnce: 120000,
-        priceTen: 1080000,
+        priceOnce: 130000,
+        priceTen: 110000,
         steps: ["하체 라인 관리", "하체 근막 관리", "지방 분해 관리", "마무리"],
         introTitle: "WeMD 하체 관리",
         introBody:
@@ -64,8 +64,8 @@ export default function BodyCareClient() {
         infoImgSrc: "/programs/body/body-sline-info.png",
 
         durationMin: 100,
-        priceOnce: 180000,
-        priceTen: 1620000,
+        priceOnce: 190000,
+        priceTen: 170000,
         steps: [
           "등 크림",
           "팔 크림",

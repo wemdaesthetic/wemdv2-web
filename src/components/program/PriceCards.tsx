@@ -68,7 +68,7 @@ function PriceCard({
   formatPrice: (n: number) => string;
 }) {
   const hasDiscount = type === "ten" && originalPrice != null && originalPrice > price;
-  const rightLabel = type === "once" ? "1회 관리 정가" : "10%할인가";
+  const rightLabel = type === "once" ? "정상가" : "회원가";
 
   return (
     <div className="snap-start shrink-0 w-[260px] md:w-[280px]">

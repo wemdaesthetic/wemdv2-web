@@ -17,9 +17,9 @@ export default function CustomCareClient() {
         heroImgSrc: "/programs/custom/wedding-hero.png",
         infoImgSrc: "/programs/custom/wedding-info.png",
 
-        durationMin: 90,
-        priceOnce: 180000,
-        priceTen: 1620000,
+        durationMin: 110,
+        priceOnce: 200000,
+        priceTen: 170000,
         steps: [
           "클렌징",
           "등 관리",
@@ -53,8 +53,8 @@ export default function CustomCareClient() {
         infoImgSrc: "/programs/custom/round-shoulder-info.png",
 
         durationMin: 60,
-        priceOnce: 130000,
-        priceTen: 1170000,
+        priceOnce: 120000,
+        priceTen: 100000,
         steps: [
           "등 크림 관리",
           "어깨·목 관리",
@@ -82,7 +82,7 @@ export default function CustomCareClient() {
 
         durationMin: 60,
         priceOnce: 120000,
-        priceTen: 1080000,
+        priceTen: 100000,
         steps: [
           "하체 밸런스 관리",
           "골반 집중 관리",
@@ -111,7 +111,7 @@ export default function CustomCareClient() {
 
         durationMin: 120,
         priceOnce: 200000,
-        priceTen: 1800000,
+        priceTen: 180000,
         steps: [
           "클렌징",
           "등 크림",
@@ -144,7 +144,7 @@ export default function CustomCareClient() {
 
         durationMin: 60,
         priceOnce: 120000,
-        priceTen: 1080000,
+        priceTen: 100000,
         steps: [
           "애플 힙(골반) 관리",
           "등 크림 관리",
