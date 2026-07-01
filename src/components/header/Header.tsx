@@ -6,17 +6,15 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BOOKING_URL, NAV_ITEMS, type NavItem, type NavMega } from "@/config/nav";
 import { cn } from "@/lib/cn";
+import MembershipModal from "@/components/membership/MembershipModal";
 
-/* ---------- ROUTE MAP ---------- */
 const ROUTES = {
   face: {
     default: "/face?p=facial-lifting",
     items: [
       { label: "얼굴 리프팅 관리", href: "/face?p=facial-lifting" },
-      // 표기명만 엘라조, slug는 실제 프로그램 slug로
       { label: "엘라조 페이스 관리", href: "/face?p=ellazo-face" },
       { label: "작은 얼굴 관리", href: "/face?p=face-slimming" },
-      // 얼굴 밸런스 관리(기존 균형) - slug 맞추기
       { label: "얼굴 밸런스 관리", href: "/face?p=face-balance" },
     ],
   },
@@ -31,7 +29,6 @@ const ROUTES = {
   custom: {
     default: "/custom?p=wedding",
     items: [
-      // 웨딩은 단일(스페셜 제거)
       { label: "웨딩 관리", href: "/custom?p=wedding" },
       { label: "라운드 숄더 관리", href: "/custom?p=round-shoulder" },
       { label: "애플 힙(골반관리)", href: "/custom?p=apple-hip" },
@@ -41,7 +38,6 @@ const ROUTES = {
   },
 };
 
-/* ---------- utils ---------- */
 function isMega(item: NavItem): item is NavMega {
   return item.type === "mega";
 }
@@ -57,14 +53,13 @@ function displayLabel(label: string) {
   return label;
 }
 
-/* ---------- Header (PC ONLY) ---------- */
 export default function Header() {
   const router = useRouter();
 
   const [activeMega, setActiveMega] = useState<string | null>(null);
+  const [membershipOpen, setMembershipOpen] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
 
-  // nav items
   const face = getItem("얼굴 관리");
   const body = getItem("바디 관리");
   const custom = getItem("맞춤 케어");
@@ -75,7 +70,6 @@ export default function Header() {
     return found && isMega(found) ? found : null;
   }, [activeMega]);
 
-  /* ---------- 외부 클릭 닫기 (PC Mega) ---------- */
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
       if (!activeMega) return;
@@ -85,7 +79,6 @@ export default function Header() {
     return () => window.removeEventListener("mousedown", onClickOutside);
   }, [activeMega]);
 
-  /* ---------- ESC 닫기 (PC Mega) ---------- */
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") setActiveMega(null);
@@ -94,95 +87,108 @@ export default function Header() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  /* ---------- 헤더 색 판정 ---------- */
-  const headerIsWhite = true; 
+  const headerIsWhite = true;
   const topText = headerIsWhite ? "text-zinc-900" : "text-white";
   const topTextHover = headerIsWhite ? "hover:text-zinc-950" : "hover:text-white";
   const dividerColor = headerIsWhite ? "bg-zinc-300" : "bg-white/40";
 
   return (
-    <header
-      ref={headerRef}
-      className={cn(
-        "fixed top-0 left-0 z-50 w-full transition-colors duration-300",
-        headerIsWhite ? "bg-white" : "bg-transparent",
-        headerIsWhite ? "border-b border-zinc-200" : "border-b border-transparent"
-      )}
-      onMouseLeave={() => setActiveMega(null)}
-    >
-      <div className="mx-auto max-w-6xl px-4">
-        {/* PC HEADER ONLY (md 이상) */}
-        <div className="hidden h-[78px] items-center justify-between md:flex">
-          {/* LEFT */}
-          <div className="flex items-center">
-            <Link href="/" className="flex items-center">
-              <Image src="/logo-main.png" alt="WeMD" width={74} height={74} priority />
-            </Link>
+    <>
+      <header
+        ref={headerRef}
+        className={cn(
+          "fixed top-0 left-0 z-50 w-full transition-colors duration-300",
+          headerIsWhite ? "bg-white" : "bg-transparent",
+          headerIsWhite ? "border-b border-zinc-200" : "border-b border-transparent"
+        )}
+        onMouseLeave={() => setActiveMega(null)}
+      >
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="hidden h-[78px] items-center justify-between md:flex">
+            <div className="flex items-center">
+              <Link href="/" className="flex items-center">
+                <Image src="/logo-main.png" alt="WeMD" width={74} height={74} priority />
+              </Link>
 
-            <a
-              href="#brand"
-              className={cn("ml-20 text-[16px] font-semibold transition-colors", topText, topTextHover)}
-            >
-              WeMD 에스테틱
-            </a>
+              <a
+                href="#brand"
+                className={cn("ml-20 text-[16px] font-semibold transition-colors", topText, topTextHover)}
+              >
+                WeMD 에스테틱
+              </a>
 
-            <Divider className="mx-7" colorClass={dividerColor} />
+              <Divider className="mx-7" colorClass={dividerColor} />
 
-            <nav className="hidden items-center gap-8 md:flex">
-              <MegaTopButton
-                item={face}
-                open={activeMega === face?.label}
-                headerIsWhite={headerIsWhite}
-                onOpen={setActiveMega}
-                onClickDefault={() => router.push(ROUTES.face.default)}
-              />
-              <MegaTopButton
-                item={body}
-                open={activeMega === body?.label}
-                headerIsWhite={headerIsWhite}
-                onOpen={setActiveMega}
-                onClickDefault={() => router.push(ROUTES.body.default)}
-              />
-              <MegaTopButton
-                item={custom}
-                open={activeMega === custom?.label}
-                headerIsWhite={headerIsWhite}
-                onOpen={setActiveMega}
-                onClickDefault={() => router.push(ROUTES.custom.default)}
-              />
-            </nav>
+              <nav className="hidden items-center gap-8 md:flex">
+                <MegaTopButton
+                  item={face}
+                  open={activeMega === face?.label}
+                  headerIsWhite={headerIsWhite}
+                  onOpen={setActiveMega}
+                  onClickDefault={() => router.push(ROUTES.face.default)}
+                />
+                <MegaTopButton
+                  item={body}
+                  open={activeMega === body?.label}
+                  headerIsWhite={headerIsWhite}
+                  onOpen={setActiveMega}
+                  onClickDefault={() => router.push(ROUTES.body.default)}
+                />
+                <MegaTopButton
+                  item={custom}
+                  open={activeMega === custom?.label}
+                  headerIsWhite={headerIsWhite}
+                  onOpen={setActiveMega}
+                  onClickDefault={() => router.push(ROUTES.custom.default)}
+                />
+              </nav>
 
-            <Divider className="ml-7 hidden md:inline-block" colorClass={dividerColor} />
+              <Divider className="ml-7 hidden md:inline-block" colorClass={dividerColor} />
 
-            <a
-              href={BOOKING_URL}
-              target="_blank"
-              rel="noreferrer"
-              className={cn("ml-7 hidden text-[16px] font-medium transition-colors md:inline-block", topText, topTextHover)}
-            >
-              예약하기
-            </a>
-          </div>
+              <a
+                href={BOOKING_URL}
+                target="_blank"
+                rel="noreferrer"
+                className={cn(
+                  "ml-7 hidden text-[16px] font-medium transition-colors md:inline-block",
+                  topText,
+                  topTextHover
+                )}
+              >
+                예약하기
+              </a>
+            </div>
 
-          {/* RIGHT */}
-          <div className="flex items-center gap-7">
-            <a href="/#branches" className={cn("text-[14px] font-semibold transition-colors", topText, topTextHover)}>
-              지점안내
-            </a>
-            <a href="/#franchise" className={cn("text-[14px] font-semibold transition-colors", topText, topTextHover)}>
-              가맹문의
-            </a>
+            <div className="flex items-center gap-7">
+              <button
+                type="button"
+                onClick={() => setMembershipOpen(true)}
+                className={cn("text-[14px] font-semibold transition-colors", topText, topTextHover)}
+              >
+                회원권
+              </button>
+
+              <a href="/#branches" className={cn("text-[14px] font-semibold transition-colors", topText, topTextHover)}>
+                지점안내
+              </a>
+              <a href="/#franchise" className={cn("text-[14px] font-semibold transition-colors", topText, topTextHover)}>
+                가맹문의
+              </a>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* PC Mega Menu */}
-      <MegaMenuTossLike item={activeItem} />
-    </header>
+        <MegaMenuTossLike item={activeItem} />
+      </header>
+
+      <MembershipModal
+        open={membershipOpen}
+        onClose={() => setMembershipOpen(false)}
+        bookingUrl={BOOKING_URL}
+      />
+    </>
   );
 }
-
-/* ---------- Components ---------- */
 
 function Divider({ className, colorClass }: { className?: string; colorClass?: string }) {
   return <span className={cn("inline-block h-5 w-px", colorClass, className)} aria-hidden />;
@@ -231,13 +237,7 @@ function MegaMenuTossLike({ item }: { item: NavMega | null }) {
   const normalized = normalizeMegaItem(item);
 
   return (
-    <div
-      className="
-        relative z-50
-        border-t border-zinc-200 bg-white
-        shadow-[0_18px_40px_-28px_rgba(0,0,0,0.35)]
-      "
-    >
+    <div className="relative z-50 border-t border-zinc-200 bg-white shadow-[0_18px_40px_-28px_rgba(0,0,0,0.35)]">
       <div className="mx-auto max-w-6xl px-4 py-10">
         <div className="grid grid-cols-12 gap-10">
           <div className="col-span-12 md:col-span-3">
@@ -267,25 +267,20 @@ function MegaMenuTossLike({ item }: { item: NavMega | null }) {
             >
               {normalized.sections.map((section) => (
                 <div key={section.title} className="min-w-0">
-                  <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">{section.title || "MENU"}</div>
+                  <div className="text-[12px] font-semibold tracking-[0.22em] text-zinc-400">
+                    {section.title || "MENU"}
+                  </div>
 
                   <div className="mt-4 flex flex-col gap-3">
                     {section.links.map((l) => (
                       <Link
                         key={l.href}
                         href={l.href}
-                        className="
-                          group inline-flex min-w-0 items-center justify-between
-                          text-[15px] font-semibold text-zinc-900
-                          hover:text-[#B90E0A]
-                        "
+                        className="group inline-flex min-w-0 items-center justify-between text-[15px] font-semibold text-zinc-900 hover:text-[#B90E0A]"
                       >
                         <span className="truncate">{l.label}</span>
                         <span
-                          className="
-                            ml-3 shrink-0 text-zinc-300
-                            transition group-hover:translate-x-[2px] group-hover:text-[#B90E0A]/50
-                          "
+                          className="ml-3 shrink-0 text-zinc-300 transition group-hover:translate-x-[2px] group-hover:text-[#B90E0A]/50"
                           aria-hidden
                         >
                           →
@@ -306,11 +301,7 @@ function MegaMenuTossLike({ item }: { item: NavMega | null }) {
                 href={BOOKING_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="
-                  inline-flex h-[44px] items-center justify-center rounded-full
-                  bg-[#B90E0A] px-6 text-[14px] font-semibold text-white
-                  hover:bg-[#a40c09]
-                "
+                className="inline-flex h-[44px] items-center justify-center rounded-full bg-[#B90E0A] px-6 text-[14px] font-semibold text-white hover:bg-[#a40c09]"
               >
                 예약하기
               </a>
@@ -322,7 +313,6 @@ function MegaMenuTossLike({ item }: { item: NavMega | null }) {
   );
 }
 
-/* ---------- Mega meta ---------- */
 function getMegaMeta(label: string): { title: string; desc: string; allHref: string } {
   if (label === "얼굴 관리") {
     return {
@@ -352,7 +342,6 @@ function getMegaMeta(label: string): { title: string; desc: string; allHref: str
   };
 }
 
-/* ---------- NAV_ITEMS의 mega 링크를 slug 링크로 교체 ---------- */
 function normalizeMegaItem(item: NavMega): NavMega {
   if (item.label === "얼굴 관리") {
     return {

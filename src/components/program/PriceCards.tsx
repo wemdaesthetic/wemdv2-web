@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import OneBadge from "@/components/price/OneBadge";
-import TenBadge from "@/components/price/TenBadge";
 
 type Card = {
   type: "once" | "ten";
@@ -32,7 +30,6 @@ export default function PriceCards({ accent, cards, formatPrice }: Props) {
         <PriceCard
           key={c.type}
           accent={accent}
-          badge={c.type === "once" ? <OneBadge className="h-[76px] w-auto md:h-[86px]" /> : <TenBadge className="h-[76px] w-auto md:h-[86px]" />}
           type={c.type}
           price={c.price}
           originalPrice={c.originalPrice}
@@ -52,7 +49,6 @@ export default function PriceCards({ accent, cards, formatPrice }: Props) {
 
 function PriceCard({
   accent,
-  badge,
   type,
   price,
   originalPrice,
@@ -60,85 +56,105 @@ function PriceCard({
   formatPrice,
 }: {
   accent: string;
-  badge: React.ReactNode;
   type: "once" | "ten";
   price: number;
   originalPrice: number | null;
   durationMin: number;
   formatPrice: (n: number) => string;
 }) {
-  const hasDiscount = type === "ten" && originalPrice != null && originalPrice > price;
-  const rightLabel = type === "once" ? "정상가" : "회원가";
+  const isMember = type === "ten";
+  const label = isMember ? "회원가" : "정상가";
+  const subLabel = isMember ? "MEMBER PRICE" : "REGULAR PRICE";
+  const badgeLabel = isMember ? "MEMBER" : "REGULAR";
+  const hasOriginal = isMember && originalPrice != null && originalPrice > price;
 
   return (
     <div className="snap-start shrink-0 w-[260px] md:w-[280px]">
-      <div className="overflow-hidden rounded-[20px] ring-1 ring-black/10 shadow-[0_18px_60px_rgba(15,23,42,0.14)]">
-        {/* HEADER */}
-        <div className="relative h-[128px]">
+      <div
+        className="
+          overflow-hidden rounded-[22px]
+          bg-white
+          ring-1 ring-black/10
+          shadow-[0_18px_60px_rgba(15,23,42,0.12)]
+        "
+      >
+        <div
+          className="
+            relative h-[128px] overflow-hidden
+            px-5 py-5
+            text-white
+          "
+          style={{
+            background: isMember
+              ? "linear-gradient(135deg, #B71919 0%, #8F1010 48%, #D83A34 100%)"
+              : "linear-gradient(135deg, #D7DBE1 0%, #A8AFB8 45%, #ECEFF3 100%)",
+          }}
+        >
           <div
-            className="absolute inset-0 bg-[length:200%_200%] animate-[gradmove_10s_ease_infinite]"
+            className="pointer-events-none absolute inset-0 opacity-55"
             style={{
-              backgroundImage:
-                "linear-gradient(110deg, #D81616 0%, #B40000 45%, #E51E1E 70%, #B40000 100%)",
+              background: isMember
+                ? "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.28), transparent 38%), radial-gradient(circle at 90% 85%, rgba(255,255,255,0.16), transparent 42%)"
+                : "linear-gradient(120deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.15) 34%, rgba(255,255,255,0.85) 52%, rgba(255,255,255,0.08) 76%, rgba(255,255,255,0.5) 100%)",
             }}
           />
 
-          <div className="absolute inset-0 opacity-70 mix-blend-screen">
-            <div
-              className="h-full w-[220%] animate-[shimmer_3.6s_ease_infinite]"
-              style={{
-                background:
-                  "linear-gradient(110deg, rgba(255,255,255,0) 35%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0) 65%)",
-                transform: "translateX(-60%)",
-              }}
-            />
-          </div>
+          <div
+            className="pointer-events-none absolute inset-0 opacity-25"
+            style={{
+              background:
+                "radial-gradient(circle at 12% 14%, rgba(255,255,255,0.8), transparent 18%), radial-gradient(circle at 80% 70%, rgba(0,0,0,0.12), transparent 42%)",
+            }}
+          />
 
-          <div className="relative flex h-full items-end justify-between px-5 pb-5">
-            <div className="flex items-end gap-3">
-              <div className="translate-y-[2px]">{badge}</div>
-              <div className="text-[18px] font-medium text-white">회 관리</div>
+          <div className="relative flex h-full flex-col justify-between">
+            <div className="flex items-center justify-between">
+              <div
+                className={isMember ? "text-[12px] font-semibold tracking-[0.28em] text-white/75" : "text-[12px] font-semibold tracking-[0.28em] text-zinc-700/70"}
+              >
+                {subLabel}
+              </div>
+
+              <span
+                className={
+                  isMember
+                    ? "rounded-full bg-white/18 px-3 py-1 text-[12px] font-semibold text-white ring-1 ring-white/20"
+                    : "rounded-full bg-white/45 px-3 py-1 text-[12px] font-semibold text-zinc-700 ring-1 ring-white/45"
+                }
+              >
+                {badgeLabel}
+              </span>
+            </div>
+
+            <div className={isMember ? "text-[32px] font-bold tracking-tight text-white" : "text-[32px] font-bold tracking-tight text-zinc-800"}>
+              {label}
             </div>
           </div>
         </div>
 
-        {/* BODY */}
-        <div className="bg-white/55 backdrop-blur-xl px-5 py-6">
-          <div className="flex items-start justify-between">
-            <div className="min-h-[22px]">
-              {type === "ten" && hasDiscount ? (
-                <div className="text-[13px] font-medium text-zinc-400 line-through">{formatPrice(originalPrice!)}</div>
-              ) : (
-                <div className="text-[13px] text-transparent">.</div>
-              )}
-            </div>
-
-            <div className="text-[13px] font-semibold text-zinc-600">{rightLabel}</div>
+        <div className="bg-white px-5 py-6">
+          <div className="min-h-[20px] text-right">
+            {hasOriginal ? (
+              <div className="text-[13px] font-medium text-zinc-400 line-through">
+                {formatPrice(originalPrice)}
+              </div>
+            ) : (
+              <div className="text-[13px] text-transparent">.</div>
+            )}
           </div>
 
-          <div className="mt-3 flex justify-end text-right text-[28px] font-bold" style={{ color: accent }}>
+          <div className="mt-2 text-right text-[30px] font-bold tracking-tight" style={{ color: accent }}>
             {formatPrice(price)}
           </div>
 
-          {/* 구분선 제거 */}
-          <div className="mt-7 space-y-2 text-right">
+          <div className="mt-6 h-px w-full bg-zinc-100" />
+
+          <div className="mt-5 space-y-2 text-right">
             <div className="text-[15px] font-medium text-zinc-600">관리 시간 {durationMin}분</div>
-            <div className="text-[15px] font-bold text-zinc-600">VAT포함</div>
+            <div className="text-[15px] font-bold text-zinc-600">VAT 포함</div>
           </div>
         </div>
       </div>
-
-      <style jsx global>{`
-        @keyframes gradmove {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        @keyframes shimmer {
-          0% { transform: translateX(-60%); }
-          100% { transform: translateX(10%); }
-        }
-      `}</style>
     </div>
   );
 }
