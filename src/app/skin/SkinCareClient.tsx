@@ -50,7 +50,7 @@ recommendedTargets: [
 
         durationMin: 70,
 priceOnce: 130000,
-priceTen: 110000,
+priceTen: 100000,
 
 steps: [
   "클렌징",
@@ -121,6 +121,7 @@ priceTen: 170000,
 
 steps: [
   "클렌징",
+  "딥 클렌징",
   "데콜테",
   "MTS 앰플 침투",
   "맞춤 팩",
