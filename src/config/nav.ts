@@ -1,23 +1,40 @@
 export const BOOKING_URL =
   "https://map.naver.com/p/entry/place/1063607602?placePath=/ticket?entry=plt&fromPanelNum=1&additionalHeight=76&timestamp=202601231203&locale=ko&svcName=map_pcv5&from=map&fromPanelNum=1&additionalHeight=76&timestamp=202601231203&locale=ko&svcName=map_pcv5&searchType=place&lng=127.1360654&lat=37.5287128&c=15.00,0,0,0,dh";
 
-export type NavLink = { label: string; href: string };
-export type NavSection = { title?: string; links: NavLink[] };
+export type NavLink = {
+  label: string;
+  href: string;
+};
+
+export type NavSection = {
+  title?: string;
+  links: NavLink[];
+};
+
 export type NavMega = {
   type: "mega";
   label: string;
   sections: NavSection[];
-  promo?: { href: string };
+  promo?: {
+    href: string;
+  };
 };
+
 export type NavItem =
-  | { type: "link"; label: string; href: string }
+  | {
+      type: "link";
+      label: string;
+      href: string;
+    }
   | NavMega;
 
 export const NAV_ITEMS: NavItem[] = [
-  // 원페이지(섹션 이동)
-  { type: "link", label: "WeMD 에스테틱", href: "#brand" },
+  {
+    type: "link",
+    label: "WeMD 에스테틱",
+    href: "#brand",
+  },
 
-  // 2뎁스(메가메뉴)
   {
     type: "mega",
     label: "얼굴 관리",
@@ -25,14 +42,32 @@ export const NAV_ITEMS: NavItem[] = [
       {
         title: "FACE CARE",
         links: [
-          { label: "얼굴 리프팅 관리", href: "/face" },
-          { label: "얼굴 V라인 관리", href: "/face#vline" },
-          { label: "작은 얼굴 관리", href: "/face#slimming" },
-          { label: "얼굴 균형 관리", href: "/face#balance" },
+          {
+            label: "얼굴 리프팅 관리",
+            href: "/face?p=facial-lifting",
+          },
+          {
+            label: "얼굴 V라인 관리",
+            href: "/face?p=ellazo-face",
+          },
+          {
+            label: "작은 얼굴 관리",
+            href: "/face?p=face-slimming",
+          },
+          {
+            label: "얼굴 균형 관리",
+            href: "/face?p=face-balance",
+          },
+          {
+            label: "웨딩 관리",
+            href: "/face?p=wedding",
+          },
         ],
       },
     ],
-    promo: { href: "/face" },
+    promo: {
+      href: "/face",
+    },
   },
 
   {
@@ -42,35 +77,97 @@ export const NAV_ITEMS: NavItem[] = [
       {
         title: "BODY CARE",
         links: [
-          { label: "상체 관리", href: "/body#upper" },
-          { label: "하체 관리", href: "/body#lower" },
-          { label: "S라인 관리", href: "/body#sline" },
+          {
+            label: "상체 관리",
+            href: "/body?p=body-upper",
+          },
+          {
+            label: "하체 관리",
+            href: "/body?p=body-lower",
+          },
+          {
+            label: "S라인 관리",
+            href: "/body?p=body-sline",
+          },
+          {
+            label: "라운드 숄더 관리",
+            href: "/body?p=round-shoulder",
+          },
         ],
       },
     ],
-    promo: { href: "/body" },
+    promo: {
+      href: "/body",
+    },
   },
 
   {
     type: "mega",
-    label: "맞춤 케어",
+    label: "집중 관리",
     sections: [
       {
-        title: "CUSTOM CARE",
+        title: "FOCUSED CARE",
         links: [
-          { label: "웨딩 관리 Standard", href: "/custom#wedding-standard" },
-          { label: "웨딩 관리 Special", href: "/custom#wedding-special" },
-          { label: "라운드 숄더 관리", href: "/custom#round-shoulder" },
-          { label: "애플 힙 관리", href: "/custom#apple-hip" },
-          { label: "런닝 후 관리", href: "/custom#runner" },
-          { label: "골프 관리", href: "/custom#golf" },
+          {
+            label: "애플 힙 관리",
+            href: "/custom?p=apple-hip",
+          },
+          {
+            label: "러닝 후 관리",
+            href: "/custom?p=runner-recovery",
+          },
+          {
+            label: "골프 관리",
+            href: "/custom?p=golf",
+          },
         ],
       },
     ],
-    promo: { href: "/custom" },
+    promo: {
+      href: "/custom",
+    },
   },
 
-  // 원페이지(섹션 이동)
-  { type: "link", label: "지점 안내", href: "#branches" },
-  { type: "link", label: "가맹 문의", href: "#contact" },
+  {
+    type: "mega",
+    label: "스킨 솔루션 관리",
+    sections: [
+      {
+        title: "SKIN CARE SOLUTION",
+        links: [
+          {
+            label: "수분 채움",
+            href: "/skin?p=hydration-fill",
+          },
+          {
+            label: "트러블 케어",
+            href: "/skin?p=trouble-care",
+          },
+          {
+            label: "광채 채움",
+            href: "/skin?p=glow-fill",
+          },
+          {
+            label: "앰플 부스팅",
+            href: "/skin?p=ampoule-boosting",
+          },
+        ],
+      },
+    ],
+    promo: {
+      href: "/skin",
+    },
+  },
+
+  {
+    type: "link",
+    label: "지점 안내",
+    href: "#branches",
+  },
+
+  {
+    type: "link",
+    label: "가맹 문의",
+    href: "#contact",
+  },
 ];

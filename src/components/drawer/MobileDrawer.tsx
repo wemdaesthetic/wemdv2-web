@@ -19,17 +19,21 @@ type Props = {
   variant?: Variant;
 };
 
-type SectionKey = "face" | "body" | "custom" | null;
+type SectionKey = "face" | "body" | "custom" | "skin" | null;
 
 export default function MobileDrawer({ open, onClose }: Props) {
   const pathname = usePathname();
+  console.log(DRAWER_ROUTES);
+console.log(DRAWER_ROUTES.skin);
   const [membershipOpen, setMembershipOpen] = useState(false);
+  
 
   const defaultOpenSection: SectionKey = useMemo(() => {
     if (!pathname) return null;
     if (pathname.startsWith("/face")) return "face";
     if (pathname.startsWith("/body")) return "body";
     if (pathname.startsWith("/custom")) return "custom";
+    if (pathname.startsWith("/skin")) return "skin";
     return null;
   }, [pathname]);
 
@@ -93,7 +97,10 @@ export default function MobileDrawer({ open, onClose }: Props) {
               ×
             </button>
 
-            <div className="px-6" style={{ paddingTop: "calc(env(safe-area-inset-top) + 90px)" }}>
+            <div
+  className="flex-1 overflow-y-auto px-6"
+  style={{ paddingTop: "calc(env(safe-area-inset-top) + 90px)" }}
+>
               <div className="text-[13px] font-medium tracking-[0.18em] text-zinc-500">WeMD Aesthetic</div>
 
               <div className="mt-3">
@@ -129,7 +136,7 @@ export default function MobileDrawer({ open, onClose }: Props) {
                   </div>
                 ) : null}
 
-                <DrawerAccordion title="맞춤 케어" open={openSection === "custom"} onToggle={() => toggleSection("custom")} />
+                <DrawerAccordion title="집중 관리" open={openSection === "custom"} onToggle={() => toggleSection("custom")} />
                 {openSection === "custom" ? (
                   <div className="ml-1 space-y-1">
                     {DRAWER_ROUTES.custom.items.map((it) => (
@@ -139,6 +146,22 @@ export default function MobileDrawer({ open, onClose }: Props) {
                     ))}
                   </div>
                 ) : null}
+
+                <DrawerAccordion
+  title="스킨 솔루션 관리"
+  open={openSection === "skin"}
+  onToggle={() => toggleSection("skin")}
+/>
+
+{openSection === "skin" ? (
+  <div className="ml-1 space-y-1">
+    {DRAWER_ROUTES.skin.items.map((it) => (
+      <DrawerSubLink key={it.href} href={it.href} onClick={onClose}>
+        {it.title}
+      </DrawerSubLink>
+    ))}
+  </div>
+) : null}
               </div>
 
               <div className="mt-7 h-px w-full bg-zinc-100" />

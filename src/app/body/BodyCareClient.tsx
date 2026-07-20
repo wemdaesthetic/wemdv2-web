@@ -20,10 +20,20 @@ export default function BodyCareClient() {
         durationMin: 50,
         priceOnce: 130000,
         priceTen: 110000,
-        steps: ["등 크림", "팔 크림", "어깨·목", "두피", "마무리"],
+
+        steps: [
+          "등 크림",
+          "팔 크림",
+          "어깨·목",
+          "두피",
+          "마무리",
+        ],
+
         introTitle: "WeMD 상체 관리",
+
         introBody:
           "등, 어깨, 목, 팔을 섬세하게 케어하여 수술 없이도 상체 라인을 자연스럽게 정리하고 탄력 있고 균형 있는 라인을 만들어드립니다.",
+
         recommendedTargets: [
           "등 어깨 팔 라인이 고민이신 분",
           "상체에 굴곡이 많아 라인이 매끄럽지 않으신 분",
@@ -32,6 +42,7 @@ export default function BodyCareClient() {
           "상체 피부 탄력을 자연스럽게 개선하고 싶은 분",
         ],
       },
+
       {
         slug: "body-lower",
         titleKo: "하체 관리",
@@ -43,10 +54,19 @@ export default function BodyCareClient() {
         durationMin: 50,
         priceOnce: 130000,
         priceTen: 110000,
-        steps: ["하체 라인 관리", "하체 근막 관리", "지방 분해 관리", "마무리"],
+
+        steps: [
+          "하체 라인 관리",
+          "하체 근막 관리",
+          "지방 분해 관리",
+          "마무리",
+        ],
+
         introTitle: "WeMD 하체 관리",
+
         introBody:
           "하체 라인을 섬세하게 관리하여 수술 없이도 자연스럽고 아름다운 하체 라인을 연출하고 탄력을 만들어드립니다.",
+
         recommendedTargets: [
           "하체 라인과 탄력이 고민이신 분",
           "하체에 굴곡이 많거나 라인이 매끄럽지 않으신 분",
@@ -55,6 +75,7 @@ export default function BodyCareClient() {
           "오래 앉아 있거나 서 있는 생활로 순환이 잘 안 되는 분",
         ],
       },
+
       {
         slug: "body-sline",
         titleKo: "S라인 관리",
@@ -66,6 +87,7 @@ export default function BodyCareClient() {
         durationMin: 100,
         priceOnce: 190000,
         priceTen: 170000,
+
         steps: [
           "등 크림",
           "팔 크림",
@@ -74,15 +96,53 @@ export default function BodyCareClient() {
           "하체 라인 or 하체 근막 관리(지방 분해 관리)",
           "마무리",
         ],
+
         introTitle: "WeMD S라인 관리",
+
         introBody:
           "상체와 하체의 탄력과 라인을 함께 관리하여 수술 없이도 자연스러운 S라인을 연출하고 탄력을 개선해드립니다.",
+
         recommendedTargets: [
           "전신 관리를 받고 싶으신 분",
           "상체·하체 라인이 매끄럽지 않다고 느끼시는 분",
           "근육이 뭉쳐 피로와 붓기가 잦은 분",
           "피부 탄력 저하로 전신 실루엣이 고민이신 분",
           "순환 저하로 몸이 자주 무거운 분",
+        ],
+      },
+
+      {
+        slug: "round-shoulder",
+        titleKo: "라운드 숄더 관리",
+        titleEn: "Round Shoulder Treatment",
+
+        heroImgSrc: "/programs/body/round-shoulder-hero.png",
+        infoImgSrc: "/programs/body/round-shoulder-info.png",
+
+        durationMin: 70,
+        priceOnce: 150000,
+        priceTen: 130000,
+
+        steps: [
+          "등 크림",
+          "어깨·목",
+          "가슴 근막",
+          "승모근 이완",
+          "두피",
+          "마무리",
+        ],
+
+        introTitle: "WeMD 라운드 숄더 관리",
+
+        introBody:
+          "굽고 말린 어깨 주변의 긴장을 섬세하게 관리하여 균형 있고 자연스러운 상체 라인을 만드는 집중 프로그램입니다.",
+
+        recommendedTargets: [
+          "어깨가 앞으로 말려 보이는 분",
+          "승모근과 목 주변의 긴장이 자주 느껴지는 분",
+          "컴퓨터와 스마트폰 사용 시간이 긴 분",
+          "상체 자세와 어깨 라인을 함께 관리하고 싶은 분",
+          "웨딩 촬영이나 중요한 일정을 앞두고 있는 분",
         ],
       },
     ],
@@ -95,7 +155,6 @@ export default function BodyCareClient() {
   const config: ProgramPageConfig = {
     basePath: "/body",
 
-    // fallback 
     heroImageSrc: "/programs/body/body-upper-hero.png",
     infoImageSrc: "/programs/body/body-upper-info.png",
 

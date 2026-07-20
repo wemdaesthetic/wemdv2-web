@@ -76,12 +76,25 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    const p = sp.get("p");
-    if (!p) return;
-    const idx = programs.findIndex((x) => x.slug === p);
-    if (idx >= 0) setActive(idx);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sp]);
+  const p = sp.get("p");
+
+  if (!p) {
+    router.replace(`${basePath}?p=${programs[0].slug}`);
+    setActive(0);
+    return;
+  }
+
+  const idx = programs.findIndex((x) => x.slug === p);
+
+  if (idx === -1) {
+    router.replace(`${basePath}?p=${programs[0].slug}`);
+    setActive(0);
+    return;
+  }
+
+  setActive(idx);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [sp, programs, router, basePath]);
 
   const current = programs[active];
 
