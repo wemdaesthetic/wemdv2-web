@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import SkinCareClient from "./SkinCareClient";
 
 export const metadata = {
@@ -6,5 +7,9 @@ export const metadata = {
 };
 
 export default function SkinPage() {
-  return <SkinCareClient />;
+  return (
+    <Suspense fallback={null}>
+      <SkinCareClient />
+    </Suspense>
+  );
 }
