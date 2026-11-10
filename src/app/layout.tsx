@@ -10,8 +10,15 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "WeMD Aesthetic",
-  description: "WeMD Aesthetic Official Website",
+  metadataBase: new URL("https://www.wemdibs.com"),
+  title: "작은얼굴관리, 바디, 스킨 관리 | 위엠디 에스테틱",
+  description:
+    "작은얼굴관리부터 바디, 스킨 관리까지 위엠디 에스테틱 공식 홈페이지. 본점은 강동구 둔촌동역에서 1분입니다.",
+  openGraph: {
+    siteName: "위엠디 에스테틱",
+    locale: "ko_KR",
+    type: "website",
+  },
   icons: {
     icon: [
       { url: "/favicon.ico" },

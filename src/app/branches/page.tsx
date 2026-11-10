@@ -2,7 +2,9 @@ import Link from "next/link";
 import { BRANCHES } from "@/config/branches";
 
 export const metadata = {
-  title: "지점 안내 | WeMD Aesthetic",
+  title: "지점 안내 | 위엠디 에스테틱",
+  description: "위엠디 에스테틱 지점 위치와 전화번호를 안내합니다.",
+  alternates: { canonical: "/branches" },
 };
 
 export default function BranchesPage() {

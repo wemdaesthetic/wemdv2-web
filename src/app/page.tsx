@@ -64,7 +64,10 @@ export default function HomePage() {
               px-4 pt-[88px]
               md:pt-[78px]
             "
-          />
+          >
+            <h1 className="sr-only">위엠디 에스테틱 공식 홈페이지</h1>
+            <p className="sr-only">작은얼굴관리, 바디, 스킨 관리 에스테틱. 본점은 강동구 둔촌동역 1분.</p>
+          </div>
         </section>
 
         {/* 섹션들 */}
