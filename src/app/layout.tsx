@@ -14,6 +14,11 @@ export const metadata: Metadata = {
   title: "작은얼굴관리, 바디, 스킨 관리 | 위엠디 에스테틱",
   description:
     "작은얼굴관리부터 바디, 스킨 관리까지 위엠디 에스테틱 공식 홈페이지. 본점은 강동구 둔촌동역에서 1분입니다.",
+  verification: {
+    other: {
+      "naver-site-verification": "06d6585199e76ad057b3c30e5ee99f80a86fff80",
+    },
+  },
   openGraph: {
     siteName: "위엠디 에스테틱",
     locale: "ko_KR",
