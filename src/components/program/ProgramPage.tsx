@@ -33,6 +33,9 @@ export type ProgramBase = {
 
   // 추천대상
   recommendedTargets?: string[];
+
+  // 자주 묻는 질문 (질문형 소제목 + 첫 문장에 답)
+  faqs?: { q: string; a: string }[];
 };
 
 export type ProgramPageConfig = {
@@ -73,7 +76,11 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
     []
   );
 
-  const [active, setActive] = useState(0);
+  // 주소의 ?p= 값으로 처음부터 맞는 프로그램을 그린다 (검색 로봇 · AI 가 받는 첫 HTML 에도 그 프로그램 내용이 담기게)
+  const [active, setActive] = useState(() => {
+    const idx = programs.findIndex((x) => x.slug === sp.get("p"));
+    return idx >= 0 ? idx : 0;
+  });
 
   useEffect(() => {
   const p = sp.get("p");
@@ -233,6 +240,28 @@ export default function ProgramPage({ config }: { config: ProgramPageConfig }) {
             </div>
           </div>
         </section>
+
+        {current.faqs?.length ? (
+          <section id="자주 묻는 질문" className="bg-white">
+            <div className="mx-auto max-w-6xl px-5 py-12 md:px-8 md:py-16">
+              <div className="text-[12px] font-semibold tracking-[0.30em]" style={{ color: ACCENT }}>
+                Q&amp;A
+              </div>
+              <div className="mt-6 divide-y divide-zinc-200 border-y border-zinc-200">
+                {current.faqs.map((f) => (
+                  <div key={f.q} className="py-7 md:py-9">
+                    <h2 className="text-[20px] font-semibold tracking-tight text-zinc-900 md:text-[26px]">
+                      {f.q}
+                    </h2>
+                    <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-zinc-700 md:text-[17px]">
+                      {f.a}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : null}
 
         <section id="가격" className="bg-white">
           <div ref={priceRef} className="mx-auto max-w-6xl px-5 py-12 md:px-8 md:py-16">
